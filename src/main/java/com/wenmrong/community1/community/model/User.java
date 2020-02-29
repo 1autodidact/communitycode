@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class User {
+    //id是自增的
     private Integer id;
     private String name;
     private String accountId;
