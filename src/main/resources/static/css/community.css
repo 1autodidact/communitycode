@@ -14,10 +14,20 @@ body{
     width: 55px;
     height: 55px;
 }
+.media-body {
+    padding-top: 14px;
+}
 .profile .section{
     margin-top: 15px;
 }
 .community-menu{
     color: #999;
     font-size: 13px;
+}
+.comment{
+    margin: 10px 0;
+}
+.btn-comment{
+    float:right;
+    margin-bottom: 10px;
 }

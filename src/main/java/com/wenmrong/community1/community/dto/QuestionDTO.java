@@ -5,8 +5,8 @@ import lombok.Data;
 
 @Data
 public class QuestionDTO {
-    private Integer id;
-    private Integer creator;
+    private Long id;
+    private Long creator;
     private Integer viewCount;
     private Integer commentCount;
     private Integer likeCount;
