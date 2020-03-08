@@ -22,9 +22,9 @@ body{
 }
 .community-menu{
     display: block;
-    margin-bottom: 15px;
     color: #999;
     font-size: 13px;
+    margin-bottom: 15px;
 }
 .comment{
     margin: 10px 0;

@@ -7,7 +7,8 @@ public enum CustomizeErrorCode implements ICustomizeErrorCode {
     NO_LOGIN(2003,"Not log in"),
     SYS_ERROR(2004,"Server overload,please try again"),
     TYPE_PARAM_WRONG(2005,"Comment type error"),
-    COMMENT_NOT_FOUND(2006,"Comment not found");
+    COMMENT_NOT_FOUND(2006,"Comment not found"),
+    COMMENT_IS_EMPTY(2007,"Comment is empty");
     private String message;
     private Integer code;
 
