@@ -4,10 +4,7 @@ import com.wenmrong.community1.community.dto.CommentDTO;
 import com.wenmrong.community1.community.enums.CommentTypeEnum;
 import com.wenmrong.community1.community.exception.CustomizeErrorCode;
 import com.wenmrong.community1.community.exception.CustomizeException;
-import com.wenmrong.community1.community.mapper.CommentMapper;
-import com.wenmrong.community1.community.mapper.QuestionExtMapper;
-import com.wenmrong.community1.community.mapper.QuestionMapper;
-import com.wenmrong.community1.community.mapper.UserMapper;
+import com.wenmrong.community1.community.mapper.*;
 import com.wenmrong.community1.community.model.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +31,10 @@ public class CommentService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private CommentExtMapper commentExtMapper;
+
+
     @Transactional
     public void insert(Comment comment) {
         if (comment.getParentId() == null || comment.getParentId() == 0){
@@ -51,6 +52,12 @@ public class CommentService {
                 throw  new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             }
             commentMapper.insert(comment);
+            //增加评论数
+            Comment parentComment = new Comment();
+            parentComment.setId(comment.getParentId());
+            parentComment.setCommentCount(1);
+            //调用了commentExtMapper.xml文件里面调用了commentExtMapper接口,进而可以把参数传到commentExtMapper.xml
+            commentExtMapper.incCommentCount(parentComment);
 
         } else{
             //回复问题

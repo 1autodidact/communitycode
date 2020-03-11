@@ -1,0 +1,3 @@
+ALTER TABLE COMMENT ADD content_count INT DEFAULT 0;
+
+
