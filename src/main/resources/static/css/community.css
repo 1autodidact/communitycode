@@ -55,6 +55,19 @@ body{
     font-size: 15px;
     cursor: pointer;
 }
+.question-tag {
+    margin-right: 5px;
+}
+.question-egg {
+    width: 100%;
+}
+.question-related {
+    line-height: 20px;
+    font-size: 12px;
+    margin-left: 0;
+    list-style: none;
+    padding-left: 0;
+}
 .menu .comment-icon :hover{
     color: #499ef3;
 }
