@@ -26,6 +26,14 @@ body{
     font-size: 13px;
     margin-bottom: 15px;
 }
+.publish-tag-tab {
+    display:none;
+    margin-top: 10px;
+    margin-top: 10px;
+}
+.publish-tag-tab .label-info {
+    margin-right: 10px;
+}
 .comment{
     margin: 10px 0;
 }
