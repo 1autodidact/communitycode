@@ -15,13 +15,17 @@ body{
     height: 55px;
 }
 .media-body {
-    padding-top: 14px;
+    padding-top: 5px;
+}
+media-body.media-heading {
+
+    margin-bottom: -15px;
+    font-size: 22px;
 }
 .profile .section{
     margin-top: 15px;
 }
 .community-menu{
-    display: block;
     color: #999;
     font-size: 13px;
     margin-bottom: 15px;
@@ -32,7 +36,9 @@ body{
     margin-top: 10px;
 }
 .publish-tag-tab .label-info {
-    margin-right: 10px;
+    white-space: normal;
+    margin: 5px 5px;
+    display: inline-block;
 }
 .comment{
     margin: 10px 0;
@@ -102,6 +108,7 @@ body{
     margin-bottom: 13px;
 
 }
+
 .sub-comments .btn {
     margin: 10px 0;
 }
