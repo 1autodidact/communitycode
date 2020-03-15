@@ -18,27 +18,28 @@ public class CustomizeErrorController implements ErrorController {
     public String getErrorPath() {
         return "error";
     }
+
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE)
-    public ModelAndView errorHtml(HttpServletRequest request, Model model){
+    public ModelAndView errorHtml(HttpServletRequest request, Model model) {
         HttpStatus status = getStatus(request);
-        if (status.is4xxClientError()){
-            model.addAttribute("message","Your request failed");
+        if (status.is4xxClientError()) {
+            model.addAttribute("message", "Your request failed");
         }
-        if (status.is5xxServerError()){
-            model.addAttribute("message","Server overload");
+        if (status.is5xxServerError()) {
+            model.addAttribute("message", "Server overload");
         }
         return new ModelAndView("error");
     }
 
-    private HttpStatus getStatus(HttpServletRequest request){
+    private HttpStatus getStatus(HttpServletRequest request) {
         Integer statusCode = (Integer) request
                 .getAttribute("javax.servlet.error.status_code");
-        if (statusCode == null){
+        if (statusCode == null) {
             return HttpStatus.INTERNAL_SERVER_ERROR;
         }
-        try{
+        try {
             return HttpStatus.valueOf(statusCode);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return HttpStatus.INTERNAL_SERVER_ERROR;
         }
 

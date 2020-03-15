@@ -1,7 +1,5 @@
 package com.wenmrong.community1.community.exception;
 
-import org.omg.PortableInterceptor.INACTIVE;
-
 public class CustomizeException extends RuntimeException {
     private String message;
     private Integer code;
@@ -17,7 +15,7 @@ public class CustomizeException extends RuntimeException {
         return message;
     }
 
-    public Integer getCode(){
+    public Integer getCode() {
         return code;
     }
 }

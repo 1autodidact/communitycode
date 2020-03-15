@@ -2,7 +2,6 @@ package com.wenmrong.community1.community.controller;
 
 
 import com.wenmrong.community1.community.dto.PaginationDTO;
-import com.wenmrong.community1.community.mapper.UserMapper;
 import com.wenmrong.community1.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,9 +16,9 @@ public class IndexController {
     private QuestionService questionService;
 
     @GetMapping("/")
-    public String index( Model model,
-                         @RequestParam(name = "page", defaultValue = "1") Integer page,
-                         @RequestParam(name = "size", defaultValue = "7") Integer size){
+    public String index(Model model,
+                        @RequestParam(name = "page", defaultValue = "1") Integer page,
+                        @RequestParam(name = "size", defaultValue = "7") Integer size) {
         PaginationDTO pagination = questionService.list(page, size);
         model.addAttribute("pagination", pagination);
         return "index";
