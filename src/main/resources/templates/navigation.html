@@ -44,7 +44,10 @@
                         <a href="/publish">publish</a>
                     </li>
                     <li>
-                        <a href="/profile/replies">notice <span class="badge">42</span></a>
+                        <a href="/profile/replies" th:if="${session.user != null}">notice <span class="badge">
+                            <span th:text="${session.unreadCount}"></span>
+                        </span>
+                        </a>
                     </li>
                     <li class="dropdown" th:if="${session.user!= null}">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
