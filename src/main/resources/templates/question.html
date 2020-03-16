@@ -6,10 +6,14 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/css/community.css">
+    <link rel="stylesheet" href="/css/editormd.preview.min.css">
     <script src="/js/jquery-3.4.1.min.js"></script>
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
     <script src="/js/community.js" type="application/javascript"></script>
     <script src="/js/moment.js" type="application/javascript"></script>
+    <script src="/js/editormd.min.js" type="application/javascript"></script>
+    <script src="/js/lib/marked.min.js"></script>
+    <script src="/js/lib/prettify.min.js"></script>
 </head>
 <body>
 <div th:insert="~{navigation :: nav}"></div>
@@ -26,8 +30,16 @@
                 </span>
                 <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <!--content-->
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 description_sty"
-                     th:text="${question.description}"></div>
+
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 description_sty" id ="question-view">
+                    <textarea style="display:none;" th:text="${question.description}"></textarea>
+
+                </div>
+                <script type="text/javascript">
+                    $(function() {
+                        editormd.markdownToHTML("question-view", {});
+                    });
+                </script>
                 <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <!--tag-->
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -140,7 +152,7 @@
             <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <h4> Easter Egg </h4>
-                <img class="img-thumbnail question-egg" src="/img/iceman.png" >
+                <img class="img-thumbnail question-egg" src="/images/iceman.png" >
             </div>
 
             <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
