@@ -10,7 +10,7 @@
     <script src="/js/jquery-3.4.1.min.js"></script>
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
     <script src="/js/community.js" type="application/javascript"></script>
-    <script src="/js/editormd.min.js" type="application/javascript"></script>
+    <script src="/js/editormd.js" type="application/javascript"></script>
 </head>
 <body>
 <div th:insert="~{navigation :: nav}"></div>
@@ -38,7 +38,10 @@
                             path   : "/js/lib/",
                             delay  : 0,
                             watch  : false,
-                            placeholder : "Please input question description"
+                            placeholder : "Please input question description",
+                            imageUpload    : true,
+                            imageFormats   : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                            imageUploadURL : "/file/upload"
                         });
                     });
                 </script>
