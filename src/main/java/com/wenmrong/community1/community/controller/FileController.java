@@ -22,7 +22,11 @@ public class FileController {
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         MultipartFile file = multipartRequest.getFile("editormd-image-file");
         try {
-            ossClientAuthorization.upload(file.getInputStream(),file.getOriginalFilename());
+            String urlFileName = ossClientAuthorization.upload(file.getInputStream(),file.getOriginalFilename());
+            FileDTO fileDTO = new FileDTO();
+            fileDTO.setSuccess(1);
+            fileDTO.setUrl(urlFileName);
+            return fileDTO;
         } catch (IOException e) {
             e.printStackTrace();
         }
