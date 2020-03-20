@@ -21,7 +21,7 @@
 </script>
 <body>
 <div th:insert="~{navigation :: nav}"></div>
-<div class="container-fluid" main>
+<div class="container-fluid main" >
     <div class="row">
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
             <h2><span class="glyphicon glyphicon-list" aria-hidden="true"></span>discovery</h2>
@@ -76,9 +76,13 @@
         </div>
 
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
-            <h3>Hot topic</h3>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <h4> Easter Egg </h4>
+                <img class="img-thumbnail question-egg" src="/images/iceman.png" >
+            </div>
         </div>
     </div>
 </div>
+<div th:insert="~{footer :: foot}"></div>
 </body>
 </html>

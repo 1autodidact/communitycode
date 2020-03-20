@@ -3,7 +3,8 @@ body{
 }
 .main{
     background-color:white;
-    magin:30px;
+    margin:30px 55px;
+
 }
 .btn-publish{
     float: right;
@@ -111,4 +112,11 @@ media-body.media-heading {
 
 .sub-comments .btn {
     margin: 10px 0;
+}
+
+.footer {
+    padding: 10px 25%;
+    color: #666;
+    font-size: 12px;
+
 }
