@@ -8,10 +8,15 @@
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
+            <div class="navbar-headers">
+                <a href="/">
+                    <img class="logo" src="/images/xia.jpg">
+                </a>
+
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                     <span class="sr-only">community</span>
                 </button>
+
                 <a class="navbar-brand" href="/">Community</a>
             </div>
 
@@ -33,8 +38,10 @@
                     </ul>
                     </li>
                 </ul>
+
                 <form class="navbar-form navbar-left" action="/" method="get">
                     <div class="form-group">
+
                         <input type="text" class="form-control" name="search" placeholder="search topic">
                     </div>
                     <button type="submit" class="btn btn-default">search</button>
@@ -56,11 +63,11 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a href="/profile/questions">My Questions</a></li>
-                            <li><a href="/logout">Log out</a></li>
+                            <li><a href="/logout">Logout</a></li>
                         </ul>
                     </li>
                     <li th:if="${session.user == null}">
-                        <a th:href="@{https://github.com/login/oauth/authorize(client_id='9c222e32e05f516f0401',redirect_uri=${#httpServletRequest.getServletContext().getAttribute('redirectUri')},scope='user',state=1)}">log in</a>
+                        <a th:href="@{https://github.com/login/oauth/authorize(client_id='9c222e32e05f516f0401',redirect_uri=${#httpServletRequest.getServletContext().getAttribute('redirectUri')},scope='user',state=1)}">Login</a>
 
                     </li>
                 </ul>

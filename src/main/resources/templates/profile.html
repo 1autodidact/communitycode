@@ -14,7 +14,7 @@
 <div class="container-fluid main profile">
     <div class="row">
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
-            <h2><span th:text="${sectionName}"></span></h2>
+            <h2 class="headline"><span th:text="${sectionName}"></span></h2>
             <hr>
 
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:if="${section == 'questions'}">
@@ -30,12 +30,12 @@
                             <a th:href="@{'/question/'+ ${question.id}}" th:text="${question.title}"></a>
                         </h4>
                         <span class="text-desc">
-                        <span th:text="${question.commentCount}"></span> 个回复 • <span
-                                th:text="${question.viewCount}"></span> 次浏览 • <span
+                        <span th:text="${question.commentCount}"></span> replies • <span
+                                th:text="${question.viewCount}"></span> view • <span
                                 th:text="${#dates.format(question.gmtCreate,'yyyy-MM-dd HH:mm')}"></span> •
                         <a th:href="@{'/publish/'+${question.id}}" class="community-menu"
                            th:if="${session.user != null && session.user.id == question.creator}">
-                        <span class="glyphicon glyphicon-pencil" aria-hidden="true">编辑</span>
+                        <span class="glyphicon glyphicon-pencil" aria-hidden="true">edit</span>
                     </a>
                     </span>
                     </div>
@@ -49,7 +49,7 @@
                             <a th:href="@{'/notification/'+ ${notification.id}}"
                                th:text="${notification.outerTitle}">
                             </a>
-                            <span class="label label-danger" th:if="${notification.status == 0}">未读</span>
+                            <span class="label label-danger" th:if="${notification.status == 0}">unread</span>
                         </p>
                     </div>
                 </div>

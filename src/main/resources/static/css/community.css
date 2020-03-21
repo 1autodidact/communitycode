@@ -1,81 +1,101 @@
-body{
+body {
     background-color: #efefef;
 }
-.main{
-    background-color:white;
-    margin:30px 55px;
 
+.main {
+    background-color: white;
+    margin: 30px 55px;
+    border-radius: 11px;
 }
-.btn-publish{
+
+.btn-publish {
     float: right;
     margin-bottom: 15px;
 
 }
+
 .media-object {
     width: 55px;
     height: 55px;
 }
+
 .media-body {
     padding-top: 5px;
 }
+
 media-body.media-heading {
 
     margin-bottom: -15px;
     font-size: 22px;
 }
-.profile .section{
+
+.profile .section {
     margin-top: 15px;
 }
-.community-menu{
+
+.community-menu {
     color: #999;
     font-size: 13px;
     margin-bottom: 15px;
 }
+
 .publish-tag-tab {
-    display:none;
+    display: none;
     margin-top: 10px;
     margin-top: 10px;
 }
+
 .publish-tag-tab .label-info {
     white-space: normal;
     margin: 5px 5px;
     display: inline-block;
 }
-.comment{
+
+.comment {
     margin: 10px 0;
 }
-.btn-comment{
-    float:right;
+
+.btn-comment {
+    float: right;
     margin-bottom: 10px;
 }
-.comment-sp{
+
+.comment-sp {
     margin-top: 0;
 }
-.menu{
+
+.menu {
     color: #999;
     margin-top: 5px;
 }
-.menu .icon{
+
+.menu .icon {
     margin-right: 6px;
     font-size: 15px;
-    cursor:pointer;
+    cursor: pointer;
 }
-.menu .active{
+
+.menu .active {
     color: #499ef3;
 }
-.menu .icon:hover{
+
+.menu .icon:hover {
     color: #499ef3;
 }
+
 .menu .comment-icon {
     font-size: 15px;
     cursor: pointer;
 }
+
 .question-tag {
     margin-right: 5px;
 }
+
 .question-egg {
     width: 100%;
 }
+
 .question-related {
     line-height: 20px;
     font-size: 12px;
@@ -83,24 +103,30 @@ media-body.media-heading {
     list-style: none;
     padding-left: 0;
 }
-.menu .comment-icon :hover{
+
+.menu .comment-icon :hover {
     color: #499ef3;
 }
-.menu .comment-icon :hover{
+
+.menu .comment-icon :hover {
     color: #499ef3;
 }
-.answerNum{
+
+.answerNum {
     margin-left: 10px;
 }
-.description_sty{
+
+.description_sty {
     margin-left: -16px;
 
 }
-.comments{
+
+.comments {
     padding-bottom: 5px;
     margin-bottom: 15px;
     border-bottom: 1px solid #eee;
 }
+
 .sub-comments {
     border-radius: 12px;
     margin-top: 10px;
@@ -114,9 +140,21 @@ media-body.media-heading {
     margin: 10px 0;
 }
 
+.headline {
+    font-size: 21px;
+}
+
 .footer {
     padding: 10px 25%;
     color: #666;
     font-size: 12px;
 
+}
+.logo {
+    width: 15%;
+    margin-left: -11px;
+}
+.navbar-headers {
+    margin-right: -128px;
+    float: left;
 }
