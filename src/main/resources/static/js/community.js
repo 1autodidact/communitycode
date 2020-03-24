@@ -137,3 +137,14 @@ function showSelectTag() {
 
 
 }
+function deleteQuestion(e) {
+    debugger;
+    var questionId = e.getAttribute("data-id");
+    console.log(questionId);
+    var isDeleted = confirm("delete forever ?");
+    if (isDeleted) {
+        window.open("http://localhost:8887/"+questionId+"/delete");
+    }
+
+
+}
