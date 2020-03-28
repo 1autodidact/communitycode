@@ -80,7 +80,7 @@
                             </h5>
                             <div th:text="${comment.content}"></div>
                             <div class="menu">
-                                 <span th:id="${'thumb-'+comment.id}" th:data-id="${comment.id+'/'+session.user.id}" onclick="thumbComments(this)" class="thumbComment-icon" th:if="${session.user!=null}">
+                                 <span th:id="${'thumb-'+comment.id}" th:data-id="${comment.id+'/'+session.user.id+'/'+question.id}" onclick="thumbComments(this)" class="thumbComment-icon" th:if="${session.user!=null}">
                                       <span class="glyphicon glyphicon-thumbs-up icon"></span>
                                       <span id="thumbChildElement" th:text="${comment.likeCount}"></span>
 
