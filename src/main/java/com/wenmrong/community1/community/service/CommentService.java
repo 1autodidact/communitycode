@@ -86,8 +86,8 @@ public class CommentService {
         }
     }
 
-    private void createNotification(Comment comment, Long receiver, String notifierName, String outerTitle, NotificationTypeEnum notificationType, Long outerId) {
-        if (receiver == comment.getCommentator()) {
+    public void createNotification(Comment comment, Long receiver, String notifierName, String outerTitle, NotificationTypeEnum notificationType, Long outerId) {
+        if (receiver == comment.getCommentator() && (notificationType.getType() == 1 || notificationType.getType() == 2)) {
             return;
         }
         Notification notification = new Notification();
