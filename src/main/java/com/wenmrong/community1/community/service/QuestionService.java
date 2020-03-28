@@ -31,6 +31,9 @@ public class QuestionService {
     @Autowired
     private QuestionExtMapper questionExtMapper;
 
+    @Autowired
+    private QuestionService questionService;
+
     public PaginationDTO list(String search,Integer page, Integer size) {
         if (!StringUtils.isNullOrEmpty(search)) {
             String[] tags = StringUtils.arraySplit(search, ' ', true);
@@ -124,14 +127,17 @@ public class QuestionService {
     }
 
     public QuestionDTO getById(Long id) {
+        //先进行计数,如果question已经查询完毕,再计数无法及时刷新数据
+        questionService.incView(id);
         Question question = questionMapper.selectByPrimaryKey(id);
-        if (question == null) {
+            if (question == null) {
             throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
         }
         User user = userMapper.selectByPrimaryKey(question.getCreator());
         QuestionDTO questionDTO = new QuestionDTO();
         BeanUtils.copyProperties(question, questionDTO);
         questionDTO.setUser(user);
+        questionDTO.setViewCount(question.getViewCount());
         return questionDTO;
     }
 

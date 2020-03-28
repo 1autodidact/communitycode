@@ -74,6 +74,7 @@ function collapseComments(e){
             e.classList.add("active");
 
         } else {
+            debugger;
             $.getJSON("/comment/" + id, function (data) {
                 console.log(data)
                 $.each(data.data.reverse(), function (index, comment) {
@@ -138,13 +139,25 @@ function showSelectTag() {
 
 }
 function deleteQuestion(e) {
-    debugger;
     var questionId = e.getAttribute("data-id");
     console.log(questionId);
     var isDeleted = confirm("delete forever ?");
     if (isDeleted) {
         window.open("http://localhost:8887/"+questionId+"/delete");
     }
+
+
+}
+function thumbComments(e) {
+    debugger;
+    var thumbId = e.getAttribute("id");
+    var url = e.getAttribute("data-id");
+    var tags =$("#"+thumbId).children("#thumbChildElement");
+
+    $.getJSON("/thumb/" + url ,function(data) {
+        //span标签赋值用html,表单一般用val
+        tags.html(data);
+    });
 
 
 }

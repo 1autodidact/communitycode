@@ -125,7 +125,7 @@ public class CommentService {
         List<User> users = userMapper.selectByExample(userExample);
         Map<Long, User> userMap = users.stream().collect(Collectors.toMap(user -> user.getId(), user -> user));
 
-        //comments 转化为commentsDTOS
+        //comments 转化为commentsDTOS(单一类型转复合类型的常用方法)
         List<CommentDTO> commentDTOS = comments.stream().map(comment -> {
             CommentDTO commentDTO = new CommentDTO();
             BeanUtils.copyProperties(comment, commentDTO);
