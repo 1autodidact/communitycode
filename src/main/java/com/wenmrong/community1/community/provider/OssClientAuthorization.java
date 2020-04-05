@@ -2,11 +2,15 @@ package com.wenmrong.community1.community.provider;
 
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
+import com.wenmrong.community1.community.exception.CustomizeErrorCode;
+import com.wenmrong.community1.community.exception.CustomizeException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.util.Date;
 import java.util.UUID;
 
 @Service
@@ -45,9 +49,19 @@ public class OssClientAuthorization {
         // 上传文件流。
         ossClient.putObject(bucketName, generatedFileName, inputStream);
 
-        // 关闭OSSClient。
-        ossClient.shutdown();
-        return generatedFileName;
+        Long dateTime = 1962631209000L;
+        Date expiration = new Date(dateTime);
+        System.out.println(expiration);
+        // 生成以GET方法访问的签名URL，访客可以直接通过浏览器访问相关内容。
+        URL url = ossClient.generatePresignedUrl(bucketName, generatedFileName, expiration);
+        if (url != null) {
+            // 关闭OSSClient。
+            ossClient.shutdown();
+            return url.toString();
+        } else {
+            throw new CustomizeException(CustomizeErrorCode.FILE_UPLOAD_FAILURE);
+        }
+
     }
 
 }
