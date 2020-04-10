@@ -162,3 +162,20 @@ media-body.media-heading {
 .btn-delete {
     margin-left: 1px;
 }
+.Log-style {
+    margin-top: 15px;
+    margin-right: 50px;
+}
+.question-history {
+    padding: 15px;
+    margin-top: -15px;
+}
+.history-head {
+    margin-top: -1px;
+}
+.glyphicon-hourglass {
+    font-size: 17px;
+}
+.glyphicon-grain {
+    font-size: 17px;
+}
