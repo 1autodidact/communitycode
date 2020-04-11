@@ -1,11 +1,14 @@
 body {
     background-color: #efefef;
+    background-image: url("http://cdn.wenmrong.com/heibai.png");
 }
 
 .main {
-    background-color: white;
-    margin: 30px 55px;
-    border-radius: 11px;
+    margin: 40px 200px;
+    background-color: #fff;
+    box-shadow: 6px 6px 10px grey;
+    min-height: 700px;
+    border-radius: 4px;
 }
 
 .btn-publish {
@@ -151,14 +154,22 @@ media-body.media-heading {
 
 }
 .logo {
-    width: 15%;
+    width: 16%;
     margin-left: -11px;
 }
+.community-name {
+    font-size: 25px;
+    font-style: italic;
+}
 .navbar-headers {
-    margin-right: -128px;
+    margin-right: -121px;
     float: left;
 }
-
+.top-nav {
+    padding-left: 185px;
+    padding-right: 170px;
+    margin-bottom: 0;
+}
 .btn-delete {
     margin-left: 1px;
 }

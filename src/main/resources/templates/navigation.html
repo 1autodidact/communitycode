@@ -5,7 +5,7 @@
 <body>
 
 <div th:fragment="nav">
-    <nav class="navbar navbar-default">
+    <nav class="navbar navbar-default top-nav">
         <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-headers">
@@ -17,7 +17,7 @@
                     <span class="sr-only">community</span>
                 </button>
 
-                <a class="navbar-brand" href="/">Community</a>
+                <a class="navbar-brand community-name" href="/">Autodidact</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -76,7 +76,7 @@
                             <a th:href="@{https://github.com/login/oauth/authorize(client_id='9c222e32e05f516f0401',redirect_uri=${#httpServletRequest.getServletContext().getAttribute('redirectUri')},scope='user',state=1)}">
                                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                             </a>
-                            <a th:href="@{https://github.com/login/oauth/authorize(client_id='9c222e32e05f516f0401',redirect_uri=${#httpServletRequest.getServletContext().getAttribute('redirectUri')},scope='user',state=1)}">Login</a>
+                            <a style="text-decoration:none;" th:href="@{https://github.com/login/oauth/authorize(client_id='9c222e32e05f516f0401',redirect_uri=${#httpServletRequest.getServletContext().getAttribute('redirectUri')},scope='user',state=1)}">Login</a>
                         </li>
                     </div>
 

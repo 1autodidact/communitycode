@@ -40,6 +40,7 @@ public class QuestionController {
         ArrayList<Question> questionHistory = questionHistoryService.showHistory(history);
         Cookie cookie = new Cookie("history",history);
         cookie.setMaxAge(24*60*60);
+        cookie.setPath("/");
         response.addCookie(cookie);
         model.addAttribute("question", questionDTO);
         model.addAttribute("comments", comments);
