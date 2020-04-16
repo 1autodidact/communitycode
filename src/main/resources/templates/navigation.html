@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 
 <html xmlns:th="http://www.thymeleaf.org">
+<head>
+<head>
 
+</head>
 <body>
 
 <div th:fragment="nav">
@@ -48,35 +51,60 @@
                 </form>
                 <ul class="nav navbar-nav navbar-right">
                     <li th:if="${session.user!= null}">
-                        <a href="/publish">publish</a>
+                        <div class="AliLogo-box">
+                            <i class="iconfont icon-fabu navbar_ali_icon"></i>
+                            <a href="/publish">publish</a>
+                        </div>
+
                     </li>
                     <li th:if="${session.user!= null}">
-                        <a href="/wallpaper">wallpaper</a>
+
+                        <div class="AliLogo-box">
+                            <i class="iconfont icon-bizhi navbar_ali_icon"></i>
+                            <a  href="/wallpaper" style="text-decoration:none;">wallpaper</a>
+                        </div>
                     </li>
-                    <li>
-                        <a href="/profile/replies" th:if="${session.user != null}">notice <span class="badge">
+
+                    <li th:if="${session.user!= null}">
+                        <div class="AliLogo-box">
+                            <i class="iconfont icon-unread navbar_ali_icon"></i>
+                            <a href="/profile/replies" th:if="${session.user != null}">notice <span class="badge">
                             <span th:text="${session.unreadCount}"></span>
-                        </span>
-                        </a>
+                            </span>
+                            </a>
+                        </div>
+
                     </li>
 
                     <li class="dropdown" th:if="${session.user!= null}">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                            <span th:text="${session.user.getName()}"></span>
-                            <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a href="/profile/questions">My Questions</a></li>
-                            <li><a href="/logout">Logout</a></li>
-                        </ul>
+                        <div class="AliLogo-box">
+                            <i class="iconfont icon-heike navbar_ali_icon"></i>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <span th:text="${session.user.getName()}"></span>
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/profile/questions">My Questions</a></li>
+                                <li><a href="/logout">Logout</a></li>
+                            </ul>
+                        </div>
                     </li>
 
                     <div class="Log-style">
+
                         <li th:if="${session.user == null}">
                             <a th:href="@{https://github.com/login/oauth/authorize(client_id='9c222e32e05f516f0401',redirect_uri=${#httpServletRequest.getServletContext().getAttribute('redirectUri')},scope='user',state=1)}">
                                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                             </a>
-                            <a style="text-decoration:none;" th:href="@{https://github.com/login/oauth/authorize(client_id='9c222e32e05f516f0401',redirect_uri=${#httpServletRequest.getServletContext().getAttribute('redirectUri')},scope='user',state=1)}">Login</a>
+
+                            <a class="Log-font" style="text-decoration:none;" th:href="@{https://github.com/login/oauth/authorize(client_id='9c222e32e05f516f0401',redirect_uri=${#httpServletRequest.getServletContext().getAttribute('redirectUri')},scope='user',state=1)}">Login</a>
+                            <a href="/loginByQQ">
+                                <img class="logo" src="/images/QQ.jpg">
+
+                            </a>
+
+
+
                         </li>
                     </div>
 

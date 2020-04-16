@@ -1,20 +1,28 @@
 body {
     background-color: #efefef;
-    background-image: url("http://cdn.wenmrong.com/heibai.png");
+    background-image: url("http://cdn.wenmrong.com/grey.png");
 }
 
 .main {
     margin: 40px 200px;
     background-color: #fff;
     box-shadow: 6px 6px 10px grey;
-    min-height: 700px;
+    min-height: 580px;
     border-radius: 4px;
+
+}
+.main a {
+    text-decoration: none;
+    color: black;
 }
 
 .btn-publish {
     float: right;
     margin-bottom: 15px;
 
+}
+.dropdown {
+    margin-top: 0;
 }
 
 .media-object {
@@ -146,6 +154,10 @@ media-body.media-heading {
 .headline {
     font-size: 21px;
 }
+.profile-headline {
+    font-size: 21px;
+    margin-top: 1px;
+}
 
 .footer {
     padding: 10px 25%;
@@ -175,7 +187,12 @@ media-body.media-heading {
 }
 .Log-style {
     margin-top: 15px;
-    margin-right: 50px;
+    margin-right: -90px;
+
+}
+.Log-style a {
+    color: #777;
+    text-decoration: none;
 }
 .question-history {
     padding: 15px;
@@ -189,4 +206,22 @@ media-body.media-heading {
 }
 .glyphicon-grain {
     font-size: 17px;
+}
+.Log-font {
+    margin-right: 11px;
+}
+.AliLogo-box {
+    margin-top: 15px;
+    margin-right: 18px;
+}
+.AliLogo-box .navbar_ali_icon {
+    font-size: 20px ;
+}
+.AliLogo-box a {
+    color: #777;
+    text-decoration: none;
+  }
+
+.page-left {
+    border-right: 1px solid #D2D2D2;
 }

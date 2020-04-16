@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/css/community.css">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_1758124_52775yunyg.css">
     <script src="/js/jquery-3.4.1.min.js"></script>
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
     <script src="/js/community.js" type="application/javascript"></script>
@@ -14,8 +15,11 @@
 <div th:insert="~{navigation :: nav}"></div>
 <div class="container-fluid main profile">
     <div class="row">
-        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
-            <h2 class="headline"><span th:text="${sectionName}"></span></h2>
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12 page-left">
+            <div class="AliLogo-box">
+                <i class="iconfont icon-heike navbar_ali_icon"></i>
+                <h2 class="profile-headline"><span th:text="${sectionName}"></span></h2>
+            </div>
             <hr>
 
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:if="${section == 'questions'}">
