@@ -13,7 +13,7 @@ body {
 }
 .main a {
     text-decoration: none;
-    color: black;
+
 }
 
 .btn-publish {
@@ -224,4 +224,13 @@ media-body.media-heading {
 
 .page-left {
     border-right: 1px solid #D2D2D2;
+}
+
+.login-page {
+    width: 714px;
+    height: 500px;
+    margin: 0 auto;
+    background-color: #fff;
+    border: 1px solid #b3b3b3;
+    border-radius: 3px;
 }

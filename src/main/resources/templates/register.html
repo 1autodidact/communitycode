@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login-Autodidact</title>
+    <head>
+        <link rel="shortcut icon" href="/images/Autodidact.ico" type="image/x-icon">
+        <script src="/js/jquery-3.4.1.min.js"></script>
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/css/bootstrap-theme.css">
+        <script src="/js/bootstrap.min.js"></script>
+        <script src="/js/moment.min.js"></script>
+        <link rel="stylesheet" href="/dist/jquery.validator.css">
+        <script src="/dist/jquery.validator.min.js?local=zh-CN"></script>
+        <link rel="stylesheet" href="/css/login.css">
+        <script src="/js/community.js"></script>
+    </head>
+</head>
+<body class="login-body">
+<div class="login-main">
+    <div class="login-page container-fluid">
+        <div class="row login-page-main">
+            <div class="login-left col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                <div class="login-logo">
+                    <b><a class="logo" href="/">Autodidact Community</a></b>
+                </div>
+                <form class="login-form" action="/register" method="post"
+                      data-validator-option="{theme:'yellow_right_effect', stopOnError:true}">
+                    <div class="form-group">
+                        <label for="login-email">
+                            <img src="/icons/envelope-open.svg" class="login-icon">&nbsp;email
+                        </label>
+                        <input type="email" class="form-control" id="login-email" placeholder="Email"
+                               name="email" data-rule="邮箱: required; email">
+                    </div>
+                    <div class="form-group">
+                        <label for="login-pwd">
+                            <img src="/icons/lock.svg" class="login-icon">&nbsp;password
+                        </label>
+                        <input type="password" class="form-control" id="login-pwd" placeholder="Password"
+                               name="password" data-rule="密码:required;length(6~16)">
+                    </div>
+                    <div class="form-group">
+                        <label for="register-code">
+                            <img src="/images/code.svg" class="login-icon">&nbsp;Code
+                            <button id="send-email-btn" type="button" class="btn btn-success btn-xs send-email-btn" onclick="sendEmail()">GetCode</button>
+                        </label>
+                        <input type="text" class="form-control" id="register-code" placeholder="Verification Code" name="code"
+                               data-rule="验证码:required;length(6)">
+                    </div>
+                    <div>
+                        <span th:if="${signupSuccess!=null}" class="red">SignUp Success</span>
+                        <button type="submit" class="btn btn-primary btn-publish">SignUp</button>
+                    </div>
+                </form>
+            </div>
+            <div class="login-right col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                <div class="login-other-all">
+                    <h4>Third party login</h4>
+                    <a class="login-other" th:href="@{https://github.com/login/oauth/authorize(client_id='9c222e32e05f516f0401',redirect_uri=${#httpServletRequest.getServletContext().getAttribute('redirectUri')},scope='user',state=1)}">
+                        <img src="/images/github.svg" class="login-icon">
+                        Github
+                    </a>
+                    <a href="https://gitee.com/oauth/authorize?client_id=8946d87d3965015cdb6eb9ac8262a077b61a8636ab66dbad08485529677cef64&amp;redirect_uri=http://www.dbeetle.cn/giteeCallback&amp;response_type=code&amp;scope=user_info&amp;state=giteelogin"
+                       class="login-other">
+                        <img src="/images/gitee.svg" class="login-icon">
+                        Gitee
+                    </a>
+                    <a href="/loginByQQ">
+                        <img src="/images/QQ.svg" class="login-icon">
+                        QQ
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        <div class="login-page-footer">
+            <img src="/icons/info.svg" class="login-icon">&nbsp;
+            <b>Already existed?  <a href="/login">go to login</a></b>
+        </div>
+    </div>
+</div>
+
+<!--页尾-->
+<div class="footer-word">
+    Copyright © 2020 · Autodidact ·
+    粤ICP备20010366号-1
+    All rights reserved
+</div>
+<script>
+    $(function(){
+        customTheme();
+    });
+</script>
+</body>
+</html>

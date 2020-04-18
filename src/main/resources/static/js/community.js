@@ -161,3 +161,40 @@ function thumbComments(e) {
 
 
 }
+
+function sendEmail() {
+    var email= $('input[name="email"]').val();
+    if (email == null || email.trim().length === 0) {
+        alert("请输入邮箱！");
+        return;
+    }
+    $.getJSON("/sendEmail/" + email,function (data) {
+        if (data.code === 200) {
+            invokeSetTime("#send-email-btn");
+        } else {
+            alert(data.message);
+        }
+    });
+    
+}
+
+function invokeSetTime(obj) {
+    let countdown = 60;
+    setTime(obj);
+
+    function setTime(obj) {
+        if (countdown === 0) {
+            $(obj).attr("disabled", false);
+            $(obj).text("GetCode");
+            countdown = 60;
+            return;
+        } else {
+            $(obj).attr("disabled", true);
+            $(obj).text("(" + countdown + ") s resend");
+            countdown--;
+        }
+        setTimeout(function () {
+            setTime(obj)
+        }, 1000);
+    }
+}

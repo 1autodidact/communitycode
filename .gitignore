@@ -2,6 +2,7 @@ HELP.md
 target/
 qqconnect.log
 
+
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
 !**/src/test/**
@@ -29,6 +30,8 @@ earch function
 /nbdist/
 /.nb-gradle/
 build/
+src/main/resources/qqconnectconfig.properties
+
 
 ### VS Code ###
 .vscode/

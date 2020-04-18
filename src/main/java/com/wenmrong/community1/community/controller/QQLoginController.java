@@ -1,4 +1,5 @@
 package com.wenmrong.community1.community.controller;
+
 import com.qq.connect.QQConnectException;
 import com.qq.connect.api.OpenID;
 import com.qq.connect.api.qzone.UserInfo;
@@ -35,11 +36,11 @@ public class QQLoginController {
 //    }
 
     /**
+     * @return void
      * @Description 请求QQ登录
      * @Author wm
      * @Date 11:25 2020/2/21
      * @Param [request, response]
-     * @return void
      **/
     @RequestMapping("/loginByQQ")
     public void loginByQQ(HttpServletRequest request, HttpServletResponse response) {
@@ -53,16 +54,16 @@ public class QQLoginController {
     }
 
     /**
+     * @return java.lang.String
      * @Description QQ登录的回调方法
      * @Author wm
      * @Date 11:25 2020/2/21
      * @Param [request, response, map]
-     * @return java.lang.String
      **/
 
     @RequestMapping("/qqlogin")
 
-    public String connection(HttpServletRequest request, HttpServletResponse response, Map<String,Object> map) {
+    public String connection(HttpServletRequest request, HttpServletResponse response, Map<String, Object> map) {
         try {
             AccessToken accessTokenObj = (new Oauth()).getAccessTokenByRequest(request);
             String accessToken = null, openID = null;
@@ -86,9 +87,9 @@ public class QQLoginController {
                 if (userInfoBean.getRet() == 0) {
                     String name = removeNonBmpUnicode(userInfoBean.getNickname());
                     String imgUrl = userInfoBean.getAvatar().getAvatarURL100();
-                    map.put("openId",openID);
-                    map.put("name",name);
-                    map.put("imgUrl",imgUrl);
+                    map.put("openId", openID);
+                    map.put("name", name);
+                    map.put("imgUrl", imgUrl);
 
                     User user = new User();
                     String token = UUID.randomUUID().toString();
@@ -97,7 +98,10 @@ public class QQLoginController {
                     user.setAccountId(openID);
                     user.setAvatarUrl(imgUrl);
                     userService.createOrUpdate(user);
-                    response.addCookie(new Cookie("token", token));
+                    Cookie cookie = new Cookie("token", token);
+                    cookie.setPath("/");
+                    cookie.setMaxAge(60 * 60 * 24);
+                    response.addCookie(cookie);
                     return "redirect:/";
                 } else {
                     System.out.println("很抱歉，我们没能正确获取到您的信息，原因是： " + userInfoBean.getMsg());
@@ -110,11 +114,11 @@ public class QQLoginController {
     }
 
     /**
+     * @return java.lang.String
      * @Description 处理掉QQ网名中的特殊表情
      * @Author wm
      * @Date 11:26 2020/2/21
      * @Param [str]
-     * @return java.lang.String
      **/
     public String removeNonBmpUnicode(String str) {
         if (str == null) {

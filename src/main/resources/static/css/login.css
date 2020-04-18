@@ -1,0 +1,432 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    width: 100%;
+    height: 100%;
+    /* background-image: url("/images/bg/index-bg1.jpg");*/
+    background-image: url("http://cdn.wenmrong.com/black.png");
+}
+
+.main {
+    margin: 40px 200px;
+    background-color: #fff;
+    box-shadow: 6px 6px 10px gray;
+    min-height: 700px;
+    border-radius: 4px;
+}
+
+.top-nav {
+    padding-left: 185px;
+    padding-right: 170px;
+    margin-bottom: 0;
+}
+
+.logo {
+    font-size: 25px;
+    font-style: italic;
+    /*text-shadow: grey 10px 10px 4px;*/
+}
+
+.logo:hover {
+    text-decoration: none;
+}
+
+.search-input {
+    /*background: url("/icons/search-input.svg") no-repeat;*/
+    /* padding-left: 30px;*/
+}
+
+.to-right {
+    float: right;
+}
+
+.to-left {
+    float: left;
+}
+
+.red {
+    color: red;
+}
+
+.btn-publish {
+    float: right;
+    margin: 15px 0;
+}
+
+.user_login_avatar {
+    width: 23px;
+    height: 23px;
+}
+
+.user_avatar {
+    width: 40px;
+    height: 40px;
+}
+
+.question_info {
+    font-size: 12px;
+    font-weight: normal;
+    color: #999;
+}
+
+.question_text {
+    font-size: 13px;
+    color: #999;
+}
+
+.question-top {
+    font-size: 15px;
+}
+
+.page-bar {
+    float: right;
+}
+
+.page_left {
+    border-right: 1px solid #D2D2D2;
+}
+
+.page_right {
+}
+
+.creator_card {
+    margin-top: 20px;
+}
+
+.comment_context_section {
+    margin-top: 20px;
+}
+
+.comment_operating {
+    margin-top: 15px;
+}
+
+.comment_operating .btn {
+    font-size: 15px;
+    color: #999;
+    margin-left: 10px;
+    padding: 0;
+}
+
+.oper-btn:hover {
+    color: #499EF3;
+}
+
+.comment_operating .active {
+    color: #499EF3;
+}
+
+.comment_count, .comment_commit {
+    margin-top: 40px;
+}
+
+.comment_cut_line {
+    margin-top: 10px;
+}
+
+.sub_comments {
+    margin: 10px 50px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    padding: 20px 20px 70px 20px;
+}
+
+.related_question_list {
+    padding-left: 20px;
+}
+
+.tag-style {
+    display: inline-block;
+    font-size: 13px;
+    /*margin-right: 10px;*/
+    /*margin-top: 8px;*/
+    margin: 6px;
+    cursor: pointer;
+}
+
+.tag-style:hover {
+    background-color: #337AEE;
+}
+
+.tag-style a {
+    color: #fff;
+}
+
+.tag-style a:hover, .tag-style a:visited {
+    text-decoration: none;
+}
+
+.publish-tab-tags {
+    margin-top: 15px;
+}
+
+.publish-tab-tags .select:hover {
+    background-color: forestgreen;
+}
+
+.publish-tag-list {
+    margin-top: 15px;
+    display: none;
+}
+
+.publish-error-nav {
+    display: flex;
+}
+
+.publish-error {
+    margin: auto auto 0 auto;
+    width: 300px;
+    line-height: 32px;
+    text-align: center;
+    padding: 0;
+}
+
+.publish-error span {
+    margin-right: 10px;
+}
+
+.tags-input-div {
+    display: flex;
+}
+
+.input-tag-btn {
+    margin: 10px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.profile-canEdit {
+    margin-left: 10px;
+}
+
+.publish-tag-selected {
+    background-color: forestgreen;
+    cursor: unset;
+}
+
+.publish-tag-remove:hover {
+    color: #db2d20;
+    cursor: pointer;
+}
+
+.tag-text {
+    margin-left: 3px;
+}
+
+.reply-list {
+    margin: 0 0;
+}
+
+.reply-list .time {
+    float: right;
+}
+
+.footer-word {
+    color: #888;
+    text-align: center;
+    padding: 30px 0 10px;
+    font-size: 12px;
+}
+
+.one-day-module {
+    margin-bottom: 5px;
+}
+
+.click-top-btn {
+    font-size: 17px;
+    top: unset;
+    bottom: 20px;
+    right: 20px;
+    position: fixed;
+    padding: 5px;
+    background-color: #eee;
+    cursor: pointer;
+    display: none;
+}
+
+.click-top-btn:hover {
+    background-color: #aaa;
+}
+
+.user-oper-list {
+    text-align: center;
+    border-radius: 5px;
+}
+
+.user-oper-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.nav-title-icon {
+    width: 30px;
+    height: 30px;
+}
+
+.publish-guide-ul {
+    display: contents;
+}
+
+.publish-guide-li {
+    margin-left: 15px;
+}
+
+.login-body {
+    background-image: url("http://cdn.wenmrong.com/black.png");
+}
+
+.login-logo {
+    display: flex;
+}
+
+.login-form {
+    margin-top: 30px;
+}
+
+.login-form div {
+    margin-right: 130px;
+}
+
+.login-main {
+    width: 100%;
+    height: auto;
+    margin-top: 100px;
+    margin-bottom: 50px;
+}
+
+.login-page {
+    width: 714px;
+    height: 500px;
+    margin: 0 auto;
+    background-color: #fff;
+    border: 1px solid #b3b3b3;
+    border-radius: 3px;
+}
+
+.login-page-main {
+    padding: 40px 0 50px 50px;
+    height: 420px
+}
+
+.login-left {
+    height: 100%;
+    border-right: 1px solid #D2D2D2;
+    /*background-color: #eee;*/
+}
+
+.login-right {
+    height: 100%;
+    /*background-color: #eee;*/
+}
+
+.login-other-all {
+    padding: 40px 24px;
+}
+
+.login-other {
+    display: block;
+    height: 40px;
+}
+
+.login-other:hover, .login-other:active, .login-other:visited {
+    text-decoration: none;
+}
+
+.login-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.login-page-footer {
+    height: 70px;
+    line-height: 70px;
+    padding: 0 45px;
+    /*background-color: #eee;*/
+}
+
+.login-page-footer a:hover {
+    text-decoration: none;
+}
+
+.get-source {
+    float: left;
+}
+
+.person {
+    background-color: #eee;
+}
+
+.person-info-image {
+    background-image: url("http://cdn.wenmrong.com/grey.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100%;
+    height: 400px;
+}
+
+.person-info-main {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.person-info {
+    display: flex;
+    margin: 0 20px 24px;
+}
+
+.person-avatar {
+    margin-top: -25px;
+}
+
+.person-avatar img {
+    width: 160px;
+    height: 160px;
+}
+
+.person-content {
+    margin: 10px 30px;
+}
+
+.error-page {
+    background-color: #eee;
+    padding: 40px 210px;
+    height: 600px;
+}
+
+.a-no-line:hover, .a-no-line:active, .a-no-line:visited {
+    text-decoration: none;
+}
+
+.hot-tag-list {
+    word-wrap: break-word;
+}
+
+.send-email-btn {
+    margin-left: 10px;
+}
+
+.cannot-click {
+    pointer-events: none;
+    cursor: none;
+}
+
+.register-body {
+    background-image: url("http://cdn.wenmrong.com/heibai.png");
+}
+
+.n-bootstrap .msg-wrap {
+    font-size: 14px;
+    margin-top: 3px;
+}
+
+.article-tag {
+    font-size: 18px;
+    text-align: center;
+}
+
+.article-modal-content {
+    background-color: #eee;
+}
