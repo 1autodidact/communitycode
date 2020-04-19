@@ -25,7 +25,7 @@ public class LoginController {
 
     @GetMapping("/login")
     public String LoginPage() {
-        return "/login";
+        return "login";
     }
 
     @PostMapping("/login")
@@ -50,7 +50,7 @@ public class LoginController {
             return "redirect:/";
         } else {
             model.addAttribute("loginFail", "fail");
-            return "/login";
+            return "login";
         }
 
 

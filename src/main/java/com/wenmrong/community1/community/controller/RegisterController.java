@@ -50,10 +50,10 @@ public class RegisterController {
             user.setAvatarUrl("http://cdn.wenmrong.com/heibai.png");
             userService.createOrUpdate(user);
             model.addAttribute("signupSuccess", "success");
-            return "/register";
+            return "register";
         } else {
             //注册失败
-            return "/register";
+            return "register";
         }
 
     }
