@@ -48,9 +48,12 @@
                         </label>
                     </div>
                     <div>
-
-                        <span th:if="${loginFail!=null}" class="red">Please input correct info</span>
                         <button type="submit" class="btn btn-primary btn-publish">Login</button>
+                        <div th:if="${loginFail!=null}">
+                            <span class="red">Please input correct info</span>
+                            <button type="submit" class="btn btn-primary btn-publish" onclick="modify()">forget password</button>
+                        </div>
+
                     </div>
                 </form>
             </div>

@@ -16,30 +16,29 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Controller
-public class RegisterController {
+public class ModifyPasswordController {
     @Autowired
     private UserMapper userMapper;
     @Autowired
     private UserService userService;
 
-    @GetMapping("/register")
-    public String register() {
-
-
-        return "register";
+    @GetMapping("/modify")
+    public String modifyPage() {
+        return "modifypassword";
     }
 
-    @PostMapping("/register")
-    public String registering(HttpServletRequest request, HttpServletResponse response, Model model) {
+    @PostMapping("/modify")
+    public String modify(HttpServletRequest request, HttpServletResponse response, Model model) {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String code = request.getParameter("code");
         Cookie[] cookies = request.getCookies();
         User user = new User();
         for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("activeCode")) {
+            if (cookie.getName().equals("modifyCode")) {
                 String value = cookie.getValue();
                 if (value.equals(code)) {
                     user.setStatus(1);
@@ -48,38 +47,37 @@ public class RegisterController {
             }
         }
         if (user.getStatus() == 1) {
-            user.setName(email);
-            user.setPassword(password);
-            user.setAccountId(email);
-            user.setAvatarUrl("http://cdn.wenmrong.com/heibai.png");
-            userService.createOrUpdate(user);
-            model.addAttribute("signupSuccess", "success");
-            return "register";
+            UserExample example = new UserExample();
+            example.createCriteria()
+                    .andAccountIdEqualTo(email);
+            User modifiedUser = userMapper.selectByExample(example).get(0);
+            modifiedUser.setPassword(password);
+            userMapper.updateByPrimaryKey(modifiedUser);
+            return "login";
         } else {
-            //注册失败
-            return "register";
+            //修改失败
+            model.addAttribute("modifyFail", "fail");
+            return "modifypassword";
         }
-
     }
 
+
     @ResponseBody
-    @GetMapping("/sendActiveEmail/{email}")
-    public ResultDTO sendActiveEmail(@PathVariable(name = "email") String email, HttpServletResponse response) {
+    @GetMapping("/sendModifyEmail/{email}")
+    public ResultDTO sendModifyEmail(@PathVariable(name = "email") String email, HttpServletResponse response) {
         //使用cookie存储验证码用于校验
         UserExample userExample = new UserExample();
         userExample.createCriteria()
                 .andAccountIdEqualTo(email);
-        User user = userMapper.selectByExample(userExample).get(0);
-        if (user != null) {
-            return ResultDTO.errorOf(300,"Email already signup,please go to login ");
+        List<User> users = userMapper.selectByExample(userExample);
+        if (users == null || users.size() == 0) {
+            return ResultDTO.errorOf(400, "User is not found ");
         }
-        String activeCode = userService.sendEmail(email,"ActiveCode");
-        Cookie cookie = new Cookie("activeCode", activeCode);
+        String modifyCode = userService.sendEmail(email, "modifyCode");
+        Cookie cookie = new Cookie("modifyCode", modifyCode);
         cookie.setPath("/");
         cookie.setMaxAge(60 * 5);
         response.addCookie(cookie);
-        return ResultDTO.okOf(activeCode);
+        return ResultDTO.okOf(modifyCode);
     }
-
-
 }

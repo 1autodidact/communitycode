@@ -44,16 +44,16 @@ public class UserService {
         }
     }
 
-    public String sendEmail(String email) {
+    public String sendEmail(String email,String character) {
         //创建激活码
-        String ActiveCode = randomCodeService.createActiveCode();
+        String code = randomCodeService.createActiveCode();
         //主题
         String subject = "来自Autodidact网站的激活邮件";
         //上面的激活码发送到用户注册邮箱
         //  String context = "<a href=\"http://localhost:8887/checkCode?code="+code+"\">激活请点击:"+code+"</a>";
-        String context = "<a href=\"\">Please complete in 5 minutes Active Code:"+ActiveCode+"</a>";
+        String context = "<a href=\"\">Please complete in 5 minutes "+character+":"+code+"</a>";
         //发送激活邮件
         mailService.sendMimeMail (email,subject,context);
-        return ActiveCode;
+        return code;
     }
 }

@@ -162,13 +162,13 @@ function thumbComments(e) {
 
 }
 
-function sendEmail() {
+function sendActiveEmail() {
     var email= $('input[name="email"]').val();
     if (email == null || email.trim().length === 0) {
         alert("请输入邮箱！");
         return;
     }
-    $.getJSON("/sendEmail/" + email,function (data) {
+    $.getJSON("/sendActiveEmail/" + email,function (data) {
         if (data.code === 200) {
             invokeSetTime("#send-email-btn");
         } else {
@@ -177,6 +177,23 @@ function sendEmail() {
     });
     
 }
+
+function sendModifyEmail() {
+    var email= $('input[name="email"]').val();
+    if (email == null || email.trim().length === 0) {
+        alert("请输入邮箱！");
+        return;
+    }
+    $.getJSON("/sendModifyEmail/" + email,function (data) {
+        if (data.code === 200) {
+            invokeSetTime("#send-email-btn");
+        } else {
+            alert(data.message);
+        }
+    });
+
+}
+
 
 function invokeSetTime(obj) {
     let countdown = 60;
@@ -197,4 +214,7 @@ function invokeSetTime(obj) {
             setTime(obj)
         }, 1000);
     }
+}
+function modify() {
+    window.location.replace("/modify")
 }
