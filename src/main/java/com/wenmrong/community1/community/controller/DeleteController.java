@@ -19,17 +19,16 @@ public class DeleteController {
     private QuestionService questionService;
     @Autowired
     private QuestionMapper questionMapper;
-
-    @GetMapping("/{id}/delete")
+    @GetMapping("/profile/questions/delete/{id}")
     public String delete(@PathVariable(name = "id") Long id,
                          HttpServletRequest request,
                          Model model,
                          @RequestParam(name = "page", defaultValue = "1") Integer page,
                          @RequestParam(name = "size", defaultValue = "7") Integer size) {
         User user = (User) request.getSession().getAttribute("user");
-        if (user == null) {
-            return "redirect:/";
-        }
+//        if (user == null) {
+//            return "redirect:/";
+//        }
 
         model.addAttribute("section", "questions");
         model.addAttribute("sectionName", "My Questions");

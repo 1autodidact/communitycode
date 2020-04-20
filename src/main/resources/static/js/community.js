@@ -23,10 +23,11 @@ function comment2target(targetId, type, content) {
             if (response.code == 200){
                 window.location.reload();
             }else {
+                //评论未登录返回登录页面
                 if (response.code == 2003) {
                     var isAccepted = confirm(response.message);
                     if (isAccepted) {
-                        window.open("https://github.com/login/oauth/authorize?client_id=9c222e32e05f516f0401&redirect_uri=http://localhost:8887/callback&state=1");
+                        window.location.replace("/login")
                         window.localStorage.setItem("closable","true");
                     }
 
@@ -143,7 +144,7 @@ function deleteQuestion(e) {
     console.log(questionId);
     var isDeleted = confirm("delete forever ?");
     if (isDeleted) {
-        window.open("http://localhost:8887/"+questionId+"/delete");
+        window.location.replace("/profile/questions/delete/"+questionId);
     }
 
 
