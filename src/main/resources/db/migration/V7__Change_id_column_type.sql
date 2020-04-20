@@ -1,3 +1,3 @@
-ALTER TABLE QUESTION ALTER COLUMN ID BIGINT DEFAULT NOT NULL AUTO_INCREMENT;
-ALTER TABLE `USER` ALTER COLUMN ID BIGINT DEFAULT NOT NULL AUTO_INCREMENT;
+alter table question modify id bigint auto_increment not null;
+alter table `user` modify id bigint auto_increment not null;
 

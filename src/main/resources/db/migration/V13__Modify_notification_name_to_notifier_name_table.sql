@@ -1,1 +1,1 @@
-alter table NOTIFICATION alter column NOTIFICATION_NAME rename to NOTIFIER_NAME;
+alter table notification change notification_name notifier_name varchar(100) null;

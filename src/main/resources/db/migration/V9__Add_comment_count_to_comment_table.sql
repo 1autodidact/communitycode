@@ -1,3 +1,3 @@
-ALTER TABLE COMMENT ADD content_count INT DEFAULT 0;
+alter table comment add content_count int default 0;
 
 

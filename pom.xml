@@ -17,6 +17,19 @@
     <properties>
         <java.version>1.8</java.version>
     </properties>
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <db.url>jdbc:h2:~/community</db.url>
+                <db.user>sa</db.user>
+                <db.password>123</db.password>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+    </profiles>
 
     <dependencies>
         <dependency>
@@ -131,11 +144,16 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>5.2.4</version>
                 <configuration>
-                    <url>jdbc:h2:~/community</url>
-                    <user>sa</user>
-                    <password>123</password>
+                    <url>${db.url}</url>
+                    <user>${db.user}</user>
+                    <password>${db.password}</password>
                 </configuration>
                 <dependencies>
+                    <dependency>
+                        <groupId>mysql</groupId>
+                        <artifactId>mysql-connector-java</artifactId>
+                        <version>5.1.47</version>
+                    </dependency>
                     <dependency>
                         <groupId>com.h2database</groupId>
                         <artifactId>h2</artifactId>

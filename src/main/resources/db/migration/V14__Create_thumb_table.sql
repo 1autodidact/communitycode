@@ -1,8 +1,8 @@
 create table thumb
 (
-	id BIGINT auto_increment,
-	thumb_id BIGINT not null,
-	thumb_id_parent BIGINT not null,
+	id bigint auto_increment,
+	thumb_id bigint not null,
+	thumb_id_parent bigint not null,
 	constraint thumb_pk
 		primary key (id)
 );

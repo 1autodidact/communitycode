@@ -1,2 +1,2 @@
-alter table USER
-	add PASSWORD VARCHAR(100) default null;
+alter table user
+	add password varchar(100) default null;
