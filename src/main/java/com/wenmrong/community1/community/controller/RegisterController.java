@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Controller
 public class RegisterController {
@@ -69,8 +70,8 @@ public class RegisterController {
         UserExample userExample = new UserExample();
         userExample.createCriteria()
                 .andAccountIdEqualTo(email);
-        User user = userMapper.selectByExample(userExample).get(0);
-        if (user != null) {
+        List<User> users = userMapper.selectByExample(userExample);
+        if (users != null && users.size() != 0) {
             return ResultDTO.errorOf(300,"Email already signup,please go to login ");
         }
         String activeCode = userService.sendEmail(email,"ActiveCode");
