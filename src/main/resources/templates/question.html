@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/css/community.css">
     <link rel="stylesheet" href="/css/editormd.preview.min.css">
-    <link rel="stylesheet" href="//at.alicdn.com/t/font_1758124_52775yunyg.css">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_1758372_iu83tgg8gw.css">
     <script src="/js/jquery-3.4.1.min.js"></script>
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
     <script src="/js/community.js" type="application/javascript"></script>
@@ -23,7 +23,10 @@
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12 page-left">
             <!--正文-->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <h4><span th:text="${question.title}"></span></h4>
+                <h4 class="question-AliLogo">
+                    <i class="iconfont icon-heike question_ali_icon"></i>
+                    <span th:text="${question.title}"></span>
+                </h4>
                 <span class="text-desc">
                 author:<span th:text="${question.user.name}"></span>|
                 view:<span th:text="${question.viewCount}"></span>|
@@ -62,8 +65,9 @@
 
             </div>
             <!--回复列表-->
-            <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
-                <h4>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <h4 class="question-AliLogo">
+                    <i class="iconfont icon-huifu question_ali_icon"></i>
                     <span class="answerNum" th:text="${question.commentCount}"></span> replies
                 </h4>
                 <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12 comment-sp">
@@ -112,9 +116,10 @@
 
                 </div>
             </div>
-            <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
-                <h4>
-                    提交回复
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <h4 class="question-AliLogo">
+                    <i class="iconfont icon-tijiao question_ali_icon"></i>
+                    Publish Comment
                 </h4>
                 <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12 comment-sp">
                 <!--回复输入框-->
@@ -141,7 +146,10 @@
         <!--右边发起人-->
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <h3>Sponsor</h3>
+                <h3 class="question-AliLogo">
+                    <i class="iconfont icon-heike question_ali_icon"></i>
+                    <span>Sponsor</span>
+                </h3>
                 <div class="media">
                     <div class="media-left">
                         <a href="#">
@@ -156,10 +164,12 @@
                     </div>
                 </div>
             </div>
-            <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12 page-right-line">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <span class="glyphicon glyphicon-hourglass"></span>
-                <h4 class="history-head">browsing history  </h4>
+                <h4 class="history-head">
+                    <span class="glyphicon glyphicon-hourglass"></span>
+                    browsing history
+                </h4>
                 <ul class="question-history"th:if="${session.user!=null}">
                     <li th:each="history : ${questionHistory}">
                         <a th:href="@{'/question/'+ ${history.id}}" th:text="${history.title}"></a>
@@ -169,10 +179,13 @@
                 </ul>
             </div>
 
-            <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12 page-right-line">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <span class="glyphicon glyphicon-grain"></span>
-                <h4>relevant issues</h4>
+
+                <h4>
+                    <span class="glyphicon glyphicon-grain"></span>
+                    relevant issues
+                </h4>
                 <ul class="question-related">
                     <li th:each="related : ${relatedQuestions}">
                         <a th:href="@{'/question/'+ ${related.id}}" th:text="${related.title}"></a>
@@ -180,6 +193,7 @@
                     </li>
                 </ul>
             </div>
+            <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12 page-right-line">
 
         </div>
     </div>

@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/css/community.css">
-    <link rel="stylesheet" href="//at.alicdn.com/t/font_1758124_52775yunyg.css">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_1758372_iu83tgg8gw.css">
     <script src="/js/jquery-3.4.1.min.js"></script>
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
     <script src="/js/community.js" type="application/javascript"></script>
@@ -17,7 +17,7 @@
     <div class="row">
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12 page-left">
             <div class="AliLogo-box">
-                <i class="iconfont icon-heike navbar_ali_icon"></i>
+                <i class="iconfont icon-qianlan-heike navbar_ali_icon"></i>
                 <h2 class="profile-headline"><span th:text="${sectionName}"></span></h2>
             </div>
             <hr>
@@ -34,18 +34,22 @@
                         <h4 class="media-heading">
                             <a th:href="@{'/question/'+ ${question.id}}" th:text="${question.title}"></a>
                         </h4>
-                        <span class="text-desc">
-                        <span th:text="${question.commentCount}"></span> replies • <span
-                                th:text="${question.viewCount}"></span> view • <span
-                                th:text="${#dates.format(question.gmtCreate,'yyyy-MM-dd HH:mm')}"></span> •
+                        <div>
+                            <span class="text-desc">
+                                <span th:text="${question.commentCount}"></span> replies • <span
+                                       th:text="${question.viewCount}"></span> view • <span
+                                       th:text="${#dates.format(question.gmtCreate,'yyyy-MM-dd HH:mm')}"></span> •
+                         </span>
+                        </div>
+                        <button type="button" class="btn btn-danger btn-delete" onclick="deleteQuestion(this)"
+                                th:data-id="${question.id}">delete
+                        </button>
                         <a th:href="@{'/publish/'+${question.id}}" class="community-menu"
                            th:if="${session.user != null && session.user.id == question.creator}">
-                        <span class="glyphicon glyphicon-pencil" aria-hidden="true">edit</span>
-
+                            <span class="glyphicon glyphicon-pencil" aria-hidden="true">edit</span>
                         </a>
 
-                        </span>
-                        <button type="button" class="btn btn-danger btn-delete" onclick="deleteQuestion(this)"th:data-id="${question.id}" >delete</button>
+
                     </div>
                 </div>
             </div>

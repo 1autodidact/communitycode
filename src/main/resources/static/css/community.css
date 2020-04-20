@@ -46,8 +46,9 @@ media-body.media-heading {
 
 .community-menu {
     color: #999;
-    font-size: 13px;
+    font-size: 16px;
     margin-bottom: 15px;
+    margin-left: 26px;
 }
 
 .publish-tag-tab {
@@ -58,8 +59,19 @@ media-body.media-heading {
 
 .publish-tag-tab .label-info {
     white-space: normal;
-    margin: 5px 5px;
     display: inline-block;
+    background-color: #E91E63;
+    font-size: 13px;
+    margin-right: 10px;
+    margin-top: 8px;
+
+}
+.label-info {
+    background-color: #E91E63;
+    font-size: 11px;
+    margin-right: 10px;
+    margin-top: 8px;
+
 }
 
 .comment {
@@ -73,6 +85,7 @@ media-body.media-heading {
 
 .comment-sp {
     margin-top: 0;
+
 }
 
 .menu {
@@ -101,6 +114,7 @@ media-body.media-heading {
 
 .question-tag {
     margin-right: 5px;
+    background-color: #E91E63;
 }
 
 .question-egg {
@@ -124,7 +138,7 @@ media-body.media-heading {
 }
 
 .answerNum {
-    margin-left: 10px;
+    margin-left: 1px;
 }
 
 .description_sty {
@@ -184,6 +198,7 @@ media-body.media-heading {
 }
 .btn-delete {
     margin-left: 1px;
+    font-size: 1px;
 }
 .Log-style {
     margin-top: 15px;
@@ -222,6 +237,12 @@ media-body.media-heading {
     text-decoration: none;
   }
 
+.question-AliLogo .question_ali_icon {
+    font-size: 25px;
+}
+.question-AliLogo {
+    margin-top: 11px;
+}
 .page-left {
     border-right: 1px solid #D2D2D2;
 }
@@ -233,4 +254,8 @@ media-body.media-heading {
     background-color: #fff;
     border: 1px solid #b3b3b3;
     border-radius: 3px;
+}
+
+.page-right-line {
+    width: 88%;
 }
