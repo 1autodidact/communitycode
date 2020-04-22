@@ -66,15 +66,33 @@
 
   <select id="selectBySearch" parameterType="com.wenmrong.community1.community.dto.QuestionQueryDTO" resultMap="BaseResultMap">
     select * from QUESTION
-  <where>
-    <if test="search != null and search != ''">
-      and title regexp #{search}
+    <where>
+      <if test="search != null and search != ''">
+        and title regexp #{search}
+      </if>
+      <if test="tag != null and tag != ''">
+        and tag regexp #{tag}
+      </if>
+      <if test="sort != null and sort != '' and sort == 'no'">
+        and comment_count = 0
+      </if>
+      <if test="time != null and time != ''">
+        and gmt_create > #{time}
+      </if>
+    </where>
+    <if test="sort == null or sort == ''">
+      order by gmt_create desc
     </if>
-    <if test="tag != null and tag != ''">
-      and tag regexp #{tag}
+    <if test="sort != null and sort != '' and sort == 'new'">
+      order by gmt_create desc
     </if>
-  </where>
-  order by gmt_create desc limit #{page},#{size}
+    <if test="sort != null and sort != '' and sort == 'no'">
+      order by gmt_create desc
+    </if>
+    <if test="sort != null and sort != '' and (sort == 'hot' || sort == 'hot7' || sort == 'hot30')">
+      order by comment_count desc,view_count desc
+    </if>
+    limit #{page},#{size}
   </select>
 
 

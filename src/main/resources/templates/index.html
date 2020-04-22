@@ -2,12 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Community</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/css/community.css">
     <link rel="stylesheet" href="//at.alicdn.com/t/font_1758372_iu83tgg8gw.css">
     <script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="/js/moment.min.js"></script>
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
 
 </head>
@@ -23,11 +24,29 @@
 </script>
 <body>
 <div th:insert="~{navigation :: nav}"></div>
-<div class="container-fluid main" >
+<div class="container-fluid main">
     <div class="row">
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12 page-left">
-            <h2 class="headline"> <i class="iconfont icon-wenti index_ali_icon"></i></span>Explore</h2>
-            <hr>
+            <h2 class="headline"><i class="iconfont icon-wenti index_ali_icon"></i></span>Explore</h2>
+            <ul class="nav nav-tabs hot_title">
+                <li role="presentation" th:class="${sort == 'new' || sort == null ? 'active':''}">
+                    <a th:href="@{/(sort='new')}">New</a>
+                </li>
+                <li role="presentation" th:class="${sort == 'hot30' ? 'active':''}">
+                    <a th:href="@{/(sort='hot30')}">Hot_30</a>
+                </li>
+                <li role="presentation" th:class="${sort == 'hot7' ? 'active':''}">
+                    <a th:href="@{/(sort='hot7')}">Hot_7</a>
+                </li>
+                <li role="presentation" th:class="${sort == 'hot' ? 'active':''}">
+                    <a th:href="@{/(sort='hot')}">MostHot</a>
+                </li>
+                <li role="presentation" th:class="${sort == 'no' ? 'active':''}">
+                    <a th:href="@{/(sort='no')}" class="red">Clean_0_Comment</a>
+                </li>
+            </ul>
+
+
             <div class="media" th:each="question : ${pagination.data}">
                 <div class="media-left">
                     <a href="#">
@@ -44,7 +63,9 @@
                           <span class="label label-info" th:text="${tag}"></span>
                     </span>
                     <!--<span th:text="${#strings.abbreviate(question.description,10)}"></span> <br>-->
-                    <span class="question_info"> <span th:text="${question.commentCount}"></span> replies •<span th:text="${question.viewCount}"></span> view • <span th:text="${#dates.format(question.gmtCreate,'yyyy-MM-dd')}"></span></span>
+                    <span class="question_info"> <span th:text="${question.commentCount}"></span> replies •<span
+                            th:text="${question.viewCount}"></span> view • <span
+                            th:text="${#dates.format(question.gmtCreate,'yyyy-MM-dd')}"></span></span>
 
                 </div>
             </div>
@@ -56,12 +77,13 @@
                         </a>
                     </li>
                     <li th:if="${pagination.showPrevious}">
-                        <a th:href="@{/(page=${pagination.page - 1},search=${search},tag=${tag})}" aria-label="Previous">
+                        <a th:href="@{/(page=${pagination.page - 1},search=${search},tag=${tag})}"
+                           aria-label="Previous">
                             <span aria-hidden="true">&lt;</span>
                         </a>
                     </li>
 
-                    <li th:each="page : ${pagination.pages}" th:class ="${pagination.page == page}? 'active': ''">
+                    <li th:each="page : ${pagination.pages}" th:class="${pagination.page == page}? 'active': ''">
                         <a th:href="@{/(page = ${page},search=${search},tag=${tag})}" th:text="${page}">
                         </a>
                     </li>
@@ -83,7 +105,7 @@
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <h4> Easter Egg </h4>
-                <img class="img-thumbnail question-egg" src="/images/iceman.png" >
+                <img class="img-thumbnail question-egg" src="/images/iceman.png">
 
             </div>
             <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12 page-right-line">
@@ -91,7 +113,7 @@
 
                 <h4>
                     <i class="iconfont icon-LOL-xiaolong tag_ali_icon"></i>
-<!--                    <span class="glyphicon glyphicon-grain"></span>-->
+                    <!--                    <span class="glyphicon glyphicon-grain"></span>-->
                     Hot tags
                 </h4>
                 <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12 hot-tag-list">
@@ -104,8 +126,6 @@
                     </span>
 
                 </div>
-
-
 
 
             </div>

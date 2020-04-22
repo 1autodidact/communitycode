@@ -3,6 +3,7 @@ package com.wenmrong.community1.community.service;
 import com.wenmrong.community1.community.dto.PaginationDTO;
 import com.wenmrong.community1.community.dto.QuestionDTO;
 import com.wenmrong.community1.community.dto.QuestionQueryDTO;
+import com.wenmrong.community1.community.enums.SortEnum;
 import com.wenmrong.community1.community.exception.CustomizeErrorCode;
 import com.wenmrong.community1.community.exception.CustomizeException;
 import com.wenmrong.community1.community.mapper.QuestionExtMapper;
@@ -34,7 +35,7 @@ public class QuestionService {
     @Autowired
     private QuestionService questionService;
 
-    public PaginationDTO list(String search, String tag, Integer page, Integer size) {
+    public PaginationDTO list(String search, String tag, Integer page, Integer size, String sort) {
         if (!StringUtils.isNullOrEmpty(search)) {
             String[] tags = StringUtils.arraySplit(search, ' ', true);
             search = Arrays.stream(tags).collect(Collectors.joining("|"));
@@ -45,6 +46,20 @@ public class QuestionService {
         QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
         questionQueryDTO.setSearch(search);
         questionQueryDTO.setTag(tag);
+
+        for (SortEnum sortEnum : SortEnum.values()) {
+            if (sortEnum.name().toLowerCase().equals(sort)) {
+                questionQueryDTO.setSort(sort);
+
+                if (sortEnum == SortEnum.HOT7) {
+                    questionQueryDTO.setTime(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 7);
+                }
+                if (sortEnum == SortEnum.HOT30) {
+                    questionQueryDTO.setTime(System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 30);
+                }
+                break;
+            }
+        }
         Integer totalCount = questionExtMapper.countBySearch(questionQueryDTO);
         Integer totalPage;
 
