@@ -1,0 +1,1 @@
+alter table user modify column avatar_url varchar(300);

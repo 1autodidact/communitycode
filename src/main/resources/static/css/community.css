@@ -28,8 +28,8 @@ body {
 }
 
 .media-object {
-    width: 55px;
-    height: 55px;
+    width: 43px;
+    height: 43px;
 }
 
 .media-body {
@@ -304,4 +304,39 @@ media-body.media-heading {
 
 .question_info {
     float: right;
+}
+
+.person {
+    background-color: #eee;
+}
+
+.person-info-image {
+    background-image: url("http://cdn.wenmrong.com/black.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100%;
+    height: 400px;
+}
+
+.person-info-main {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.person-info {
+    display: flex;
+    margin: 0 20px 24px;
+}
+
+.person-avatar {
+    margin-top: -25px;
+}
+
+.person-avatar img {
+    width: 160px;
+    height: 160px;
+}
+
+.person-content {
+    margin: 10px 30px;
 }
