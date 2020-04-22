@@ -69,7 +69,7 @@ media-body.media-heading {
 .label-info {
     background-color: #E91E63;
     font-size: 11px;
-    margin-right: 10px;
+    margin-right: 1px;
     margin-top: 8px;
 
 }
@@ -261,4 +261,18 @@ media-body.media-heading {
 }
 .page-left .index_ali_icon{
     font-size: 22px;
+}
+
+.hot_tag .tag_ali_icon {
+    font-size: 32px;
+}
+.hot-tag-list {
+    word-wrap: break-word;
+}
+.hot_tag_style {
+    color: white;
+
+}
+.hot_tag_list {
+    margin-left: -8px;
 }

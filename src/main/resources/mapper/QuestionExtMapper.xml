@@ -41,13 +41,25 @@
   </update>
 
   <select id="selectRelated" parameterType="com.wenmrong.community1.community.model.Question" resultMap="BaseResultMap">
-    select * from QUESTION where id != #{id} and tag regexp #{tag}
+    select * from QUESTION
+    <where>
+      <if test="id != null">
+        and id != #{id}
+      </if>
+      <if test="tag != null and tag != ''">
+        and tag regexp #{tag}
+      </if>
+    </where>
+    order by gmt_create desc limit 20
   </select>
   <select id="countBySearch" parameterType="com.wenmrong.community1.community.dto.QuestionQueryDTO" resultType="java.lang.Integer">
     select count(*) from QUESTION
   <where>
-    <if test="search != null">
+    <if test="search != null and search != ''">
       and title regexp #{search}
+    </if>
+    <if test="tag != null and tag != ''">
+      and tag regexp #{tag}
     </if>
   </where>
   </select>
@@ -55,8 +67,11 @@
   <select id="selectBySearch" parameterType="com.wenmrong.community1.community.dto.QuestionQueryDTO" resultMap="BaseResultMap">
     select * from QUESTION
   <where>
-    <if test="search != null">
+    <if test="search != null and search != ''">
       and title regexp #{search}
+    </if>
+    <if test="tag != null and tag != ''">
+      and tag regexp #{tag}
     </if>
   </where>
   order by gmt_create desc limit #{page},#{size}
