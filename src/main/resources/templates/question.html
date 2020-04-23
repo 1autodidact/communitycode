@@ -170,13 +170,17 @@
                     <span class="glyphicon glyphicon-hourglass"></span>
                     browsing history
                 </h4>
-                <ul class="question-history" th:if="${session.user!=null}">
-                    <li th:each="history : ${questionHistory}">
-                        <a th:href="@{'/question/'+ ${history.id}}" th:text="${history.title}"></a>
+                <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12 history_tag_list" th:if="${session.user!=null}">
+                    <span class="label history_label_info history_tag_list" th:each="history : ${questionHistory}">
+                         <a th:href="@{'/question/'+ ${history.id}}" >
+                          <span class="glyphicon glyphicon-tags history_tag_style"></span>
+                          <span class="label history_label_info" th:text="${history.title}"></span>
+                         </a>
+                    </span>
+                </div>
 
-                    </li>
 
-                </ul>
+
             </div>
 
             <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12 page-right-line">
@@ -186,12 +190,21 @@
                     <span class="glyphicon glyphicon-grain"></span>
                     relevant issues
                 </h4>
-                <ul class="question-related">
-                    <li th:each="related : ${relatedQuestions}">
-                        <a th:href="@{'/question/'+ ${related.id}}" th:text="${related.title}"></a>
 
-                    </li>
-                </ul>
+                <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12 history_tag_list">
+                    <span class="label history_label_info history_tag_list" th:each="related : ${relatedQuestions}">
+                          <a th:href="@{'/question/'+ ${related.id}}" >
+                          <span class="glyphicon glyphicon-tags history_tag_style"></span>
+                          <span class="label history_label_info" th:text="${related.title}"></span>
+                         </a>
+                    </span>
+                </div>
+<!--                <ul class="question-related">-->
+<!--                    <li th:each="related : ${relatedQuestions}">-->
+<!--                        <a th:href="@{'/question/'+ ${related.id}}" th:text="${related.title}"></a>-->
+
+<!--                    </li>-->
+<!--                </ul>-->
             </div>
             <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12 page-right-line">
 

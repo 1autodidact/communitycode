@@ -30,19 +30,31 @@
             <h2 class="headline"><i class="iconfont icon-wenti index_ali_icon"></i></span>Explore</h2>
             <ul class="nav nav-tabs hot_title">
                 <li role="presentation" th:class="${sort == 'new' || sort == null ? 'active':''}">
-                    <a th:href="@{/(sort='new')}">New</a>
+                    <a th:href="@{/(sort='new')}">
+                        <span class="glyphicon glyphicon-fire ">New</span>
+                    </a>
                 </li>
                 <li role="presentation" th:class="${sort == 'hot30' ? 'active':''}">
-                    <a th:href="@{/(sort='hot30')}">Hot_30</a>
+                    <a th:href="@{/(sort='hot30')}">
+                        <span class="glyphicon glyphicon-fire hot_question_logo">Hot_30</span>
+                    </a>
                 </li>
                 <li role="presentation" th:class="${sort == 'hot7' ? 'active':''}">
-                    <a th:href="@{/(sort='hot7')}">Hot_7</a>
+                    <a th:href="@{/(sort='hot7')}">
+                        <span class="glyphicon glyphicon-fire hot_question_logo">Hot_7</span>
+                    </a>
+
                 </li>
                 <li role="presentation" th:class="${sort == 'hot' ? 'active':''}">
-                    <a th:href="@{/(sort='hot')}">MostHot</a>
+                    <a th:href="@{/(sort='hot')}">
+                        <span class="glyphicon glyphicon-fire hot_question_logo">MostHot</span>
+                    </a>
+
                 </li>
                 <li role="presentation" th:class="${sort == 'no' ? 'active':''}">
-                    <a th:href="@{/(sort='no')}" class="red">Clean_0_Comment</a>
+                    <a th:href="@{/(sort='no')}">
+                        <span class="glyphicon glyphicon-fire">Clean_0_Comment</span>
+                    </a>
                 </li>
             </ul>
 

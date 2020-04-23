@@ -291,16 +291,31 @@ media-body.media-heading {
 
 .hot-tag-list {
     word-wrap: break-word;
+    margin-left: -8px;
 }
 
 .hot_tag_style {
     color: white;
 
 }
+.history_label_info {
+    background-color: black;
+    font-size: 11px;
+    margin-right: 1px;
+    margin-top: 8px;
+}
 
-.hot_tag_list {
+.history_tag_list {
+    word-wrap: break-word;
     margin-left: -8px;
 }
+
+.history_tag_style {
+    color: white;
+
+}
+
+
 
 .question_info {
     float: right;
@@ -339,4 +354,10 @@ media-body.media-heading {
 
 .person-content {
     margin: 10px 30px;
+}
+.profile_form {
+    margin-left: 11px;
+}
+.hot_question_logo {
+    color: #E91E63;
 }

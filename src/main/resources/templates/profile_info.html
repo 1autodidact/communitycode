@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="//at.alicdn.com/t/font_1758372_iu83tgg8gw.css">
     <script src="/js/jquery-3.4.1.min.js"></script>
     <script src="/js/moment.min.js"></script>
+    <script src="/js/community.js" type="application/javascript"></script>
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
 </head>
 <body>
@@ -31,12 +32,12 @@
                     </div>
                 </div>
             </div>
-            <form action="/modifyProfile" enctype="multipart/form-data" method="post">
+            <form action="/modifyProfile" class="profile_form" enctype="multipart/form-data" onsubmit="return isImage()" method="post">
                 <div class="form-group">
-                    <label for="exampleInputFile">File upload</label>
+                    <label for="exampleInputFile">Modify Head Portrait</label>
                     <input type="file" name="head_portrait" id="exampleInputFile">
                 </div>
-                <button type="submit" class="btn btn-default">Submit</button>
+                <button type="submit" class="btn btn-default">Modify</button>
             </form>
         </div>
     </div>

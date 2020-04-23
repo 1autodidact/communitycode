@@ -52,7 +52,7 @@ public class RegisterController {
             user.setName(email);
             user.setPassword(password);
             user.setAccountId(email);
-            user.setAvatarUrl("http://cdn.wenmrong.com/heibai.png");
+            user.setAvatarUrl("http://cdn.wenmrong.com/grey.png");
             userService.createOrUpdate(user);
             model.addAttribute("signupSuccess", "success");
             return "register";
