@@ -32,6 +32,7 @@ public class LoginController {
     public String Login(HttpServletRequest request, HttpServletResponse response, Model model) {
         String account = request.getParameter("email");
         String password = request.getParameter("password");
+        String rememberFlag = request.getParameter("rememberFlag");
         UserExample userExample = new UserExample();
         userExample.createCriteria()
                 .andAccountIdEqualTo(account)
@@ -45,7 +46,9 @@ public class LoginController {
             userMapper.updateByPrimaryKey(user);
             Cookie cookie = new Cookie("token", token);
             cookie.setPath("/");
-            cookie.setMaxAge(60 * 60 * 24);
+            if (rememberFlag != null) {
+                cookie.setMaxAge(60 * 60 * 24);
+            }
             response.addCookie(cookie);
             return "redirect:/";
         } else {
