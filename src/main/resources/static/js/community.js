@@ -231,3 +231,37 @@ function isImage() {
     }
 
 }
+
+function star(e) {
+    let starId = e.getAttribute("id");
+    let starSpan = $("h4.question-AliLogo span.glyphicon-star");
+    starSpan.addClass("active");
+    $.ajax({
+        type: "post",
+        url: "/star",
+        data: starId,
+        dataType: "application/json",
+        success: function (data) {
+            if (data.code == 200) {
+                alert(data.code);
+            }
+        },
+        error: function (data) {
+           alert("Already Stared")
+        }
+    });
+
+}
+function unstar(e) {
+    let id = e.getAttribute("data-id");
+    alert(id);
+    $.getJSON("/unstar/" + id,function (data) {
+        if (data.code === 200) {
+            alert("success");
+            window.location.reload();
+        } else {
+            alert(data.message);
+        }
+    });
+
+}

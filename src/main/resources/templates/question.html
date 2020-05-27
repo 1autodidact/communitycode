@@ -71,6 +71,7 @@
                     <span class="answerNum" th:text="${question.commentCount}"></span> replies
                 </h4>
                 <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12 comment-sp">
+
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 comments" th:each="comment : ${comments}">
                     <div class="media">
                         <div class="media-left">
@@ -116,6 +117,15 @@
 
                 </div>
             </div>
+            <!--收藏-->
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 starDiv">
+                <h4 class="question-AliLogo">
+                    <span th:id="${question.id}" th:class="${starFlag == true?'glyphicon glyphicon-star active':'glyphicon glyphicon-star'}" onclick="star(this)"></span>
+                    Star
+                </h4>
+                <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12 comment-sp">
+            </div>
+
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <h4 class="question-AliLogo">
                     <i class="iconfont icon-tijiao question_ali_icon"></i>
@@ -172,7 +182,7 @@
                 </h4>
                 <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12 history_tag_list" th:if="${session.user!=null}">
                     <span class="label history_label_info history_tag_list" th:each="history : ${questionHistory}">
-                         <a th:href="@{'/question/'+ ${history.id}}" >
+                         <a th:if="${history!=null}" th:href="@{'/question/'+ ${history.id}}" >
                           <span class="glyphicon glyphicon-tags history_tag_style"></span>
                           <span class="label history_label_info" th:text="${history.title}"></span>
                          </a>

@@ -66,6 +66,24 @@
                     </div>
                 </div>
             </div>
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:if="${section == 'star'}">
+                <div class="media" th:each="star : ${pagination.data}" >
+                    <div class="media-body">
+<!--                        <p class="media-heading" th:each="author : ${authors}">-->
+                            <span th:text="${'commentCount:'+star.commentCount}"></span>
+                            <span th:text="${'likeCount:'+star.likeCount}"></span>
+                            <a th:href="@{'/question/'+ ${star.id}}"
+                               th:text="${'title:'+star.title}">
+                            </a>
+                            <button type="button" class="btn btn-danger btn-delete" onclick="unstar(this)"
+                                th:data-id="${star.id}">unstar
+                            </button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <nav aria-label="Page navigation">
                     <ul class="pagination">
@@ -108,6 +126,8 @@
                     newly response
                     <span class="badge" th:text="${session.unreadCount}"></span>
                 </a>
+                <a href="/profile/star"
+                   th:class="${section == 'star'}? 'active list-group-item' : 'list-group-item'">my star</a>
             </div>
         </div>
     </div>

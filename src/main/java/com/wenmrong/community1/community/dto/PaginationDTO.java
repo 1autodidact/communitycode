@@ -26,7 +26,7 @@ public class PaginationDTO<T> {
             }
             if (page + i <= totalPage) {
                 pages.add(page + i);
-            }
+        }
 
 
         }

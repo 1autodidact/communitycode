@@ -361,3 +361,14 @@ media-body.media-heading {
 .hot_question_logo {
     color: #E91E63;
 }
+.starDiv .glyphicon-star {
+    font-size: 25px;
+    cursor: pointer;
+}
+
+.starDiv .active {
+    color: #E91E63;
+}
+.starDiv .question-AliLogo .active {
+    color: #E91E63;
+}
