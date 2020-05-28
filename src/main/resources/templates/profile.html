@@ -70,7 +70,6 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:if="${section == 'star'}">
                 <div class="media" th:each="star : ${pagination.data}" >
                     <div class="media-body">
-<!--                        <p class="media-heading" th:each="author : ${authors}">-->
                             <span th:text="${'commentCount:'+star.commentCount}"></span>
                             <span th:text="${'likeCount:'+star.likeCount}"></span>
                             <a th:href="@{'/question/'+ ${star.id}}"
@@ -79,7 +78,6 @@
                             <button type="button" class="btn btn-danger btn-delete" onclick="unstar(this)"
                                 th:data-id="${star.id}">unstar
                             </button>
-                        </p>
                     </div>
                 </div>
             </div>

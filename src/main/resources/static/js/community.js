@@ -254,7 +254,6 @@ function star(e) {
 }
 function unstar(e) {
     let id = e.getAttribute("data-id");
-    alert(id);
     $.getJSON("/unstar/" + id,function (data) {
         if (data.code === 200) {
             alert("success");

@@ -45,13 +45,16 @@ public class QuestionController {
         cookie.setMaxAge(24*60*60);
         cookie.setPath("/");
         response.addCookie(cookie);
-        String star = user.getStar();
-        if (star != null && !star.equals("")) {
-            List<String> starList = Arrays.asList(star.substring(0, star.length() - 1).split("="));
-            if (starList.contains(Long.toString(id))) {
-                model.addAttribute("starFlag",true);
+        if (user != null) {
+            String star = user.getStar();
+            if (star != null && !star.equals("")) {
+                List<String> starList = Arrays.asList(star.substring(0, star.length() - 1).split("="));
+                if (starList.contains(Long.toString(id))) {
+                    model.addAttribute("starFlag",true);
+                }
             }
         }
+
         model.addAttribute("question", questionDTO);
         model.addAttribute("comments", comments);
         model.addAttribute("relatedQuestions", relatedQuestions);
