@@ -48,6 +48,7 @@ public class DeleteController {
         //避免java.util.ConcurrentModificationException
         Iterator<String> starIterator = starListByArrayList.iterator();
         List<Question> questions = questionMapper.selectByExample(new QuestionExample());
+        //避免因为已经删除的问题出现在收藏文章中
         while (starIterator.hasNext()) {
             String next = starIterator.next();
             for (Question question : questions) {
