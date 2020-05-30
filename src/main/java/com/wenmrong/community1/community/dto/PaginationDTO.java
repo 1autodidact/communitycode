@@ -20,6 +20,7 @@ public class PaginationDTO<T> {
         this.totalPage = totalPage;
         this.page = page;
         pages.add(page);
+        // 判断page当前页之前是否能显示3页，page之后是否能显示3页，最多可以显示7页
         for (int i = 1; i <= 3; i++) {
             if (page - i > 0) {
                 pages.add(0, page - i);

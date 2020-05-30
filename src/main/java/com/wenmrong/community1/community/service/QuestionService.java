@@ -152,9 +152,9 @@ public class QuestionService {
         }
         User user = userMapper.selectByPrimaryKey(question.getCreator());
         QuestionDTO questionDTO = new QuestionDTO();
+        //把question的属性全部复制到questionDTO
         BeanUtils.copyProperties(question, questionDTO);
         questionDTO.setUser(user);
-        questionDTO.setViewCount(question.getViewCount());
         return questionDTO;
     }
 

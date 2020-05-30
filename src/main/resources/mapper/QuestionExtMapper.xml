@@ -61,6 +61,12 @@
     <if test="tag != null and tag != ''">
       and tag regexp #{tag}
     </if>
+    <if test="sort != null and sort != '' and sort == 'no'">
+      and comment_count = 0
+    </if>
+    <if test="sort != null and sort != '' and (sort == 'hot7' || sort == 'hot30')">
+      and gmt_create > #{time}
+    </if>
   </where>
   </select>
 
