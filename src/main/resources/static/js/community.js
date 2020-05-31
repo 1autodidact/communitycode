@@ -27,7 +27,17 @@ function comment2target(targetId, type, content) {
                 if (response.code == 2003) {
                     var isAccepted = confirm(response.message);
                     if (isAccepted) {
-                        window.location.replace("/login")
+                        debugger;
+                        //获得当前目录
+                        var curPath = window.document.location.href;
+                        //获取主机地址之后的目录，如： test/test.jsp
+                        var pathName = window.document.location.pathname;
+                        //计算目录名字的索引位置
+                        var pos = curPath.indexOf(pathName);
+                        //获取主机地址，如： http://localhost:8088
+                        var localhostPath = curPath.substring(0, pos);
+                        //在原来的窗口中打开新的窗口
+                        window.open(localhostPath + "/login");
                         window.localStorage.setItem("closable","true");
                     }
 
@@ -123,8 +133,10 @@ function collapseComments(e){
 
 }
 function selectTag(e) {
-    var value = e.getAttribute("data-tag")
+    var value = e.getAttribute("data-tag");
+    //获取已经存在的标签
     var previous = $("#tag").val();
+    //判断已经存在的标签是否包含value
     if (previous.indexOf(value) == -1){
         if (previous) {
             $("#tag").val(previous + ',' + value);

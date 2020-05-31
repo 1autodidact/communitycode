@@ -69,18 +69,12 @@ public class PublishController {
             return "publish";
         }
         User user = (User) request.getSession().getAttribute("user");
-
-
-        if (user == null) {
-            model.addAttribute("error", "用户未登录");
-            System.out.println("0000");
-            return "publish";
-        }
         Question question = new Question();
         question.setTitle(title);
         question.setDescription(description);
         question.setTag(tag);
         question.setCreator(user.getId());
+        //通过input的hidden隐藏了获取id的值 表单提交获取id值判断是编辑还是新键
         question.setId(id);
         questionService.createOrUpdate(question);
         return "redirect:/";
