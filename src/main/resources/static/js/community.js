@@ -79,8 +79,11 @@ function collapseComments(e){
         e.classList.remove("active");
     } else {
         var subCommentContainer = $("#comment-"+id);
+        //判断二级评论是否已经拉去了数据，subCommentContainer默认只有一个子标签，大于一个子标签证明已经拉去了数据
         if (subCommentContainer.children().length != 1) {
+            //展开评论
             comments.addClass("in");
+            //标记评论
             e.setAttribute("data-collapse","in");
             e.classList.add("active");
 
