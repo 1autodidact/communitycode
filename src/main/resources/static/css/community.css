@@ -70,6 +70,7 @@ media-body.media-heading {
 }
 
 .label-info {
+    display: inline-block;
     background-color: #E91E63;
     font-size: 11px;
     margin-right: 1px;
@@ -207,7 +208,7 @@ media-body.media-heading {
 
 .btn-delete {
     margin-left: 1px;
-    font-size: 1px;
+    font-size: 12px;
 }
 
 .Log-style {
@@ -295,6 +296,7 @@ media-body.media-heading {
 }
 
 .hot_tag_style {
+    display: inline-block;
     color: white;
 
 }
@@ -306,6 +308,7 @@ media-body.media-heading {
 }
 
 .history_tag_list {
+    display: inline-block;
     word-wrap: break-word;
     margin-left: -8px;
 }
