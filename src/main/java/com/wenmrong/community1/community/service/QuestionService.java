@@ -12,8 +12,8 @@ import com.wenmrong.community1.community.mapper.UserMapper;
 import com.wenmrong.community1.community.model.Question;
 import com.wenmrong.community1.community.model.QuestionExample;
 import com.wenmrong.community1.community.model.User;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
-import org.h2.util.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,8 +36,8 @@ public class QuestionService {
     private QuestionService questionService;
 
     public PaginationDTO list(String search, String tag, Integer page, Integer size, String sort) {
-        if (!StringUtils.isNullOrEmpty(search)) {
-            String[] tags = StringUtils.arraySplit(search, ' ', true);
+        if (!StringUtils.isNotBlank(search)) {
+            String[] tags = search.split(",");
             search = Arrays.stream(tags).collect(Collectors.joining("|"));
         }
 
@@ -195,10 +195,10 @@ public class QuestionService {
     }
 
     public List<QuestionDTO> selectRelated(QuestionDTO queryDTO) {
-        if (StringUtils.isNullOrEmpty(queryDTO.getTag())) {
+        if (StringUtils.isNotBlank(queryDTO.getTag())) {
             return new ArrayList<>();
         }
-        String[] tags = StringUtils.arraySplit(queryDTO.getTag(), ',', true);
+        String[] tags = queryDTO.getTag().split(",");
         String regexpTag = Arrays.stream(tags).collect(Collectors.joining("|"));
         Question question = new Question();
         question.setId(queryDTO.getId());

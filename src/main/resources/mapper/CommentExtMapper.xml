@@ -18,7 +18,7 @@
     <result column="CONTENT_COUNT" jdbcType="INTEGER" property="contentCount" />
   </resultMap>
   <update id="incCommentCount" parameterType="com.wenmrong.community1.community.model.Comment">
-  update COMMENT
+  update comment
   set
   COMMENT_COUNT = COMMENT_COUNT + #{commentCount,jdbcType=INTEGER}
   where id = #{id}

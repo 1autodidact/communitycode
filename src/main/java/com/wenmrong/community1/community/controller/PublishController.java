@@ -5,7 +5,7 @@ import com.wenmrong.community1.community.dto.QuestionDTO;
 import com.wenmrong.community1.community.model.Question;
 import com.wenmrong.community1.community.model.User;
 import com.wenmrong.community1.community.service.QuestionService;
-import org.h2.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -64,7 +64,7 @@ public class PublishController {
             return "publish";
         }
         String invalid = TagCache.filterInvalid(tag);
-        if (!StringUtils.isNullOrEmpty(invalid)) {
+        if (!StringUtils.isNotBlank(invalid)) {
             model.addAttribute("error", "tag is unreasonable" + invalid);
             return "publish";
         }

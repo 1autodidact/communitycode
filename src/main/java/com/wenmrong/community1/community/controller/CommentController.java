@@ -8,7 +8,7 @@ import com.wenmrong.community1.community.exception.CustomizeErrorCode;
 import com.wenmrong.community1.community.model.Comment;
 import com.wenmrong.community1.community.model.User;
 import com.wenmrong.community1.community.service.CommentService;
-import org.h2.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +30,7 @@ public class CommentController {
             return ResultDTO.errorOf(CustomizeErrorCode.NO_LOGIN);
 
         }
-        if (commentCreateDTO == null || StringUtils.isNullOrEmpty(commentCreateDTO.getContent())) {
+        if (commentCreateDTO == null || StringUtils.isNotBlank(commentCreateDTO.getContent())) {
             return ResultDTO.errorOf(CustomizeErrorCode.COMMENT_IS_EMPTY);
         }
 

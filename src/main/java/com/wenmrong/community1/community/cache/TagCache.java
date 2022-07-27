@@ -1,7 +1,7 @@
 package com.wenmrong.community1.community.cache;
 
+import com.aliyun.oss.common.utils.StringUtils;
 import com.wenmrong.community1.community.dto.TagDTO;
-import org.h2.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,7 +40,7 @@ public class TagCache {
 
     }
     public static String filterInvalid(String tags) {
-        String[] split = StringUtils.arraySplit(tags,',',true);
+        String[] split = tags.split(",");
         List<TagDTO> tagDTOS = get();
 
         List<String> tagList= tagDTOS.stream().flatMap(tag -> tag.getTags().stream()).collect(Collectors.toList());

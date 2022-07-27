@@ -1,27 +1,19 @@
 package com.wenmrong.community1.community.schedule;
 
-import java.text.SimpleDateFormat;
+import com.wenmrong.community1.community.cache.HotTagCache;
+import com.wenmrong.community1.community.mapper.QuestionMapper;
+import com.wenmrong.community1.community.model.Question;
+import com.wenmrong.community1.community.model.QuestionExample;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.session.RowBounds;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-
-import com.wenmrong.community1.community.cache.HotTagCache;
-import com.wenmrong.community1.community.cache.TagCache;
-import com.wenmrong.community1.community.mapper.CommentMapper;
-import com.wenmrong.community1.community.mapper.QuestionMapper;
-import com.wenmrong.community1.community.mapper.UserMapper;
-import com.wenmrong.community1.community.model.Question;
-import com.wenmrong.community1.community.model.QuestionExample;
-import com.wenmrong.community1.community.model.UserExample;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.session.RowBounds;
-import org.h2.util.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
@@ -40,7 +32,7 @@ public class ScheduledTasks {
 		while (offset == 0 || questions.size() == limit) {
 			questions = questionMapper.selectByExampleWithRowbounds(new QuestionExample(),new RowBounds(offset,limit));
 			for (Question question : questions) {
-				String[] tags = StringUtils.arraySplit(question.getTag(), ',', true);
+				String[] tags = question.getTag().split(",");
 				for (String tag : tags) {
 					Integer priority = priorities.get(tag);
 					if (priority != null){
