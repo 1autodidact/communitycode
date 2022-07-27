@@ -4,7 +4,7 @@
 - 采用Cookie存储验证码、浏览历史信息，以及Session存储用户数据。
 - 采用拦截器调用Session存储用户信息和消息未读数的更新。
 - 基于jQuery和ajax实现和服务端异步传输数据来发送和校验验证码
-- 基于MyBatis实现对数据库的增删改查。
+- 基于MyBatis实现对数据库的增删改查(已改成MySQL)。
 - 基于BootStrap、CSS优化页面
 - 调用阿里云、QQ接口以及Github接口实现第三方登录和编写Markdown和上传图片
 - 采用Git将项目上传到Github
@@ -14,19 +14,16 @@
 1. 安装必备工具  
 JDK，Maven
 2. 克隆代码到本地  
-3. 运行命令创建数据库脚本
-```sh
-mvn flyway:migrate
 ```
-4. 运行打包命令
+3. 运行打包命令
 ```sh
 mvn package
 ```
-5. 运行项目  
+4. 运行项目  
 ```sh
 java -jar target/community-0.0.1-SNAPSHOT.jar
 ```
-6. 访问项目
+5. 访问项目
 ```
 http://localhost:8887
 ```
@@ -59,21 +56,5 @@ http://localhost:8887
 [Live Reload](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei/related)  
 [Postman](https://chrome.google.com/webstore/detail/coohjcphdfgbiolnekdpbcijmhambjff)
 
-## 脚本
-```sql
-CREATE TABLE USER
-(
-    ID int AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    ACCOUNT_ID VARCHAR(100),
-    NAME VARCHAR(50),
-    TOKEN VARCHAR(36),
-    GMT_CREATE BIGINT,
-    GMT_MODIFIED BIGINT
-);
-```
-```bash
-mvn flyway:migrate
-mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate
-```
 
 
