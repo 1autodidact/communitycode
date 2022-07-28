@@ -64,7 +64,7 @@ public class PublishController {
             return "publish";
         }
         String invalid = TagCache.filterInvalid(tag);
-        if (!StringUtils.isNotBlank(invalid)) {
+        if (StringUtils.isNotBlank(invalid)) {
             model.addAttribute("error", "tag is unreasonable" + invalid);
             return "publish";
         }
