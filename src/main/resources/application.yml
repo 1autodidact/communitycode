@@ -1,0 +1,72 @@
+AliCloud:
+  accessKeyId: '******'
+  accessKeySecret: '******'
+  bucketName: loadimages
+  endpoint: http://oss-cn-shenzhen.aliyuncs.com
+github:
+  client:
+    id: '******'
+    secret: '******'
+  redirect:
+    uri: http://localhost:8887/callback
+logging:
+  file:
+    max-history: 30
+    max-size: 200MB
+    path: logs/log
+  level:
+    com:
+      wenmrong:
+        community1:
+          community:
+            mapper: debug
+    root: info
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.wenmrong.community1.community.mapper
+server:
+  port: 8887
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: 123456
+    url: '******'
+    username: root
+  mail:
+    default-encoding: UTF-8
+    host: '******'
+    password: '******'
+    port: 465
+    properties:
+      mail:
+        smtp:
+          auth: true
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+            port: 465
+          ssl:
+            enable: true
+          starttls:
+            enable: true
+            required: true
+    protocol: smtp
+    username: '******'
+  redis:
+    database: 0
+    host: '******'
+    lettuce:
+      pool:
+        max-active: 20
+        max-idle: 5
+        max-wait: -1
+        min-idle: 0
+    password: '******'
+    port: 6379
+    timeout: 1800000
+
+rocketmq:
+  name-server: '******'
+  producer:
+    group: msg_question_group

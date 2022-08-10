@@ -7,6 +7,7 @@ import com.wenmrong.community1.community.model.QuestionExample;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -14,10 +15,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @Slf4j
 public class ScheduledTasks {
+	@Autowired
+	RedisTemplate redisTemplate;
  	@Autowired
 	private QuestionMapper questionMapper;
 	@Autowired
