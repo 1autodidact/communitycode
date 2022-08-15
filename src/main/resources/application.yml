@@ -21,6 +21,22 @@ logging:
           community:
             mapper: debug
     root: info
+mybatis-plus:
+  # xml文件路径
+  mapper-locations: classpath:mapper/*.xml
+  # 实体类路径
+  type-aliases-package: com.wenmrong.community1.community.model
+  configuration:
+    # 驼峰转换
+    map-underscore-to-camel-case: true
+    # 是否开启缓存
+    cache-enabled: false
+    # 打印sql
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  # 全局配置
+  global-config:
+    # 数据库字段驼峰下划线转换
+    db-column-underline: true
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
