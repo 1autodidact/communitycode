@@ -29,8 +29,8 @@ public class MqMessageController {
         ResultDTO msg = new ResultDTO();
         return msg;
     }
-    @RequestMapping("/pushTsMsg")
-    public ResultDTO get() throws MQClientException, InterruptedException {
+    @RequestMapping("/placeOrder")
+    public ResultDTO placeOrder() throws MQClientException, InterruptedException {
         final long id = snowFlake.nextId();
         final NftOrder order = new NftOrder();
         order.setId(String.valueOf(id));

@@ -21,6 +21,7 @@ public class TransactionConsumer implements RocketMQListener<NftOrder> {
 
     @Override
     public void onMessage(NftOrder message) {
+        //TODO 付款，定时查看订单是否付款
         log.error("事务消息：{}", JSONObject.toJSONString(message));
     }
 }
