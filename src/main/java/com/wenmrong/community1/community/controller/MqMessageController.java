@@ -1,9 +1,8 @@
 package com.wenmrong.community1.community.controller;
  
-import com.wenmrong.community1.community.algorithm.SnowFlake;
+import com.wenmrong.community1.community.utils.SnowFlake;
 import com.wenmrong.community1.community.dto.ResultDTO;
 import com.wenmrong.community1.community.model.NftOrder;
-import com.wenmrong.community1.community.model.Question;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.apache.rocketmq.spring.support.RocketMQHeaders;
@@ -11,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
-import org.springframework.messaging.support.GenericMessage;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
