@@ -1,6 +1,6 @@
 package com.wenmrong.community1.community;
 
-import com.wenmrong.community1.community.algorithm.SnowFlake;
+import com.wenmrong.community1.community.utils.SnowFlake;
 import com.wenmrong.community1.community.mapper.NftOrderMapper;
 import com.wenmrong.community1.community.model.NftOrder;
 import org.junit.jupiter.api.Test;
