@@ -21,6 +21,7 @@ logging:
           community:
             mapper: debug
     root: info
+
 mybatis-plus:
   # xml文件路径
   mapper-locations: classpath:mapper/*.xml
@@ -43,17 +44,17 @@ mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.wenmrong.community1.community.mapper
 server:
-  port: 8887
+  port: 8889
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    password: 123456
-    url: '******'
+    password: ENC(rwlSxdLaKqtRPi34HgMz2g==)
+    url: jdbc:mysql://114.132.200.49:3310/community?useSSL=false&serverTimezone=GMT%2B8
     username: root
   mail:
     default-encoding: UTF-8
-    host: '******'
-    password: '******'
+    host: "*****"
+    password: "*****"
     port: 465
     properties:
       mail:
@@ -68,21 +69,27 @@ spring:
             enable: true
             required: true
     protocol: smtp
-    username: '******'
+    username: "*****"
   redis:
     database: 0
-    host: '******'
+    host: 114.132.200.49
     lettuce:
       pool:
         max-active: 20
         max-idle: 5
         max-wait: -1
         min-idle: 0
-    password: '******'
+    password: ENC(U0MGI+vhGg8q5Lt+X2AGetUPe01QZLZs)
     port: 6379
     timeout: 1800000
-
 rocketmq:
-  name-server: '******'
+  name-server: 114.132.200.49:9876
   producer:
     group: msg_question_group
+
+#加密
+jasypt:
+  # 盐加密
+  encryptor:
+    password: "****"
+

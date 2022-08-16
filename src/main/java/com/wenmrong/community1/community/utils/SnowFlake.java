@@ -1,4 +1,4 @@
-package com.wenmrong.community1.community.algorithm;
+package com.wenmrong.community1.community.utils;
 
 /**
  * 描述: Twitter的分布式自增ID雪花算法snowflake (Java版)
