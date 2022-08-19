@@ -2,7 +2,6 @@ package com.wenmrong.community1.community.mq.consumer;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wenmrong.community1.community.model.Question;
-import com.wenmrong.community1.community.mq.producer.transaction.TransactionListenerImpl;
 import com.wenmrong.community1.community.service.QuestionService;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;

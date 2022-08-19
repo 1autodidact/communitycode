@@ -1,15 +1,14 @@
 package com.wenmrong.community1.community.mq.producer.transaction;
 
-import com.wenmrong.community1.community.controller.MqMessageController;
-import com.wenmrong.community1.community.mapper.NftOrderMapper;
+import com.wenmrong.community1.community.mapper.TbOrderMapper;
 import com.wenmrong.community1.community.model.NftOrder;
+import com.wenmrong.community1.community.model.TbOrder;
+import com.wenmrong.community1.community.sysenum.SysEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.annotation.RocketMQTransactionListener;
 import org.apache.rocketmq.spring.core.RocketMQLocalTransactionListener;
 import org.apache.rocketmq.spring.core.RocketMQLocalTransactionState;
 import org.apache.rocketmq.spring.support.RocketMQHeaders;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.messaging.Message;
@@ -17,13 +16,13 @@ import org.springframework.messaging.Message;
 import javax.annotation.Resource;
 
 @RocketMQTransactionListener
-public class TransactionListenerImpl implements RocketMQLocalTransactionListener {
-    private static final Logger log = LoggerFactory.getLogger(TransactionListenerImpl.class);
+@Slf4j
+public class MsgTransactionListener implements RocketMQLocalTransactionListener {
 
     @Autowired
     RedisTemplate redisTemplate;
     @Resource
-    NftOrderMapper orderMapper;
+    TbOrderMapper orderMapper;
 
     /**
      *  执行业务逻辑
@@ -34,18 +33,13 @@ public class TransactionListenerImpl implements RocketMQLocalTransactionListener
      */
     @Override
     public RocketMQLocalTransactionState executeLocalTransaction(Message message, Object o) {
-        log.error("事务id {}",(String)message.getHeaders().get(RocketMQHeaders.TRANSACTION_ID));
-
-        NftOrder NftOrder = new NftOrder();
-        NftOrder.setGmtCreate(System.currentTimeMillis());
-        NftOrder.setGmtModified(NftOrder.getGmtCreate());
-        String transId = (String)message.getHeaders().get(RocketMQHeaders.TRANSACTION_ID);
-        NftOrder.setId(String.valueOf(transId));
+        log.error("事务id {}", message.getHeaders().get(RocketMQHeaders.TRANSACTION_ID));
+        TbOrder order = (TbOrder) message.getPayload();
         try {
-            orderMapper.insert(NftOrder);
+            orderMapper.insert(order);
             // 设置事务状态
             // 返回事务状态给生产者
-            return RocketMQLocalTransactionState.COMMIT;
+            return RocketMQLocalTransactionState.UNKNOWN;
         } catch (Exception e) {
             log.error("订单创建失败");
         }
@@ -61,10 +55,10 @@ public class TransactionListenerImpl implements RocketMQLocalTransactionListener
     @Override
     public RocketMQLocalTransactionState checkLocalTransaction(Message message) {
         log.error("事务id {}",(String)message.getHeaders().get(RocketMQHeaders.TRANSACTION_ID));
-        NftOrder nftOrder = orderMapper.selectById((String)message.getHeaders().get(RocketMQHeaders.TRANSACTION_ID));
-        if (nftOrder != null) {
+        TbOrder order = orderMapper.selectById((String) message.getHeaders().get(RocketMQHeaders.TRANSACTION_ID));
+        if (order != null && order.getStatus().equals(SysEnum.Status.PAID.getStatus())) {
             return RocketMQLocalTransactionState.COMMIT;
         }
-        return RocketMQLocalTransactionState.ROLLBACK;
+        return RocketMQLocalTransactionState.UNKNOWN;
     }
 }

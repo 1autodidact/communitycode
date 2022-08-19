@@ -6,6 +6,7 @@ import lombok.Data;
 public class QuestionQueryDTO {
     private String search;
     private String tag;
+    private TagDTO tagDTO;
     private String sort;
     private Integer page;
     private Integer size;

@@ -16,6 +16,7 @@ public class QuestionDTO {
     private Long gmtCreate;
     private Long gmtModified;
     private User user;
+    private TagDTO tagDTO;
 
 
 }

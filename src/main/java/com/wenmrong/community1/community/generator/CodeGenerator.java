@@ -81,10 +81,10 @@ public class CodeGenerator {
 
         // TODO 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("***");
+        dsc.setUrl("jdbc:mysql://114.132.200.49:3310/community?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=true&characterEncoding=UTF-8");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
-        dsc.setUsername("***");
-        dsc.setPassword("***");
+        dsc.setUsername("root");
+        dsc.setPassword("123456");
         mpg.setDataSource(dsc);
 
         // TODO 包配置

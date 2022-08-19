@@ -1,7 +1,9 @@
 package com.wenmrong.community1.community.controller;
 
 import com.wenmrong.community1.community.dto.CommentDTO;
+import com.wenmrong.community1.community.dto.PaginationDTO;
 import com.wenmrong.community1.community.dto.QuestionDTO;
+import com.wenmrong.community1.community.dto.ResultDTO;
 import com.wenmrong.community1.community.enums.CommentTypeEnum;
 import com.wenmrong.community1.community.model.Question;
 import com.wenmrong.community1.community.model.User;
@@ -13,6 +15,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Controller
+@RestController
 public class QuestionController {
     @Autowired
     private QuestionService questionService;
@@ -60,6 +65,20 @@ public class QuestionController {
         model.addAttribute("relatedQuestions", relatedQuestions);
         model.addAttribute("questionHistory", questionHistory);
         return "question";
+    }
+
+
+    @GetMapping("/getQuestions")
+    public ResultDTO getQuestions(Model model,
+                                  @RequestParam(name = "currentPage", defaultValue = "1") Integer currentPage,
+                                  @RequestParam(name = "pageSize", defaultValue = "7") Integer pageSize,
+                                  @RequestParam(name = "search", required = false) String search,
+                                  @RequestParam(name = "tag", required = false) String tag,
+                                  @RequestParam(name = "sort", required = false) String sort) {
+
+        PaginationDTO pagination = questionService.list(search, tag, currentPage, pageSize, sort);
+
+        return ResultDTO.okOf(pagination);
     }
 
 }

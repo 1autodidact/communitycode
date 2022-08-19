@@ -1,8 +1,10 @@
 package com.wenmrong.community1.community.service;
 
+import com.wenmrong.community1.community.cache.TagCache;
 import com.wenmrong.community1.community.dto.PaginationDTO;
 import com.wenmrong.community1.community.dto.QuestionDTO;
 import com.wenmrong.community1.community.dto.QuestionQueryDTO;
+import com.wenmrong.community1.community.dto.TagDTO;
 import com.wenmrong.community1.community.enums.SortEnum;
 import com.wenmrong.community1.community.exception.CustomizeErrorCode;
 import com.wenmrong.community1.community.exception.CustomizeException;
@@ -12,6 +14,7 @@ import com.wenmrong.community1.community.mapper.UserMapper;
 import com.wenmrong.community1.community.model.Question;
 import com.wenmrong.community1.community.model.QuestionExample;
 import com.wenmrong.community1.community.model.User;
+import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
@@ -21,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,7 +40,7 @@ public class QuestionService {
     private QuestionService questionService;
 
     public PaginationDTO list(String search, String tag, Integer page, Integer size, String sort) {
-        if (!StringUtils.isNotBlank(search)) {
+        if (StringUtils.isNotBlank(search)) {
             String[] tags = search.split(",");
             search = Arrays.stream(tags).collect(Collectors.joining("|"));
         }
@@ -90,11 +94,26 @@ public class QuestionService {
             QuestionDTO questionDTO = new QuestionDTO();
             BeanUtils.copyProperties(question, questionDTO);
             questionDTO.setUser(user);
+            TagDTO tagDTO = this.randomGetTag();
+            questionDTO.setTagDTO(tagDTO);
             questionDTOList.add(questionDTO);
         }
         paginationDTO.setData(questionDTOList);
 
         return paginationDTO;
+    }
+
+    private TagDTO randomGetTag() {
+        List<TagDTO> tagDTOS = TagCache.get();
+        boolean nextBoolean = RandomUtils.nextBoolean();
+        if (nextBoolean) {
+            if (RandomUtils.nextBoolean()) {
+                return tagDTOS.get(3);
+            }
+            return tagDTOS.get(1);
+        } else {
+            return tagDTOS.get(2);
+        }
     }
 
     public PaginationDTO list(Long userId, Integer page, Integer size) {
