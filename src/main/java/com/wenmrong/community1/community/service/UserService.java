@@ -1,16 +1,26 @@
 package com.wenmrong.community1.community.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wenmrong.community1.community.mapper.QuestionMapper;
+import com.wenmrong.community1.community.mapper.TbOrderMapper;
 import com.wenmrong.community1.community.mapper.UserMapper;
+import com.wenmrong.community1.community.model.Question;
+import com.wenmrong.community1.community.model.TbOrder;
 import com.wenmrong.community1.community.model.User;
 import com.wenmrong.community1.community.model.UserExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
-public class UserService {
-    @Autowired
+public class UserService extends ServiceImpl<UserMapper, User> {
+    @Resource
     private UserMapper userMapper;
 
     @Autowired
@@ -19,6 +29,8 @@ public class UserService {
     @Autowired
     private RandomCodeService randomCodeService;
 
+    @Resource
+    private QuestionMapper questionMapper;
     public void createOrUpdate(User user) {
         UserExample userExample = new UserExample();
         userExample.createCriteria()
@@ -57,5 +69,18 @@ public class UserService {
         return code;
     }
 
+
+    public List<User> getHotAuthorsList() {
+        List<Question> creator = questionMapper.selectList(new QueryWrapper<Question>());
+        Map<Long, List<Question>> creatorGrouping = creator.stream().collect(Collectors.groupingBy(Question::getCreator));
+        Map<Long, Integer> scoreGroupingByCreator = creatorGrouping.entrySet().stream().collect(Collectors.toMap(item -> item.getKey(), item -> {
+            List<Question> list = item.getValue();
+            return list.stream().map(question -> question.getViewCount() + question.getCommentCount() * 5 + question.getLikeCount() * 10)
+                    .collect(Collectors.summingInt(value -> value));
+        }));
+        List<Long> creatorId = scoreGroupingByCreator.entrySet().stream().sorted((entry, entry2) -> entry.getValue()).limit(5).map(item -> item.getKey()).collect(Collectors.toList());
+        List<User> users = userMapper.selectBatchIds(creatorId);
+        return users;
+    }
 
 }

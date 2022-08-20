@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@RestController
+@Controller
 public class QuestionController {
     @Autowired
     private QuestionService questionService;
@@ -69,6 +69,7 @@ public class QuestionController {
 
 
     @GetMapping("/getQuestions")
+    @ResponseBody
     public ResultDTO getQuestions(Model model,
                                   @RequestParam(name = "currentPage", defaultValue = "1") Integer currentPage,
                                   @RequestParam(name = "pageSize", defaultValue = "7") Integer pageSize,
@@ -80,5 +81,6 @@ public class QuestionController {
 
         return ResultDTO.okOf(pagination);
     }
+
 
 }

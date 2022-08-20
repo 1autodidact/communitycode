@@ -1,5 +1,6 @@
 package com.wenmrong.community1.community.service;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wenmrong.community1.community.cache.TagCache;
 import com.wenmrong.community1.community.dto.PaginationDTO;
 import com.wenmrong.community1.community.dto.QuestionDTO;
@@ -8,6 +9,7 @@ import com.wenmrong.community1.community.dto.TagDTO;
 import com.wenmrong.community1.community.enums.SortEnum;
 import com.wenmrong.community1.community.exception.CustomizeErrorCode;
 import com.wenmrong.community1.community.exception.CustomizeException;
+import com.wenmrong.community1.community.mapper.CommentMapper;
 import com.wenmrong.community1.community.mapper.QuestionExtMapper;
 import com.wenmrong.community1.community.mapper.QuestionMapper;
 import com.wenmrong.community1.community.mapper.UserMapper;
@@ -28,7 +30,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
-public class QuestionService {
+public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
     @Autowired
     private UserMapper userMapper;
     @Autowired

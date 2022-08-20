@@ -1,5 +1,6 @@
 package com.wenmrong.community1.community.service;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wenmrong.community1.community.dto.CommentDTO;
 import com.wenmrong.community1.community.enums.CommentTypeEnum;
 import com.wenmrong.community1.community.enums.NotificationStatusEnum;
@@ -20,7 +21,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class CommentService {
+public class CommentService  extends ServiceImpl<CommentMapper, Comment> {
     @Autowired
     private CommentMapper commentMapper;
 
