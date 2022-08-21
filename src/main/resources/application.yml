@@ -53,8 +53,8 @@ spring:
     username: root
   mail:
     default-encoding: UTF-8
-    host: "*****"
-    password: "*****"
+    host: smtp.qq.com
+    password: clpvrkzwwvrifafj
     port: 465
     properties:
       mail:
@@ -69,7 +69,7 @@ spring:
             enable: true
             required: true
     protocol: smtp
-    username: "*****"
+    username: 1985013202@qq.com
   redis:
     database: 0
     host: 114.132.200.49
@@ -91,5 +91,5 @@ rocketmq:
 jasypt:
   # 盐加密
   encryptor:
-    password: "****"
+    password: autodidact
 

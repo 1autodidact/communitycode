@@ -14,4 +14,9 @@ public class StatisticData {
     public Integer commentCount;
     public Integer questionCount;
     public Integer userCount;
+    public boolean isFollow;
+    public boolean isLike;
+    public String level;
+    public Integer likeCount;
+
 }

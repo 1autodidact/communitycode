@@ -3,6 +3,8 @@ package com.wenmrong.community1.community.dto;
 import com.wenmrong.community1.community.model.User;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class QuestionDTO {
     private Long id;
@@ -17,6 +19,9 @@ public class QuestionDTO {
     private Long gmtModified;
     private User user;
     private TagDTO tagDTO;
+    private Object file;
+    private String html;
+    private List<Integer> labelIds;
 
 
 }

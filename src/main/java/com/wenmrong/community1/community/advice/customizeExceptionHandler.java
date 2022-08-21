@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.wenmrong.community1.community.dto.ResultDTO;
 import com.wenmrong.community1.community.exception.CustomizeErrorCode;
 import com.wenmrong.community1.community.exception.CustomizeException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -16,11 +17,13 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 @ControllerAdvice
+@Slf4j
 public class customizeExceptionHandler {
     @ExceptionHandler(Exception.class)
     ModelAndView handle(Throwable e, Model model, HttpServletRequest request, HttpServletResponse response) {
         String contentType = request.getContentType();
         if ("application/json".equals(contentType)){
+            log.error("handle ");
             ResultDTO resultDTO;
             //返回json
             if (e instanceof CustomizeException){
@@ -41,6 +44,8 @@ public class customizeExceptionHandler {
             }
             return null;
         }else {
+            log.error("handle exception ");
+
             //错误页面跳转
             if (e instanceof CustomizeException){
                 model.addAttribute("message",e.getMessage());

@@ -1,23 +1,16 @@
 package com.wenmrong.community1.community.controller;
 
-import com.wenmrong.community1.community.dto.CommentDTO;
-import com.wenmrong.community1.community.dto.PaginationDTO;
-import com.wenmrong.community1.community.dto.QuestionDTO;
-import com.wenmrong.community1.community.dto.ResultDTO;
+import com.wenmrong.community1.community.dto.*;
 import com.wenmrong.community1.community.enums.CommentTypeEnum;
+import com.wenmrong.community1.community.model.Label;
 import com.wenmrong.community1.community.model.Question;
 import com.wenmrong.community1.community.model.User;
-import com.wenmrong.community1.community.service.CommentService;
-import com.wenmrong.community1.community.service.QuestionHistoryService;
-import com.wenmrong.community1.community.service.QuestionService;
+import com.wenmrong.community1.community.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +29,11 @@ public class QuestionController {
 
     @Autowired
     private QuestionHistoryService questionHistoryService;
+    @Autowired
+    private StatisticService statisticService;
 
+    @Autowired
+    private LabelService labelService;
     @GetMapping("/question/{id}")
     public String question(@PathVariable(name = "id") Long id, Model model,
                            HttpServletRequest request, HttpServletResponse response) {
@@ -82,5 +79,36 @@ public class QuestionController {
         return ResultDTO.okOf(pagination);
     }
 
+
+    @GetMapping("/question/getById")
+    @ResponseBody
+    public ResultDTO question(@RequestParam Long id,boolean isPv){
+        QuestionDTO questionDTO = questionService.getById(id);
+        return ResultDTO.okOf(questionDTO);
+    }
+
+
+    @GetMapping("/question/getCountById")
+    @ResponseBody
+    public ResultDTO getArticleCommentVisitTotal() {
+        StatisticData statistic = statisticService.statistic();
+        return ResultDTO.okOf(statistic);
+    }
+
+    @GetMapping("/label/getList")
+    @ResponseBody
+    public ResultDTO getLabels() {
+        List<Label> labels = labelService.getLabels();
+        return ResultDTO.okOf(labels);
+    }
+
+
+
+    @PostMapping("/question/create")
+    @ResponseBody
+    public ResultDTO create( QuestionDTO questionDTO) {
+        questionService.create(questionDTO);
+        return ResultDTO.okOf();
+    }
 
 }

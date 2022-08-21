@@ -9,10 +9,7 @@ import com.wenmrong.community1.community.dto.TagDTO;
 import com.wenmrong.community1.community.enums.SortEnum;
 import com.wenmrong.community1.community.exception.CustomizeErrorCode;
 import com.wenmrong.community1.community.exception.CustomizeException;
-import com.wenmrong.community1.community.mapper.CommentMapper;
-import com.wenmrong.community1.community.mapper.QuestionExtMapper;
-import com.wenmrong.community1.community.mapper.QuestionMapper;
-import com.wenmrong.community1.community.mapper.UserMapper;
+import com.wenmrong.community1.community.mapper.*;
 import com.wenmrong.community1.community.model.Question;
 import com.wenmrong.community1.community.model.QuestionExample;
 import com.wenmrong.community1.community.model.User;
@@ -23,6 +20,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -37,7 +35,8 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
     private QuestionMapper questionMapper;
     @Autowired
     private QuestionExtMapper questionExtMapper;
-
+    @Resource
+    private LabelMapper labelMapper;
     @Autowired
     private QuestionService questionService;
 
@@ -234,5 +233,17 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
 
         return questionDTOS;
     }
+
+   public void create(QuestionDTO questionDTO) {
+       Question question = new Question();
+       BeanUtils.copyProperties(questionDTO,question);
+       question.setCreator(1l);
+       question.setViewCount(0);
+       question.setCommentCount(0);
+       question.setLikeCount(0);
+       question.setTag("language");
+       questionMapper.insert(question);
+
+   }
 
 }

@@ -3,6 +3,7 @@ package com.wenmrong.community1.community.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wenmrong.community1.community.dto.CommentCreateDTO;
 import com.wenmrong.community1.community.dto.CommentDTO;
+import com.wenmrong.community1.community.dto.QuestionDTO;
 import com.wenmrong.community1.community.dto.ResultDTO;
 import com.wenmrong.community1.community.enums.CommentTypeEnum;
 import com.wenmrong.community1.community.exception.CustomizeErrorCode;
@@ -63,5 +64,20 @@ public class CommentController {
     public ResultDTO<List<Comment>> getLatestComment() {
         List<Comment> comments = commentMapper.selectList(new QueryWrapper<Comment>().orderByAsc("gmt_create").last("limit 6"));
         return ResultDTO.okOf(comments);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/getCommentByArticleId", method = RequestMethod.GET)
+    public ResultDTO<List<CommentDTO>> getCommentByArticleId(@RequestParam Long articleId) {
+        List<CommentDTO> commentDTOS = commentService.listByTargetId(articleId, CommentTypeEnum.COMMENT);
+        return ResultDTO.okOf(commentDTOS);
+    }
+
+
+    @PostMapping("/comment/create")
+    @ResponseBody
+    public ResultDTO create(@RequestBody Comment comment) {
+        commentService.create(comment);
+        return ResultDTO.okOf();
     }
 }

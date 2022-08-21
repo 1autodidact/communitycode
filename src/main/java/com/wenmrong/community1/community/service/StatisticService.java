@@ -4,6 +4,7 @@ import com.wenmrong.community1.community.dto.StatisticData;
 import com.wenmrong.community1.community.mapper.CommentMapper;
 import com.wenmrong.community1.community.mapper.QuestionMapper;
 import com.wenmrong.community1.community.mapper.UserMapper;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -31,6 +32,8 @@ public class StatisticService {
         statisticData.setUserCount(usrCount);
         statisticData.setCommentCount(commentCount);
         statisticData.setQuestionCount(questionCount);
+        statisticData.setLevel("Lv2");
+        statisticData.setLikeCount(5);
         return statisticData;
     }
 

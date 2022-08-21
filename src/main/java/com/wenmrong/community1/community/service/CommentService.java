@@ -104,10 +104,11 @@ public class CommentService  extends ServiceImpl<CommentMapper, Comment> {
     }
 
     public List<CommentDTO> listByTargetId(Long id, CommentTypeEnum type) {
+        // 1 为评论问题类型
         CommentExample commentExample = new CommentExample();
         commentExample.createCriteria()
                 .andParentIdEqualTo(id)
-                .andTypeEqualTo(type.getType());
+                .andTypeEqualTo(1);
         commentExample.setOrderByClause("gmt_create desc");
         List<Comment> comments = commentMapper.selectByExample(commentExample);
 
@@ -137,5 +138,12 @@ public class CommentService  extends ServiceImpl<CommentMapper, Comment> {
         return commentDTOS;
 
 
+    }
+
+    public void create(Comment comment) {
+        comment.setParentId(comment.getQuestionId());
+        comment.setType(1);
+        comment.setCommentator(1l);
+        commentMapper.insert(comment);
     }
 }
