@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wenmrong.community1.community.dto.ResultDTO;
 import com.wenmrong.community1.community.mapper.QuestionMapper;
 import com.wenmrong.community1.community.model.Question;
+import com.wenmrong.community1.community.model.User;
 import com.wenmrong.community1.community.service.UserService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,5 +34,12 @@ public class UserController {
                                        @RequestParam(name = "pageSize", defaultValue = "7") Integer pageSize) {
 
         return ResultDTO.okOf(userService.getHotAuthorsList());
+    }
+
+
+    @GetMapping("user/getUserInfo")
+    public ResultDTO getUserInfo(@RequestParam String userId) {
+        User userInfo = userService.getUserInfo(userId);
+        return ResultDTO.okOf(userInfo);
     }
 }

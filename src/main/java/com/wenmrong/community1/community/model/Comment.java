@@ -1,11 +1,18 @@
 package com.wenmrong.community1.community.model;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import com.wenmrong.community1.community.config.CustomSerializerAndDeserializer;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.time.LocalDateTime;
+
+import static com.baomidou.mybatisplus.annotation.IdType.ASSIGN_ID;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -17,7 +24,7 @@ public class Comment extends Model<Comment> {
      *
      * @mbg.generated Thu May 28 09:25:06 CST 2020
      */
-    @TableField("id")
+    @TableId(type = ASSIGN_ID)
     private Long id;
 
     /**
@@ -56,6 +63,7 @@ public class Comment extends Model<Comment> {
      * @mbg.generated Thu May 28 09:25:06 CST 2020
      */
     @TableField(value = "gmt_create", fill = FieldFill.INSERT)
+    @JSONField(serializeUsing = CustomSerializerAndDeserializer.class)
     private Long gmtCreate;
 
     /**
@@ -65,6 +73,7 @@ public class Comment extends Model<Comment> {
      * @mbg.generated Thu May 28 09:25:06 CST 2020
      */
     @TableField(value = "gmt_modified", fill = FieldFill.INSERT_UPDATE)
+    @JSONField(serializeUsing = CustomSerializerAndDeserializer.class)
     private Long gmtModified;
 
     /**

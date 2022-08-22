@@ -83,4 +83,10 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         return users;
     }
 
+
+    public User getUserInfo(String id) {
+        User user = userMapper.selectByPrimaryKey(Long.valueOf(id));
+        return user;
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.wenmrong.community1.community.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wenmrong.community1.community.cache.TagCache;
 import com.wenmrong.community1.community.dto.PaginationDTO;
@@ -175,6 +176,13 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
         //把question的属性全部复制到questionDTO
         BeanUtils.copyProperties(question, questionDTO);
         questionDTO.setUser(user);
+
+        // TODO 测试数据xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        TagDTO language = new TagDTO();
+        language.setCategoryName("language");
+        language.setTags(Arrays.asList("javascript", "php", "css", "html", "html5", "java", "node.js", "python", "c++", "c", "golang", "objective-c", "typescript", "shell", "swift", "c#", "sass", "ruby", "bash", "less", "asp.net", "lua", "scala", "coffeescript", "actionscript", "rust", "erlang", "perl"));
+        language.setIds(Arrays.asList(1,2,3,4));
+        questionDTO.setTagDTO(language);
         return questionDTO;
     }
 
@@ -237,11 +245,12 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
    public void create(QuestionDTO questionDTO) {
        Question question = new Question();
        BeanUtils.copyProperties(questionDTO,question);
-       question.setCreator(1l);
+       question.setCreator(Long.valueOf(questionDTO.getUserId()));
        question.setViewCount(0);
        question.setCommentCount(0);
        question.setLikeCount(0);
        question.setTag("language");
+       question.setLabelIds(JSONObject.toJSONString(questionDTO.getLabelIds()));
        questionMapper.insert(question);
 
    }
