@@ -65,19 +65,17 @@ public class QuestionController {
     }
 
 
-    @GetMapping("/getQuestions")
-    @ResponseBody
-    public ResultDTO getQuestions(Model model,
-                                  @RequestParam(name = "currentPage", defaultValue = "1") Integer currentPage,
-                                  @RequestParam(name = "pageSize", defaultValue = "7") Integer pageSize,
-                                  @RequestParam(name = "search", required = false) String search,
-                                  @RequestParam(name = "tag", required = false) String tag,
-                                  @RequestParam(name = "sort", required = false) String sort) {
-
-        PaginationDTO pagination = questionService.list(search, tag, currentPage, pageSize, sort);
-
-        return ResultDTO.okOf(pagination);
-    }
+//    @GetMapping("/getQuestions")
+//    @ResponseBody
+//    public ResultDTO getQuestions(Model model,
+//                                  @RequestParam(name = "currentPage", defaultValue = "1") Integer currentPage,
+//                                  @RequestParam(name = "pageSize", defaultValue = "7") Integer pageSize,
+//                                  @RequestParam String labelIds) {
+//
+//        PaginationDTO pagination = questionService.selectRelatedQuestion(currentPage, pageSize, labelIds);
+//
+//        return ResultDTO.okOf(pagination);
+//    }
 
 
     @GetMapping("/question/getById")

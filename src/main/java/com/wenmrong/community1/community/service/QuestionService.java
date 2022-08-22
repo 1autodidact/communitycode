@@ -250,9 +250,14 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
        question.setCommentCount(0);
        question.setLikeCount(0);
        question.setTag("language");
-       question.setLabelIds(JSONObject.toJSONString(questionDTO.getLabelIds()));
+       question.setLabelIds(questionDTO.getLabelIds());
        questionMapper.insert(question);
 
    }
+
+   public List<QuestionDTO> selectRelatedQuestion(Integer currentPage,Integer pageSize,String labelIds) {
+        return null;
+   }
+
 
 }
