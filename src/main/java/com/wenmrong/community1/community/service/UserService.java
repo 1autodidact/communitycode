@@ -10,6 +10,7 @@ import com.wenmrong.community1.community.model.Question;
 import com.wenmrong.community1.community.model.User;
 import com.wenmrong.community1.community.model.UserExample;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -22,7 +23,8 @@ import static com.wenmrong.community1.community.exception.CustomizeErrorCode.LOG
 
 @Service
 public class UserService extends ServiceImpl<UserMapper, User> {
-
+    @Autowired
+    RedisTemplate redisTemplate;
     @Resource
     private UserMapper userMapper;
 

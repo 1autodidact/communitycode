@@ -73,8 +73,7 @@ public class LoginController {
 
     @GetMapping("/getCurrentUserRights")
     @ResponseBody
-    public ResultDTO<User> getCurrentUserRights(HttpServletRequest httpServletRequest) {
-        Enumeration<String> token = httpServletRequest.getHeaders("token");
+    public ResultDTO<User> getCurrentUserRights(@RequestHeader("token")String token) {
         User user = userMapper.selectByPrimaryKey(1l);
         return ResultDTO.okOf();
     }
