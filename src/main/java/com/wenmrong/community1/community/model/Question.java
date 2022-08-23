@@ -109,7 +109,7 @@ public class Question extends Model<Question> {
     private String description;
 
     @TableField(value = "label_ids",typeHandler = FastjsonTypeHandler.class)
-    private Object labelIds;
+    private List<Integer> labelIds;
 
 
 }

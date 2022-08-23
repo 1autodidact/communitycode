@@ -54,7 +54,7 @@ public class QuestionHistoryService {
         String[] ids = history.split("\\_");
         ArrayList<Question> questions = new ArrayList<>();
         for (String id : ids) {
-            Question question = questionMapper.selectByPrimaryKey(Long.parseLong(id));
+            Question question = questionMapper.selectById(Long.parseLong(id));
             questions.add(question);
         }
         return questions;

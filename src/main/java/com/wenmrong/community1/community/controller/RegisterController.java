@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.Cookie;
@@ -27,41 +28,17 @@ public class RegisterController {
 
     @GetMapping("/register")
     public String register() {
-
-
         return "register";
     }
 
-    @PostMapping("/register")
-    public String registering(HttpServletRequest request, HttpServletResponse response, Model model) {
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        String code = request.getParameter("code");
-        Cookie[] cookies = request.getCookies();
-        User user = new User();
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("activeCode")) {
-                String value = cookie.getValue();
-                if (value.equals(code)) {
-                    user.setStatus(1);
-                    break;
-                }
-            }
-        }
-        if (user.getStatus() == 1) {
-            user.setName(email);
-            user.setPassword(password);
-            user.setAccountId(email);
-            user.setAvatarUrl("http://cdn.wenmrong.com/grey.png");
-            userService.createOrUpdate(user);
-            model.addAttribute("signupSuccess", "success");
-            return "register";
-        } else {
-            //注册失败
-            return "register";
-        }
 
+    @PostMapping("/register")
+    @ResponseBody
+    public ResultDTO registering(@RequestBody User user) {
+        String userId = userService.createUser(user);
+        return ResultDTO.okOf(userId);
     }
+
 
     @ResponseBody
     @GetMapping("/sendActiveEmail/{email}")

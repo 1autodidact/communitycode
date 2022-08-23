@@ -22,7 +22,7 @@ public class StarService {
 
     public PaginationDTO list(Long userId, Integer page, Integer size) {
         PaginationDTO<Question> paginationDTO = new PaginationDTO<>();
-        User user = userMapper.selectByPrimaryKey(userId);
+        User user = userMapper.selectById(userId);
         String star = user.getStar();
         if (star == null || star.equals("")) {
             paginationDTO.setPagination(0, 0);
@@ -58,7 +58,7 @@ public class StarService {
             List<Question> questionList = new ArrayList<>();
             for (Object o : list) {
                 long id = Long.parseLong((String) o);
-                Question question = questionMapper.selectByPrimaryKey(id);
+                Question question = questionMapper.selectById(id);
                 questionList.add(question);
             }
             paginationDTO.setData(questionList);
@@ -68,7 +68,7 @@ public class StarService {
             for (Object o : data) {
                 //需要把object转化为String再转化为Long类型
                 long id = Long.parseLong((String) o);
-                Question question = questionMapper.selectByPrimaryKey(id);
+                Question question = questionMapper.selectById(id);
                 questionList.add(question);
             }
             paginationDTO.setData(questionList);

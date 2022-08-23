@@ -52,12 +52,12 @@ public class CommentService  extends ServiceImpl<CommentMapper, Comment> {
         }
         if (comment.getType() == CommentTypeEnum.COMMENT.getType()) {
             //回复评论
-            Comment dbComment = commentMapper.selectByPrimaryKey(comment.getParentId());
+            Comment dbComment = commentMapper.selectById(comment.getParentId());
             if (dbComment == null) {
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             }
             //回复问题
-            Question question = questionMapper.selectByPrimaryKey(dbComment.getParentId());
+            Question question = questionMapper.selectById(dbComment.getParentId());
             if (question == null) {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
@@ -74,7 +74,7 @@ public class CommentService  extends ServiceImpl<CommentMapper, Comment> {
 
         } else {
             //回复问题
-            Question question = questionMapper.selectByPrimaryKey(comment.getParentId());
+            Question question = questionMapper.selectById(comment.getParentId());
             if (question == null) {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }

@@ -63,7 +63,7 @@ public class ThumbController {
         long count = thumbMapper.countByExample(thumbExample);
         Comment comment = commentMapper.selectByPrimaryKey(thumbParentId);
         //创建点赞通知
-        Question question = questionMapper.selectByPrimaryKey(questionId);
+        Question question = questionMapper.selectById(questionId);
         User commentator = userMapper.selectByPrimaryKey(comment.getCommentator());
         commentService.createNotification(comment, comment.getCommentator(), commentator.getName(), question.getTitle(), NotificationTypeEnum.THUMB_COMMENT, question.getId());
         comment.setLikeCount(count);

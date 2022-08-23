@@ -11,7 +11,9 @@ public enum CustomizeErrorCode implements ICustomizeErrorCode {
     COMMENT_IS_EMPTY(2007, "Comment is empty"),
     READ_NOTIFICATION_FAIL(2008, "Notification is not for you"),
     NOTIFICATION_NOT_FOUND(2009, "Notification is not found"),
-    FILE_UPLOAD_FAILURE(2010,"File upload failure");
+    FILE_UPLOAD_FAILURE(2010,"File upload failure"),
+    REGISTER_FAILURE(9999,"register failure"),
+    LOGIN_FAILURE(9999,"login failure");
     private String message;
     private Integer code;
 

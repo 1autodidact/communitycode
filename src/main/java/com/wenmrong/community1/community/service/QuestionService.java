@@ -1,7 +1,8 @@
 package com.wenmrong.community1.community.service;
 
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.pagehelper.PageHelper;
+import com.google.common.collect.Sets;
 import com.wenmrong.community1.community.cache.TagCache;
 import com.wenmrong.community1.community.dto.PaginationDTO;
 import com.wenmrong.community1.community.dto.QuestionDTO;
@@ -24,8 +25,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,14 +43,14 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
     @Autowired
     private QuestionService questionService;
 
-    public PaginationDTO list(String search, String tag, Integer page, Integer size, String sort) {
+    public PaginationDTO<QuestionDTO> list(String search, String tag, Integer page, Integer size, String sort) {
         if (StringUtils.isNotBlank(search)) {
             String[] tags = search.split(",");
             search = Arrays.stream(tags).collect(Collectors.joining("|"));
         }
 
 
-        PaginationDTO paginationDTO = new PaginationDTO();
+        PaginationDTO<QuestionDTO> paginationDTO = new PaginationDTO<QuestionDTO>();
         QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
         questionQueryDTO.setSearch(search);
         questionQueryDTO.setTag(tag);
@@ -118,8 +120,8 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
         }
     }
 
-    public PaginationDTO list(Long userId, Integer page, Integer size) {
-        PaginationDTO paginationDTO = new PaginationDTO();
+    public PaginationDTO<QuestionDTO> list(Long userId, Integer page, Integer size) {
+        PaginationDTO<QuestionDTO> paginationDTO = new PaginationDTO<>();
         QuestionExample questionExample = new QuestionExample();
         questionExample.createCriteria()
                 .andCreatorEqualTo(userId);
@@ -167,23 +169,11 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
     public QuestionDTO getById(Long id) {
         //先进行计数,如果question已经查询完毕,再计数无法及时刷新数据
         questionService.incView(id);
-        Question question = questionMapper.selectByPrimaryKey(id);
+        Question question = questionMapper.selectById(id);
             if (question == null) {
             throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
         }
-        User user = userMapper.selectByPrimaryKey(question.getCreator());
-        QuestionDTO questionDTO = new QuestionDTO();
-        //把question的属性全部复制到questionDTO
-        BeanUtils.copyProperties(question, questionDTO);
-        questionDTO.setUser(user);
-
-        // TODO 测试数据xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-        TagDTO language = new TagDTO();
-        language.setCategoryName("language");
-        language.setTags(Arrays.asList("javascript", "php", "css", "html", "html5", "java", "node.js", "python", "c++", "c", "golang", "objective-c", "typescript", "shell", "swift", "c#", "sass", "ruby", "bash", "less", "asp.net", "lua", "scala", "coffeescript", "actionscript", "rust", "erlang", "perl"));
-        language.setIds(Arrays.asList(1,2,3,4));
-        questionDTO.setTagDTO(language);
-        return questionDTO;
+        return assembleQuestionInfo(question);
     }
 
     public void createOrUpdate(Question question) {
@@ -255,9 +245,33 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
 
    }
 
-   public List<QuestionDTO> selectRelatedQuestion(Integer currentPage,Integer pageSize,String labelIds) {
-        return null;
+   public List<QuestionDTO> selectRelatedQuestion(Integer currentPage, Integer pageSize, String labelIds, String currentArticleId) {
+       PageHelper.startPage(currentPage,pageSize,true);
+       HashSet requestLabId = new HashSet(Arrays.asList(Optional.ofNullable(labelIds).orElse("").split(",")));
+
+       List<Question> questions = questionMapper.selectList(null);
+
+       if (StringUtils.isBlank(labelIds)) {
+           return questions.stream().map(this::assembleQuestionInfo).collect(Collectors.toList());
+       }
+
+       List<QuestionDTO> relatedQuestions = questions.stream().filter(item -> {
+           List<String> dbLabelIds = item.getLabelIds().stream().map(id -> String.valueOf(id)).collect(Collectors.toList());
+           Sets.SetView intersection = Sets.intersection(new HashSet<>(dbLabelIds), requestLabId);
+           return intersection.size() != 0;
+       }).map(this::assembleQuestionInfo).collect(Collectors.toList());
+       return relatedQuestions.stream().filter(item -> !item.getId().equals(Long.valueOf(currentArticleId))).collect(Collectors.toList());
+
    }
+
+
+    private QuestionDTO assembleQuestionInfo(Question question) {
+        QuestionDTO questionDTO = new QuestionDTO();
+        BeanUtils.copyProperties(question, questionDTO);
+        User user = userMapper.selectByPrimaryKey(question.getCreator());
+        questionDTO.setUser(user);
+        return questionDTO;
+    }
 
 
 }

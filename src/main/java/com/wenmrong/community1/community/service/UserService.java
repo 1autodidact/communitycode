@@ -1,25 +1,28 @@
 package com.wenmrong.community1.community.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wenmrong.community1.community.exception.CustomizeErrorCode;
+import com.wenmrong.community1.community.exception.CustomizeException;
 import com.wenmrong.community1.community.mapper.QuestionMapper;
-import com.wenmrong.community1.community.mapper.TbOrderMapper;
 import com.wenmrong.community1.community.mapper.UserMapper;
 import com.wenmrong.community1.community.model.Question;
-import com.wenmrong.community1.community.model.TbOrder;
 import com.wenmrong.community1.community.model.User;
 import com.wenmrong.community1.community.model.UserExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.wenmrong.community1.community.exception.CustomizeErrorCode.LOGIN_FAILURE;
+
 @Service
 public class UserService extends ServiceImpl<UserMapper, User> {
+
     @Resource
     private UserMapper userMapper;
 
@@ -31,6 +34,15 @@ public class UserService extends ServiceImpl<UserMapper, User> {
 
     @Resource
     private QuestionMapper questionMapper;
+
+    public String login(User user) {
+        User userInfo = userMapper.selectOne(new QueryWrapper<User>().eq("name", user.getName()));
+        if (userInfo == null) {
+            throw new CustomizeException(LOGIN_FAILURE);
+        }
+        return String.valueOf(userInfo.getId());
+    }
+
     public void createOrUpdate(User user) {
         UserExample userExample = new UserExample();
         userExample.createCriteria()
@@ -56,6 +68,11 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         }
     }
 
+    public String createUser(User user) {
+        userMapper.insert(user);
+        return String.valueOf(user.getId());
+    }
+
     public String sendEmail(String email,String character) {
         //创建激活码
         String code = randomCodeService.createActiveCode();
@@ -79,8 +96,10 @@ public class UserService extends ServiceImpl<UserMapper, User> {
                     .collect(Collectors.summingInt(value -> value));
         }));
         List<Long> creatorId = scoreGroupingByCreator.entrySet().stream().sorted((entry, entry2) -> entry.getValue()).limit(5).map(item -> item.getKey()).collect(Collectors.toList());
-        List<User> users = userMapper.selectBatchIds(creatorId);
-        return users;
+        if (creatorId.size() == 0) {
+            return new ArrayList<>();
+        }
+        return userMapper.selectBatchIds(creatorId);
     }
 
 
@@ -89,4 +108,14 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         return user;
     }
 
+    public void updateLikeState(String articleId) {
+
+    }
+
+    public void validateUserInfo(String username) {
+        User user = userMapper.selectOne(new QueryWrapper<User>().eq("name", username));
+        if (user != null) {
+            throw new CustomizeException(CustomizeErrorCode.REGISTER_FAILURE);
+        }
+    }
 }

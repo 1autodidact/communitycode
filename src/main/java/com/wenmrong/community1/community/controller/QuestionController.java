@@ -1,5 +1,6 @@
 package com.wenmrong.community1.community.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.wenmrong.community1.community.dto.*;
 import com.wenmrong.community1.community.enums.CommentTypeEnum;
 import com.wenmrong.community1.community.model.Label;
@@ -10,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -65,17 +65,19 @@ public class QuestionController {
     }
 
 
-//    @GetMapping("/getQuestions")
-//    @ResponseBody
-//    public ResultDTO getQuestions(Model model,
-//                                  @RequestParam(name = "currentPage", defaultValue = "1") Integer currentPage,
-//                                  @RequestParam(name = "pageSize", defaultValue = "7") Integer pageSize,
-//                                  @RequestParam String labelIds) {
-//
-//        PaginationDTO pagination = questionService.selectRelatedQuestion(currentPage, pageSize, labelIds);
-//
-//        return ResultDTO.okOf(pagination);
-//    }
+    @GetMapping("/getQuestions")
+    @ResponseBody
+    public ResultDTO getQuestions(Model model,
+                                  @RequestParam(name = "currentPage", defaultValue = "1") Integer currentPage,
+                                  @RequestParam(name = "pageSize", defaultValue = "7") Integer pageSize,
+                                  @RequestParam(required = false) String labelIds,
+                                    @RequestParam(required = false) String currentArticleId) {
+
+        List<QuestionDTO> questionDTOS = questionService.selectRelatedQuestion(currentPage, pageSize, labelIds, currentArticleId);
+
+        return ResultDTO.okOf(new PageInfo<>(questionDTOS));
+
+    }
 
 
     @GetMapping("/question/getById")
