@@ -21,4 +21,5 @@ public class UserDto extends User {
     public void setFollowers(List<User> followers) {
         this.followers = followers;
     }
+    public String token;
 }

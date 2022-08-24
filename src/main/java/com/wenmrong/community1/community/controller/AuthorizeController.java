@@ -64,22 +64,7 @@ public class AuthorizeController {
         }
     }
 
-    @GetMapping("/logout")
-    public String logout(HttpServletRequest request, HttpServletResponse response) {
-        request.getSession().removeAttribute("user");
-        request.getSession().removeAttribute("userAccount");
-        request.getSession().removeAttribute("userInfo");
-        request.getSession().removeAttribute("unreadCount");
-        for (Cookie cookie : request.getCookies()) {
-            if (cookie.getName().equals("token") || cookie.getName().equals("history")) {
-                cookie.setMaxAge(0);
-                response.addCookie(cookie);
-            }
-        }
 
-        return "redirect:/";
-
-    }
 
 
 }

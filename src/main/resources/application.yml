@@ -91,12 +91,12 @@ rocketmq:
 jasypt:
   # 盐加密
   encryptor:
-    password: "xxxx"
+    password: autodidact
 
 jwt:
   # 加密密钥
-  secret: "xxxxxx"
+  secret: ENC(22HDJ+g6Jxti7CJTXi2urBdQhGJwy4Z5)
   # token有效时长
-  expire: 3600
+  expire: 7200
   # header 名称
   header: token

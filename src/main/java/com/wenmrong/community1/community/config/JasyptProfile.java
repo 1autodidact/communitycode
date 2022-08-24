@@ -16,6 +16,6 @@ public class JasyptProfile {
     }
     @Value("${jasypt.encryptor.password}")
     public void setSecret(String secret) {
-        this.secret = secret;
+        JasyptProfile.secret = secret;
     }
 }

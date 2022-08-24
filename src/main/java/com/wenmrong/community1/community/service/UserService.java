@@ -1,7 +1,9 @@
 package com.wenmrong.community1.community.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wenmrong.community1.community.dto.UserDto;
 import com.wenmrong.community1.community.exception.CustomizeErrorCode;
 import com.wenmrong.community1.community.exception.CustomizeException;
 import com.wenmrong.community1.community.mapper.QuestionMapper;
@@ -9,22 +11,29 @@ import com.wenmrong.community1.community.mapper.UserMapper;
 import com.wenmrong.community1.community.model.Question;
 import com.wenmrong.community1.community.model.User;
 import com.wenmrong.community1.community.model.UserExample;
+import com.wenmrong.community1.community.utils.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import static com.wenmrong.community1.community.constants.CommunityConstants.COMMUNITY_USER_TOKEN;
+import static com.wenmrong.community1.community.constants.CommunityConstants.LOGIN_PREFIX;
 import static com.wenmrong.community1.community.exception.CustomizeErrorCode.LOGIN_FAILURE;
 
 @Service
 public class UserService extends ServiceImpl<UserMapper, User> {
     @Autowired
     RedisTemplate redisTemplate;
+
     @Resource
     private UserMapper userMapper;
 
@@ -37,12 +46,28 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     @Resource
     private QuestionMapper questionMapper;
 
-    public String login(User user) {
-        User userInfo = userMapper.selectOne(new QueryWrapper<User>().eq("name", user.getName()));
-        if (userInfo == null) {
-            throw new CustomizeException(LOGIN_FAILURE);
+    @Autowired
+    JwtTokenUtil jwtTokenUtil;
+
+    public UserDto login(User user) throws InterruptedException {
+        if (Boolean.TRUE.equals(redisTemplate.opsForValue().setIfAbsent(LOGIN_PREFIX + user.getName(), user.getName(), 1000 * 10, TimeUnit.MILLISECONDS))) {
+            User userInfo = userMapper.selectOne(new QueryWrapper<User>().eq("name", user.getName()));
+            if (userInfo == null) {
+                throw new CustomizeException(LOGIN_FAILURE);
+            }
+            String token = jwtTokenUtil.createToken(JSONObject.toJSONString(userInfo));
+            redisTemplate.opsForValue().set(COMMUNITY_USER_TOKEN + user.getName(), token, 1000 * 60 * 60 * 2, TimeUnit.MILLISECONDS);
+
+        } else {
+            LocalDateTime startTime = LocalDateTime.now();
+            do {
+                Thread.sleep(1000);
+            } while (redisTemplate.opsForValue().get(COMMUNITY_USER_TOKEN + user.getName()) == null && Duration.between(startTime, LocalDateTime.now()).getSeconds() < 5000);
         }
-        return String.valueOf(userInfo.getId());
+        String userInfoJson = jwtTokenUtil.getUserInfoFromToken((String) redisTemplate.opsForValue().get(COMMUNITY_USER_TOKEN + user.getName()));
+        UserDto userDto = JSONObject.parseObject(userInfoJson).toJavaObject(UserDto.class);
+        userDto.setToken((String) redisTemplate.opsForValue().get(COMMUNITY_USER_TOKEN + user.getName()));
+        return userDto;
     }
 
     public void createOrUpdate(User user) {
@@ -75,16 +100,16 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         return String.valueOf(user.getId());
     }
 
-    public String sendEmail(String email,String character) {
+    public String sendEmail(String email, String character) {
         //创建激活码
         String code = randomCodeService.createActiveCode();
         //主题
         String subject = "来自Autodidact网站的激活邮件";
         //上面的激活码发送到用户注册邮箱
         //  String context = "<a href=\"http://localhost:8887/checkCode?code="+code+"\">激活请点击:"+code+"</a>";
-        String context = "<a href=\"\">Please complete in 5 minutes "+character+":"+code+"</a>";
+        String context = "<a href=\"\">Please complete in 5 minutes " + character + ":" + code + "</a>";
         //发送激活邮件
-        mailService.sendMimeMail (email,subject,context);
+        mailService.sendMimeMail(email, subject, context);
         return code;
     }
 
@@ -119,5 +144,10 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         if (user != null) {
             throw new CustomizeException(CustomizeErrorCode.REGISTER_FAILURE);
         }
+    }
+
+    public void logout(String token) {
+        User user = jwtTokenUtil.getUserFromToken(token);
+        redisTemplate.delete(COMMUNITY_USER_TOKEN + user.getName());
     }
 }
