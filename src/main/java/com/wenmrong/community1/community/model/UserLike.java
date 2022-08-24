@@ -20,21 +20,21 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@TableName("like")
-public class Like extends Model<Like> {
+@TableName("user_like")
+public class UserLike extends Model<UserLike> {
 
 
     /**
      * 点赞编号
      */
-    @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
+    private Long id;
 
     /**
      * 文章id
      */
     @TableField("article_id")
-    private Integer articleId;
+    private Long articleId;
 
     /**
      * 状态(0取消,1点赞)

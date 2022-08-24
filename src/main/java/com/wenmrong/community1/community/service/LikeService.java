@@ -1,6 +1,6 @@
 package com.wenmrong.community1.community.service;
 
-import com.wenmrong.community1.community.model.Like;
+import com.wenmrong.community1.community.model.UserLike;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author autodidact
  * @since 2022-08-23
  */
-public interface LikeService extends IService<Like> {
+public interface LikeService extends IService<UserLike> {
 
 }

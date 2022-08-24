@@ -1,13 +1,10 @@
 package com.wenmrong.community1.community.controller;
 
 import com.wenmrong.community1.community.dto.ResultDTO;
+import com.wenmrong.community1.community.model.UserLike;
 import com.wenmrong.community1.community.model.User;
 import com.wenmrong.community1.community.service.UserService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -39,9 +36,9 @@ public class UserController {
     }
 
     @PostMapping("/user/updateLikeState")
-    public ResultDTO updateLikeState(String articleId) {
-
-        userService.updateLikeState(articleId);
+    @ResponseBody
+    public ResultDTO updateLikeState(@RequestHeader("token")String token, @RequestBody UserLike articleInfo) {
+        userService.updateLikeState(token, articleInfo.getArticleId());
         return ResultDTO.okOf();
     }
 

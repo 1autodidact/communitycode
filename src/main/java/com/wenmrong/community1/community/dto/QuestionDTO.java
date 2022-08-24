@@ -2,7 +2,7 @@ package com.wenmrong.community1.community.dto;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.wenmrong.community1.community.config.CustomSerializerAndDeserializer;
-import com.wenmrong.community1.community.model.Like;
+import com.wenmrong.community1.community.model.UserLike;
 import com.wenmrong.community1.community.model.User;
 import lombok.Data;
 
@@ -30,6 +30,6 @@ public class QuestionDTO {
     private String html;
     private boolean isLike = false;
     private List<Integer> labelIds;
-    private Like userLikeInfo;
+    private UserLike userUserLikeInfo;
 
 }

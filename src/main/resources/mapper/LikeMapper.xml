@@ -3,7 +3,7 @@
 <mapper namespace="com.wenmrong.community1.community.mapper.LikeMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.wenmrong.community1.community.model.Like">
+    <resultMap id="BaseResultMap" type="com.wenmrong.community1.community.model.UserLike">
         <id column="id" property="id" />
         <result column="article_id" property="articleId" />
         <result column="state" property="state" />

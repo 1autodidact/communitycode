@@ -6,8 +6,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wenmrong.community1.community.dto.UserDto;
 import com.wenmrong.community1.community.exception.CustomizeErrorCode;
 import com.wenmrong.community1.community.exception.CustomizeException;
+import com.wenmrong.community1.community.mapper.LikeMapper;
 import com.wenmrong.community1.community.mapper.QuestionMapper;
 import com.wenmrong.community1.community.mapper.UserMapper;
+import com.wenmrong.community1.community.model.UserLike;
 import com.wenmrong.community1.community.model.Question;
 import com.wenmrong.community1.community.model.User;
 import com.wenmrong.community1.community.model.UserExample;
@@ -46,6 +48,8 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     @Resource
     private QuestionMapper questionMapper;
 
+    @Resource
+    private LikeMapper likeMapper;
     @Autowired
     JwtTokenUtil jwtTokenUtil;
 
@@ -135,7 +139,21 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         return user;
     }
 
-    public void updateLikeState(String articleId) {
+    public void updateLikeState(String token, Long articleId) {
+        User user = jwtTokenUtil.getUserFromToken(token);
+        UserLike record = likeMapper.selectOne(new QueryWrapper<UserLike>()
+                .eq("article_id", articleId)
+                .eq("like_user",user.getId()));
+        if (record != null) {
+            record.setState(false);
+            likeMapper.updateById(record);
+        } else {
+            UserLike userLike = new UserLike();
+            userLike.setArticleId(articleId);
+            userLike.setState(true);
+            userLike.setLikeUser(user.getId());
+            likeMapper.insert(userLike);
+        }
 
     }
 

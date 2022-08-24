@@ -88,7 +88,9 @@ public class WebConfig implements WebMvcConfigurer {
         stringConverter.setSupportedMediaTypes(fastMediaTypes);
         // 将convert添加到converters当中.
         converters.add(fastJsonHttpMessageConverter);
-        converters.add(stringConverter);
+//        converters.add(stringConverter);
+//        configureMessageConverters(converters);
+
     }
 
 }
