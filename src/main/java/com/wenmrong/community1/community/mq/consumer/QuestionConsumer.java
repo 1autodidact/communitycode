@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
  
 @Component
-@RocketMQMessageListener(topic = "question_topic",consumerGroup = "question_consumer")
+@RocketMQMessageListener(topic = "question_topic",consumerGroup = "question_consumer",consumeMode = ConsumeMode.ORDERLY)
 public class QuestionConsumer implements RocketMQListener<Question> {
     private static final Logger log = LoggerFactory.getLogger(QuestionConsumer.class);
 
