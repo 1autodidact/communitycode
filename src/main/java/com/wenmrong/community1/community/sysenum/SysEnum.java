@@ -24,4 +24,46 @@ public class SysEnum {
         }
     }
 
+    public enum CommentType {
+        COMMENT(1),QUESTION(2);
+        private Integer type;
+
+        CommentType(Integer type) {
+            this.type = type;
+        }
+
+        public Integer getType() {
+            return type;
+        }
+
+        public void setType(Integer type) {
+            this.type = type;
+        }
+    }
+
+    public enum LEVEL {
+        LV1(1),
+        LV2(2),
+        LV3(3),
+        LV4(4),
+        LV5(5),
+        LV6(6),
+        LV7(7),
+        LV8(8);
+        private Integer level;
+
+        LEVEL(Integer level) {
+            this.level = level;
+        }
+
+        public Integer getLevel() {
+            return level;
+        }
+
+        public void setLevel(Integer level) {
+            this.level = level;
+        }
+    }
+
+
 }

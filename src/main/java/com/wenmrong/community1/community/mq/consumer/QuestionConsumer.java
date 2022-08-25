@@ -3,6 +3,7 @@ package com.wenmrong.community1.community.mq.consumer;
 import com.alibaba.fastjson.JSONObject;
 import com.wenmrong.community1.community.model.Question;
 import com.wenmrong.community1.community.service.QuestionService;
+import org.apache.rocketmq.spring.annotation.ConsumeMode;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.slf4j.Logger;
@@ -19,7 +20,7 @@ public class QuestionConsumer implements RocketMQListener<Question> {
     QuestionService questionService;
     @Override
     public void onMessage(Question message) {
-        questionService.createOrUpdate(message);
-        log.error("topic:question_topic {}", JSONObject.toJSONString(message));
+//        questionService.createOrUpdate(message);
+        log.error( "线程名称：" +Thread.currentThread().getName() + "XXXXXXXXXXXXXXXXXXXX" +"topic:question_topic {}", JSONObject.toJSONString(message));
     }
 }

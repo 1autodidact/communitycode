@@ -1,11 +1,11 @@
 package com.wenmrong.community1.community.model;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 import lombok.Data;
@@ -13,52 +13,52 @@ import lombok.EqualsAndHashCode;
 
 /**
  * <p>
- * 点赞
+ * 用户等级
  * </p>
  *
  * @author autodidact
- * @since 2022-08-23
+ * @since 2022-08-25
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@TableName("user_like")
-public class UserLike extends Model<UserLike> {
+@TableName("user_level")
+public class UserLevel extends Model<UserLevel> {
 
 
     /**
-     * 点赞编号
+     * 用户等级编号
      */
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     private Long id;
 
     /**
-     * 文章id
+     * 用户等级编号
      */
-    @TableField("article_id")
-    private Long articleId;
+    @TableField(value = "user_id")
+    private Long userId;
 
     /**
-     * 状态(0取消,1点赞)
+     * 等级（Lv6）
      */
-    @TableField("state")
-    private Boolean state;
+    @TableField("level")
+    private Integer level;
 
     /**
-     * 点赞用户id
+     * 积分
      */
-    @TableField("like_user")
-    private Long likeUser;
+    @TableField("points")
+    private Integer points;
 
     /**
      * 创建时间
      */
-    @TableField(value = "create_time",fill = FieldFill.INSERT)
+    @TableField(value = "create_time", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
-    @TableField(value = "update_time",fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
 

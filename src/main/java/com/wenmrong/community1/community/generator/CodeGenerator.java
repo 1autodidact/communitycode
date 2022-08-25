@@ -1,9 +1,11 @@
 package com.wenmrong.community1.community.generator;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.core.exceptions.MybatisPlusException;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.*;
+import com.baomidou.mybatisplus.generator.config.po.TableFill;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
@@ -66,8 +68,14 @@ public class CodeGenerator {
         gc.setXmlName("%sMapper");
         // 开启 swagger2 模式
         gc.setSwagger2(false);
-        // 是否覆盖已有文件
+
+
+        // 是否覆盖已有文件---------------------------------------------------------------------------
         gc.setFileOverride(false);
+
+
+
+
         // 是否开启 ActiveRecord 模式
         gc.setActiveRecord(true);
         // 是否在xml中添加二级缓存配置
@@ -122,6 +130,15 @@ public class CodeGenerator {
 
         // TODO 策略配置
         StrategyConfig strategy = new StrategyConfig();
+        // 字段添加填充
+        TableFill insertFill = new TableFill("create_time", FieldFill.INSERT);
+        TableFill updateFill = new TableFill("update_time", FieldFill.INSERT_UPDATE);
+        List<TableFill> fillFieldTable = new ArrayList<>();
+        fillFieldTable.add(insertFill);
+        fillFieldTable.add(updateFill);
+
+        strategy.setTableFillList(fillFieldTable);
+
         // 数据库表映射到实体的命名策略，驼峰原则
         strategy.setNaming(NamingStrategy.underline_to_camel);
         // 字数据库表字段映射到实体的命名策略，驼峰原则

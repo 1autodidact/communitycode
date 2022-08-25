@@ -9,6 +9,8 @@ import com.wenmrong.community1.community.exception.CustomizeErrorCode;
 import com.wenmrong.community1.community.exception.CustomizeException;
 import com.wenmrong.community1.community.mapper.*;
 import com.wenmrong.community1.community.model.*;
+import com.wenmrong.community1.community.sysenum.SysEnum;
+import com.wenmrong.community1.community.utils.UserInfoProfile;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -140,10 +142,14 @@ public class CommentService  extends ServiceImpl<CommentMapper, Comment> {
 
     }
 
+
+    @Transactional
     public void create(Comment comment) {
+        User user = UserInfoProfile.getUserProfile();
         comment.setParentId(comment.getQuestionId());
-        comment.setType(1);
-        comment.setCommentator(1l);
+        comment.setQuestionId(comment.getQuestionId());
+        comment.setType(SysEnum.CommentType.COMMENT.getType());
+        comment.setCommentator(user.getId());
         commentMapper.insert(comment);
     }
 }

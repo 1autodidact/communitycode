@@ -23,8 +23,7 @@ public class QuestionDTO {
     private Long gmtCreate;
     @JSONField(serializeUsing = CustomSerializerAndDeserializer.class)
     private Long gmtModified;
-    private User user;
-    private UserDto userDto;
+    private UserDto user;
     private TagDTO tagDTO;
     private Object file;
     private String html;

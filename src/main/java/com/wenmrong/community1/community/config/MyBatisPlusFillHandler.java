@@ -6,6 +6,7 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Component
 @Slf4j
@@ -14,16 +15,16 @@ public class MyBatisPlusFillHandler implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
         log.info("start insert .. ");
-        this.setFieldValByName("createTime", LocalDate.now(), metaObject);
+        this.setFieldValByName("createTime", LocalDateTime.now(), metaObject);
         this.setFieldValByName("gmtModified", System.currentTimeMillis(), metaObject);
         this.setFieldValByName("gmtCreate", System.currentTimeMillis(), metaObject);
-        this.setFieldValByName("updateTime", LocalDate.now(), metaObject);
+        this.setFieldValByName("updateTime", LocalDateTime.now(), metaObject);
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
         log.info("start update .. ");
-        this.setFieldValByName("updateTime", System.currentTimeMillis(),metaObject);
+        this.setFieldValByName("updateTime", LocalDateTime.now(),metaObject);
         this.setFieldValByName("gmtModified", System.currentTimeMillis(),metaObject);
     }
 }

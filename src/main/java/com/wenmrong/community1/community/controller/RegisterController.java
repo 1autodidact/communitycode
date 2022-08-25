@@ -26,17 +26,10 @@ public class RegisterController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/register")
-    public String register() {
-        return "register";
-    }
-
-
     @PostMapping("/register")
     @ResponseBody
-    public ResultDTO registering(@RequestBody User user) {
-        String userId = userService.createUser(user);
-        return ResultDTO.okOf(userId);
+    public ResultDTO registering(@RequestBody User user) throws InterruptedException {
+        return ResultDTO.okOf(userService.createUser(user));
     }
 
 

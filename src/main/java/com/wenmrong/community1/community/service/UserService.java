@@ -6,17 +6,23 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wenmrong.community1.community.dto.UserDto;
 import com.wenmrong.community1.community.exception.CustomizeErrorCode;
 import com.wenmrong.community1.community.exception.CustomizeException;
-import com.wenmrong.community1.community.mapper.LikeMapper;
+import com.wenmrong.community1.community.mapper.UserLevelMapper;
+import com.wenmrong.community1.community.mapper.UserLikeMapper;
 import com.wenmrong.community1.community.mapper.QuestionMapper;
 import com.wenmrong.community1.community.mapper.UserMapper;
+import com.wenmrong.community1.community.model.UserLevel;
 import com.wenmrong.community1.community.model.UserLike;
 import com.wenmrong.community1.community.model.Question;
 import com.wenmrong.community1.community.model.User;
 import com.wenmrong.community1.community.model.UserExample;
+import com.wenmrong.community1.community.sysenum.SysEnum;
 import com.wenmrong.community1.community.utils.JwtTokenUtil;
+import com.wenmrong.community1.community.utils.UserInfoProfile;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.Duration;
@@ -24,6 +30,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -35,6 +42,9 @@ import static com.wenmrong.community1.community.exception.CustomizeErrorCode.LOG
 public class UserService extends ServiceImpl<UserMapper, User> {
     @Autowired
     RedisTemplate redisTemplate;
+
+    @Resource
+    private UserLevelMapper userLevelMapper;
 
     @Resource
     private UserMapper userMapper;
@@ -49,11 +59,16 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     private QuestionMapper questionMapper;
 
     @Resource
-    private LikeMapper likeMapper;
+    private UserLikeMapper userLikeMapper;
     @Autowired
     JwtTokenUtil jwtTokenUtil;
 
     public UserDto login(User user) throws InterruptedException {
+        UserDto userDto = this.getLoginInfo(user);
+        return userDto;
+    }
+
+    private UserDto getLoginInfo(User user) throws InterruptedException {
         if (Boolean.TRUE.equals(redisTemplate.opsForValue().setIfAbsent(LOGIN_PREFIX + user.getName(), user.getName(), 1000 * 10, TimeUnit.MILLISECONDS))) {
             User userInfo = userMapper.selectOne(new QueryWrapper<User>().eq("name", user.getName()));
             if (userInfo == null) {
@@ -71,6 +86,8 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         String userInfoJson = jwtTokenUtil.getUserInfoFromToken((String) redisTemplate.opsForValue().get(COMMUNITY_USER_TOKEN + user.getName()));
         UserDto userDto = JSONObject.parseObject(userInfoJson).toJavaObject(UserDto.class);
         userDto.setToken((String) redisTemplate.opsForValue().get(COMMUNITY_USER_TOKEN + user.getName()));
+        UserLevel levelInfo = userLevelMapper.selectOne(new QueryWrapper<UserLevel>().eq("user_id", user.getId()));
+        userDto.setUserLevel(levelInfo);
         return userDto;
     }
 
@@ -99,9 +116,16 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         }
     }
 
-    public String createUser(User user) {
+    @Transactional
+    public UserDto createUser(User user) throws InterruptedException {
         userMapper.insert(user);
-        return String.valueOf(user.getId());
+
+        UserLevel userLevel = new UserLevel();
+        userLevel.setUserId(user.getId());
+        userLevel.setLevel(SysEnum.LEVEL.LV1.getLevel());
+        userLevel.setPoints(0);
+        userLevelMapper.insert(userLevel);
+        return this.getLoginInfo(user);
     }
 
     public String sendEmail(String email, String character) {
@@ -118,41 +142,50 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     }
 
 
-    public List<User> getHotAuthorsList() {
+    public List<UserDto> getHotAuthorsList() {
         List<Question> creator = questionMapper.selectList(new QueryWrapper<Question>());
         Map<Long, List<Question>> creatorGrouping = creator.stream().collect(Collectors.groupingBy(Question::getCreator));
         Map<Long, Integer> scoreGroupingByCreator = creatorGrouping.entrySet().stream().collect(Collectors.toMap(item -> item.getKey(), item -> {
             List<Question> list = item.getValue();
-            return list.stream().map(question -> question.getViewCount() + question.getCommentCount() * 5 + question.getLikeCount() * 10)
-                    .collect(Collectors.summingInt(value -> value));
+            return (Integer) list.stream().map(question -> question.getViewCount() + question.getCommentCount() * 5 + question.getLikeCount() * 10).mapToInt(value -> value).sum();
         }));
         List<Long> creatorId = scoreGroupingByCreator.entrySet().stream().sorted((entry, entry2) -> entry.getValue()).limit(5).map(item -> item.getKey()).collect(Collectors.toList());
         if (creatorId.size() == 0) {
             return new ArrayList<>();
         }
-        return userMapper.selectBatchIds(creatorId);
+        List<User> users = userMapper.selectBatchIds(creatorId);
+        List<Long> userIds = users.stream().map(User::getId).collect(Collectors.toList());
+        List<UserLevel> relatedUserLevel = userLevelMapper.selectList(new QueryWrapper<UserLevel>().in("user_id", userIds));
+        List<UserDto> userDtos = users.stream().map(item -> {
+            UserDto userDto = new UserDto();
+            BeanUtils.copyProperties(item, userDto);
+            Optional<UserLevel> validUser = relatedUserLevel.stream().filter(info -> info.getUserId().equals(item.getId())).findFirst();
+            validUser.ifPresent(userDto::setUserLevel);
+            return userDto;
+        }).collect(Collectors.toList());
+        return userDtos;
     }
 
 
-    public User getUserInfo(String id) {
-        User user = userMapper.selectByPrimaryKey(Long.valueOf(id));
-        return user;
+    public UserDto getUserInfo(String id) {
+        User user = userMapper.selectOne(new QueryWrapper<User>().eq("id", Long.valueOf(id)));
+        return this.buildUserLevelInfo(user);
     }
 
-    public void updateLikeState(String token, Long articleId) {
-        User user = jwtTokenUtil.getUserFromToken(token);
-        UserLike record = likeMapper.selectOne(new QueryWrapper<UserLike>()
+    public void updateLikeState(Long articleId) {
+        User user = UserInfoProfile.getUserProfile();
+        UserLike record = userLikeMapper.selectOne(new QueryWrapper<UserLike>()
                 .eq("article_id", articleId)
                 .eq("like_user",user.getId()));
         if (record != null) {
             record.setState(false);
-            likeMapper.updateById(record);
+            userLikeMapper.updateById(record);
         } else {
             UserLike userLike = new UserLike();
             userLike.setArticleId(articleId);
             userLike.setState(true);
             userLike.setLikeUser(user.getId());
-            likeMapper.insert(userLike);
+            userLikeMapper.insert(userLike);
         }
 
     }
@@ -164,8 +197,16 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         }
     }
 
-    public void logout(String token) {
-        User user = jwtTokenUtil.getUserFromToken(token);
+    public void logout() {
+        User user = UserInfoProfile.getUserProfile();
         redisTemplate.delete(COMMUNITY_USER_TOKEN + user.getName());
+    }
+
+    public UserDto buildUserLevelInfo(User user) {
+        UserDto userDto = new UserDto();
+        BeanUtils.copyProperties(user,userDto);
+        UserLevel levelInfo = userLevelMapper.selectOne(new QueryWrapper<UserLevel>().eq("user_id", user.getId()));
+        userDto.setUserLevel(levelInfo);
+        return userDto;
     }
 }

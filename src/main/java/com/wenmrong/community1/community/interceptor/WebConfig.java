@@ -21,25 +21,17 @@ import java.util.List;
 
 @Configuration
 @EnableWebMvc
-@Order(1)
 public class WebConfig implements WebMvcConfigurer {
-    @PostConstruct
-    public void innit() {
-        System.out.println("init");
-    }
     @Autowired
-    private TokenInterceptor tokenInterceptor;
+    private requestInterceptor requestInterceptor;
 
-    @Autowired
-    private LoginInterceptor loginInterceptor;
+
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(tokenInterceptor).addPathPatterns("/**")
+        registry.addInterceptor(requestInterceptor).addPathPatterns("/**")
                 .excludePathPatterns("/login")
-                .excludePathPatterns("/register")
-                .excludePathPatterns("/getArticleCommentVisitTotal","/getHotAuthorsList","/getLatestComment","/getQuestions","/getCurrentUserRights");
-//        registry.addInterceptor(loginInterceptor).addPathPatterns("/unstar/**","/profile/star","/profile/replies","/profile/questions","/publish","/wallpaper","/download/**","/profile/questions/delete/**","/thumb/**");
+                .excludePathPatterns("/register");
     }
 
     /**
@@ -89,8 +81,6 @@ public class WebConfig implements WebMvcConfigurer {
         // 将convert添加到converters当中.
         converters.add(fastJsonHttpMessageConverter);
 //        converters.add(stringConverter);
-//        configureMessageConverters(converters);
-
     }
 
 }

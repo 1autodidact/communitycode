@@ -1,30 +1,25 @@
 package com.wenmrong.community1.community.interceptor;
 
-import com.alibaba.fastjson.JSONObject;
 import com.wenmrong.community1.community.mapper.UserMapper;
 import com.wenmrong.community1.community.model.User;
-import com.wenmrong.community1.community.model.UserExample;
 import com.wenmrong.community1.community.service.NotificationService;
 import com.wenmrong.community1.community.utils.JwtTokenUtil;
-import netscape.javascript.JSObject;
+import com.wenmrong.community1.community.utils.UserInfoProfile;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
 import java.util.List;
 
-import static com.wenmrong.community1.community.constants.CommunityConstants.COMMUNITY_USER_TOKEN;
-
 @Service
-public class TokenInterceptor implements HandlerInterceptor {
+public class requestInterceptor implements HandlerInterceptor {
     @Resource
     private UserMapper userMapper;
 
@@ -38,19 +33,23 @@ public class TokenInterceptor implements HandlerInterceptor {
     RedisTemplate redisTemplate;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        List<String> excludePath = Arrays.asList("/getArticleCommentVisitTotal", "/getHotAuthorsList", "/getLatestComment", "/getQuestions", "/getCurrentUserRights");
+
         String token = request.getHeader("token");
-        String userInfoJson = jwtTokenUtil.getUserInfoFromToken(token);
-        if (StringUtils.isBlank(userInfoJson)) {
+        if (StringUtils.isBlank(token) && !excludePath.contains(request.getRequestURI())) {
             return false;
         }
-        User user = null;
-        try {
-            JSONObject parse = (JSONObject) JSONObject.parse(userInfoJson);
-            user = parse.toJavaObject(User.class);
-        } catch (Exception e) {
+
+        if (excludePath.contains(request.getRequestURI()) && StringUtils.isBlank(token)) {
+            return true;
+        }
+        boolean tokenExpired = jwtTokenUtil.isTokenExpired(jwtTokenUtil.getExpirationDateFromToken(token));
+        if (tokenExpired) {
             return false;
         }
-        return redisTemplate.opsForValue().get(COMMUNITY_USER_TOKEN + user.getName()) != null;
+        User user = jwtTokenUtil.getUserFromToken(token);
+        UserInfoProfile.setUserProfile(user);
+        return true;
     }
 
     @Override
@@ -60,6 +59,7 @@ public class TokenInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        UserInfoProfile.remove();
 
     }
 }

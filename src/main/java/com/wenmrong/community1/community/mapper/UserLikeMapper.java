@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author autodidact
  * @since 2022-08-23
  */
-public interface LikeMapper extends BaseMapper<UserLike> {
+public interface UserLikeMapper extends BaseMapper<UserLike> {
 
 }

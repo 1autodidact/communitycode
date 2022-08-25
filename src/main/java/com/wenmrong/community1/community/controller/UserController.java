@@ -37,8 +37,8 @@ public class UserController {
 
     @PostMapping("/user/updateLikeState")
     @ResponseBody
-    public ResultDTO updateLikeState(@RequestHeader("token")String token, @RequestBody UserLike articleInfo) {
-        userService.updateLikeState(token, articleInfo.getArticleId());
+    public ResultDTO updateLikeState( @RequestBody UserLike articleInfo) {
+        userService.updateLikeState(articleInfo.getArticleId());
         return ResultDTO.okOf();
     }
 

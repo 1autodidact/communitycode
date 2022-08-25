@@ -40,8 +40,8 @@ public class LoginController {
 
     @GetMapping("/logout")
     @ResponseBody
-    public ResultDTO logout(@RequestHeader("token") String token) {
-        userService.logout(token);
+    public ResultDTO logout() {
+        userService.logout();
         return ResultDTO.okOf();
     }
 

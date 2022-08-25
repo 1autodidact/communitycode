@@ -1,6 +1,7 @@
 package com.wenmrong.community1.community.dto;
 
 import com.wenmrong.community1.community.model.User;
+import com.wenmrong.community1.community.model.UserLevel;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -22,4 +23,6 @@ public class UserDto extends User {
         this.followers = followers;
     }
     public String token;
+
+    public UserLevel userLevel;
 }
