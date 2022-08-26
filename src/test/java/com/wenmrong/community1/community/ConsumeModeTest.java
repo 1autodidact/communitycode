@@ -27,13 +27,23 @@ public class ConsumeModeTest {
     public void testConsumeMode() throws InterruptedException {
         CountDownLatch countDownLatch = new CountDownLatch(20);
         for (int i = 0; i < 20; i++) {
+            int finalI = i;
             new Thread(() -> {
                 Question question = new Question();
-                long num = snowFlake.nextId();
+//                long num = snowFlake.nextId();
+                long num = RandomUtils.nextLong();
+                question.setId(123l);
                 System.out.println("numXXXX " + num);
-                question.setId(num);
                 GenericMessage genericMessage = new GenericMessage(question);
-                rocketMQTemplate.syncSendOrderly("question_topic",genericMessage,"order");
+                if (finalI % 2 == 0) {
+//                    rocketMQTemplate.syncSendOrderly("question_topic", genericMessage, "order");
+                    rocketMQTemplate.sendOneWay("question_topic", genericMessage);
+
+                } else {
+//                    rocketMQTemplate.syncSendOrderly("question_topic", genericMessage, "bill");
+                    rocketMQTemplate.sendOneWay("question_topic", genericMessage);
+
+                }
                 countDownLatch.countDown();
                 System.out.println("发送的num" + num);
             }).start();
@@ -43,6 +53,9 @@ public class ConsumeModeTest {
 
         Thread.sleep(400000);
     }
+
+
+
 
 
 }

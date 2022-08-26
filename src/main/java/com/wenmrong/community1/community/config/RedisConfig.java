@@ -21,7 +21,7 @@ import java.time.Duration;
 
 @EnableCaching
 @Configuration
-public class redisConfig extends CachingConfigurerSupport {
+public class RedisConfig extends CachingConfigurerSupport {
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
