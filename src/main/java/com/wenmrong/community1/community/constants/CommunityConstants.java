@@ -8,4 +8,7 @@ public class CommunityConstants {
     public static final String COMMUNITY_USER_TOKEN = "community:user:token";
 
     public static final String LOGIN_PREFIX = "community:user:login";
+
+
+
 }

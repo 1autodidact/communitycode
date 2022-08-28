@@ -17,7 +17,8 @@ import javax.annotation.Resource;
  * @date : 2022-08-23 20:50
  **/
 @SpringBootTest
-public class testJWt {
+public class
+testJWt {
     @Resource
     JwtTokenUtil jwtTokenUtil;
     @Test

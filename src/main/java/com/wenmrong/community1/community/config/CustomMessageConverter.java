@@ -84,9 +84,6 @@ public class CustomMessageConverter
             if (payload instanceof String && JSON.isValid((String) payload)) {
                 obj = ((String) payload).getBytes(fastJsonConfig.getCharset());
             } else {
-                if (payload instanceof Question) {
-                    ((Question) payload).setCommentCount(9999);
-                }
                 obj = JSON.toJSONBytes(payload, fastJsonConfig.getSerializeFilters(), fastJsonConfig.getSerializerFeatures());
             }
         } else {

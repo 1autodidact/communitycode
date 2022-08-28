@@ -209,4 +209,15 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         userDto.setUserLevel(levelInfo);
         return userDto;
     }
+
+    public UserDto getCurrentUserRights() {
+        User userProfile = UserInfoProfile.getUserProfile();
+        UserDto userDto = new UserDto();
+        if (userProfile  == null) {
+            return userDto;
+        }
+        BeanUtils.copyProperties(userProfile,userDto);
+        return userDto;
+    }
+
 }

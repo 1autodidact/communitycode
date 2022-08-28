@@ -2,6 +2,7 @@ package com.wenmrong.community1.community.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wenmrong.community1.community.dto.ResultDTO;
+import com.wenmrong.community1.community.dto.UserDto;
 import com.wenmrong.community1.community.mapper.UserMapper;
 import com.wenmrong.community1.community.model.User;
 import com.wenmrong.community1.community.service.NotificationService;
@@ -34,8 +35,8 @@ public class LoginController {
 
     @GetMapping("/getCurrentUserRights")
     @ResponseBody
-    public ResultDTO<User> getCurrentUserRights(@RequestHeader("token") String token) {
-        return ResultDTO.okOf(JSONObject.parse(jwtTokenUtil.getUserInfoFromToken(token)));
+    public ResultDTO<UserDto> getCurrentUserRights() {
+        return ResultDTO.okOf(userService.getCurrentUserRights());
     }
 
     @GetMapping("/logout")

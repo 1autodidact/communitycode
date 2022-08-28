@@ -1,10 +1,13 @@
 package com.wenmrong.community1.community.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.wenmrong.community1.community.cache.TagCache;
+import com.wenmrong.community1.community.constants.MQTopic;
 import com.wenmrong.community1.community.dto.PaginationDTO;
 import com.wenmrong.community1.community.dto.QuestionDTO;
 import com.wenmrong.community1.community.dto.QuestionQueryDTO;
@@ -24,34 +27,38 @@ import com.wenmrong.community1.community.utils.UserInfoProfile;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
+import org.apache.rocketmq.spring.core.RocketMQLocalRequestCallback;
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageHeaders;
+import org.springframework.messaging.support.GenericMessage;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static org.apache.rocketmq.common.message.MessageConst.PROPERTY_CLUSTER;
 
 @Service
 public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
-    @Autowired
+    @Resource
     private UserMapper userMapper;
-    @Autowired
+    @Resource
     private QuestionMapper questionMapper;
-    @Autowired
+    @Resource
     private QuestionExtMapper questionExtMapper;
     @Resource
     private LabelMapper labelMapper;
     @Autowired
     private QuestionService questionService;
-    @Autowired
+    @Resource
     private UserLikeMapper userlikeMapper;
     @Resource
     private CommentMapper commentMapper;
@@ -59,6 +66,9 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
     private UserLevelMapper userLevelMapper;
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RocketMQTemplate rocketMQTemplate;
 
     public PaginationDTO<QuestionDTO> list(String search, String tag, Integer page, Integer size, String sort) {
         if (StringUtils.isNotBlank(search)) {
@@ -216,7 +226,22 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
        question.setLikeCount(0);
        question.setTag("language");
        question.setLabelIds(questionDTO.getLabelIds());
-       questionMapper.insert(question);
+
+
+
+        rocketMQTemplate.sendAndReceive(MQTopic.QUESTION_TOPIC,question, new RocketMQLocalRequestCallback() {
+            @Override
+            public void onSuccess(Object message) {
+                log.error("消息发送成功" + JSONObject.toJSONString(message));
+            }
+
+            @Override
+            public void onException(Throwable e) {
+                log.error("消息发送失败",e);
+
+            }
+        });
+
 
    }
 

@@ -40,7 +40,7 @@ public class RocketMQConfig {
 
         rocketMQTemplate.setMessageConverter(compositeMessageConverter);
         // 默认的配置
-//        rocketMQTemplate.setMessageConverter( rocketMQMessageConverter.getMessageConverter());
+        rocketMQTemplate.setMessageConverter( rocketMQMessageConverter.getMessageConverter());
         return rocketMQTemplate;
     }
 }
