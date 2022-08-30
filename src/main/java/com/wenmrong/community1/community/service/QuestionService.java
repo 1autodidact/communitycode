@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.wenmrong.community1.community.cache.TagCache;
 import com.wenmrong.community1.community.constants.MQTopic;
@@ -21,30 +20,20 @@ import com.wenmrong.community1.community.model.Comment;
 import com.wenmrong.community1.community.model.Question;
 import com.wenmrong.community1.community.model.QuestionExample;
 import com.wenmrong.community1.community.model.User;
-import com.wenmrong.community1.community.model.UserLevel;
 import com.wenmrong.community1.community.model.UserLike;
 import com.wenmrong.community1.community.utils.UserInfoProfile;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.session.RowBounds;
 import org.apache.rocketmq.spring.core.RocketMQLocalRequestCallback;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageHeaders;
-import org.springframework.messaging.support.GenericMessage;
-import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static org.apache.rocketmq.common.message.MessageConst.PROPERTY_CLUSTER;
 
 @Service
 public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
@@ -297,6 +286,7 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
     }
 
 
-
-
+    public List<UserLike> getLikesArticle(String likeUser) {
+        return userlikeMapper.selectList(new QueryWrapper<UserLike>().eq("like_user", likeUser));
+    }
 }

@@ -6,6 +6,7 @@ import com.wenmrong.community1.community.enums.CommentTypeEnum;
 import com.wenmrong.community1.community.model.Label;
 import com.wenmrong.community1.community.model.Question;
 import com.wenmrong.community1.community.model.User;
+import com.wenmrong.community1.community.model.UserLike;
 import com.wenmrong.community1.community.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -110,5 +111,13 @@ public class QuestionController {
         questionService.create(questionDTO);
         return ResultDTO.okOf();
     }
+    @GetMapping("/article/getLikesArticle")
+    @ResponseBody
+    public ResultDTO getLikesArticle(@RequestParam(name = "currentPage", defaultValue = "1") Integer currentPage,
+                                     @RequestParam(name = "pageSize", defaultValue = "7") Integer pageSize,
+                                     @RequestParam String likeUser) {
+        List<UserLike> relatedLikeUserRecord = questionService.getLikesArticle(likeUser);
+        return ResultDTO.okOf(relatedLikeUserRecord);
 
+    }
 }
