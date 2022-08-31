@@ -37,7 +37,7 @@ public class UserController {
 
     @PostMapping("/user/updateLikeState")
     @ResponseBody
-    public ResultDTO updateLikeState( @RequestBody UserLike articleInfo) {
+    public ResultDTO updateLikeState(@RequestBody UserLike articleInfo) {
         userService.updateLikeState(articleInfo.getArticleId());
         return ResultDTO.okOf();
     }
@@ -46,5 +46,11 @@ public class UserController {
     public ResultDTO isValidUser(String username) {
         userService.validateUserInfo(username);
         return ResultDTO.okOf();
+    }
+
+    @GetMapping("/user/getFollowCount")
+    public ResultDTO getFollowCount(String userId) {
+        Integer followCount = userService.getFollowCount(userId);
+        return ResultDTO.okOf(followCount);
     }
 }

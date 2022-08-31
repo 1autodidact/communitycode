@@ -6,15 +6,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wenmrong.community1.community.dto.UserDto;
 import com.wenmrong.community1.community.exception.CustomizeErrorCode;
 import com.wenmrong.community1.community.exception.CustomizeException;
-import com.wenmrong.community1.community.mapper.UserLevelMapper;
-import com.wenmrong.community1.community.mapper.UserLikeMapper;
-import com.wenmrong.community1.community.mapper.QuestionMapper;
-import com.wenmrong.community1.community.mapper.UserMapper;
-import com.wenmrong.community1.community.model.UserLevel;
-import com.wenmrong.community1.community.model.UserLike;
-import com.wenmrong.community1.community.model.Question;
-import com.wenmrong.community1.community.model.User;
-import com.wenmrong.community1.community.model.UserExample;
+import com.wenmrong.community1.community.mapper.*;
+import com.wenmrong.community1.community.model.*;
 import com.wenmrong.community1.community.sysenum.SysEnum;
 import com.wenmrong.community1.community.utils.JwtTokenUtil;
 import com.wenmrong.community1.community.utils.UserInfoProfile;
@@ -58,6 +51,8 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     @Resource
     private QuestionMapper questionMapper;
 
+    @Resource
+    private UserFollowMapper userFollowMapper;
     @Resource
     private UserLikeMapper userLikeMapper;
     @Autowired
@@ -220,4 +215,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         return userDto;
     }
 
+    public Integer getFollowCount(String userId) {
+        return userFollowMapper.selectCount(new QueryWrapper<UserFollow>().eq("userId", Long.valueOf(userId)));
+    }
 }
