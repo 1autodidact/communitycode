@@ -20,6 +20,7 @@ import com.wenmrong.community1.community.model.Comment;
 import com.wenmrong.community1.community.model.Question;
 import com.wenmrong.community1.community.model.QuestionExample;
 import com.wenmrong.community1.community.model.User;
+import com.wenmrong.community1.community.model.UserFollow;
 import com.wenmrong.community1.community.model.UserLike;
 import com.wenmrong.community1.community.utils.UserInfoProfile;
 import org.apache.commons.lang3.RandomUtils;
@@ -55,7 +56,8 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
     private UserLevelMapper userLevelMapper;
     @Autowired
     private UserService userService;
-
+    @Resource
+    private UserFollowMapper userFollowMapper;
     @Autowired
     private RocketMQTemplate rocketMQTemplate;
 
@@ -277,11 +279,16 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
 
 
     private QuestionDTO assembleQuestionInfo(Question question) {
+        User currentUser = UserInfoProfile.getUserProfile();
         QuestionDTO questionDTO = new QuestionDTO();
         BeanUtils.copyProperties(question, questionDTO);
         User user = userMapper.selectByPrimaryKey(question.getCreator());
         UserDto userDto = userService.buildUserLevelInfo(user);
         questionDTO.setUser(userDto);
+        UserFollow userFollow = userFollowMapper.selectOne(new QueryWrapper<UserFollow>().eq("user_id", user.getId()).eq("follow_id", currentUser.getId()));
+        if (userFollow != null) {
+            questionDTO.setIsFollow(true);
+        }
         return questionDTO;
     }
 

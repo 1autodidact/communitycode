@@ -28,7 +28,7 @@ public class QuestionDTO {
     private Object file;
     private String html;
     private boolean isLike = false;
-    private boolean isFollow = false;
+    private Boolean isFollow = false;
     private List<Integer> labelIds;
     private UserLike userUserLikeInfo;
 
