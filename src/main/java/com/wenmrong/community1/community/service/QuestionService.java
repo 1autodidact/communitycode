@@ -285,15 +285,22 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
         User user = userMapper.selectByPrimaryKey(question.getCreator());
         UserDto userDto = userService.buildUserLevelInfo(user);
         questionDTO.setUser(userDto);
-        UserFollow userFollow = userFollowMapper.selectOne(new QueryWrapper<UserFollow>().eq("user_id", user.getId()).eq("follow_id", currentUser.getId()));
-        if (userFollow != null) {
-            questionDTO.setIsFollow(true);
+        if (currentUser != null) {
+            UserFollow userFollow = userFollowMapper.selectOne(new QueryWrapper<UserFollow>().eq("user_id", user.getId()).eq("follow_id", currentUser.getId()));
+            if (userFollow != null) {
+                questionDTO.setIsFollow(true);
+            }
         }
         return questionDTO;
     }
 
 
-    public List<UserLike> getLikesArticle(String likeUser) {
-        return userlikeMapper.selectList(new QueryWrapper<UserLike>().eq("like_user", likeUser));
+    public List<Question> getLikesArticle(String likeUser) {
+        List<UserLike> like_user = userlikeMapper.selectList(new QueryWrapper<UserLike>().eq("like_user", likeUser));
+        List<Long> likeArticleIds = like_user.stream().map(UserLike::getArticleId).collect(Collectors.toList());
+        if (likeArticleIds.size() == 0) {
+            return new ArrayList<Question>();
+        }
+        return questionMapper.selectList(new QueryWrapper<Question>().in("id", likeArticleIds));
     }
 }

@@ -116,8 +116,8 @@ public class QuestionController {
     public ResultDTO getLikesArticle(@RequestParam(name = "currentPage", defaultValue = "1") Integer currentPage,
                                      @RequestParam(name = "pageSize", defaultValue = "7") Integer pageSize,
                                      @RequestParam String likeUser) {
-        List<UserLike> relatedLikeUserRecord = questionService.getLikesArticle(likeUser);
-        return ResultDTO.okOf(relatedLikeUserRecord);
+        List<Question> likesArticle = questionService.getLikesArticle(likeUser);
+        return ResultDTO.okOf(likesArticle);
 
     }
 }
