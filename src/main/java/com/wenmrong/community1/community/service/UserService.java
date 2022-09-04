@@ -3,12 +3,14 @@ package com.wenmrong.community1.community.service;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.pagehelper.PageHelper;
 import com.wenmrong.community1.community.dto.UserDto;
 import com.wenmrong.community1.community.exception.CustomizeErrorCode;
 import com.wenmrong.community1.community.exception.CustomizeException;
 import com.wenmrong.community1.community.mapper.*;
 import com.wenmrong.community1.community.model.*;
 import com.wenmrong.community1.community.sysenum.SysEnum;
+import com.wenmrong.community1.community.utils.BeanPlusUtils;
 import com.wenmrong.community1.community.utils.JwtTokenUtil;
 import com.wenmrong.community1.community.utils.UserInfoProfile;
 import org.springframework.beans.BeanUtils;
@@ -35,28 +37,22 @@ import static com.wenmrong.community1.community.exception.CustomizeErrorCode.LOG
 public class UserService extends ServiceImpl<UserMapper, User> {
     @Autowired
     RedisTemplate redisTemplate;
-
+    @Autowired
+    JwtTokenUtil jwtTokenUtil;
     @Resource
     private UserLevelMapper userLevelMapper;
-
     @Resource
     private UserMapper userMapper;
-
     @Autowired
     private MailService mailService;
-
     @Autowired
     private RandomCodeService randomCodeService;
-
     @Resource
     private QuestionMapper questionMapper;
-
     @Resource
     private UserFollowMapper userFollowMapper;
     @Resource
     private UserLikeMapper userLikeMapper;
-    @Autowired
-    JwtTokenUtil jwtTokenUtil;
 
     public UserDto login(User user) throws InterruptedException {
         UserDto userDto = this.getLoginInfo(user);
@@ -171,7 +167,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         User user = UserInfoProfile.getUserProfile();
         UserLike record = userLikeMapper.selectOne(new QueryWrapper<UserLike>()
                 .eq("article_id", articleId)
-                .eq("like_user",user.getId()));
+                .eq("like_user", user.getId()));
         if (record != null) {
             record.setState(false);
             userLikeMapper.updateById(record);
@@ -199,7 +195,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
 
     public UserDto buildUserLevelInfo(User user) {
         UserDto userDto = new UserDto();
-        BeanUtils.copyProperties(user,userDto);
+        BeanUtils.copyProperties(user, userDto);
         UserLevel levelInfo = userLevelMapper.selectOne(new QueryWrapper<UserLevel>().eq("user_id", user.getId()));
         userDto.setUserLevel(levelInfo);
         return userDto;
@@ -208,14 +204,58 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     public UserDto getCurrentUserRights() {
         User userProfile = UserInfoProfile.getUserProfile();
         UserDto userDto = new UserDto();
-        if (userProfile  == null) {
+        if (userProfile == null) {
             return userDto;
         }
-        BeanUtils.copyProperties(userProfile,userDto);
+        BeanUtils.copyProperties(userProfile, userDto);
         return userDto;
     }
 
     public Integer getFollowCount(String userId) {
         return userFollowMapper.selectCount(new QueryWrapper<UserFollow>().eq("user_id", Long.valueOf(userId)));
+    }
+
+
+    public List<UserDto> getFollowUsers(Integer currentPage, Integer pageSize, String bigCow, String fan) {
+        PageHelper.startPage(currentPage, pageSize, true);
+        String column = bigCow != null ? "follow_id" : "user_id";
+        String id = bigCow != null ? bigCow : fan;
+
+        List<UserFollow> followUsers = userFollowMapper.selectList(new QueryWrapper<UserFollow>().eq(column, id));
+        List<Long> followerIds = followUsers.stream().map(item -> {
+            if (bigCow != null) {
+                return item.getUserId();
+            }
+            return item.getFollowId();
+        }).collect(Collectors.toList());
+        if (followerIds.size() == 0) {
+            return new ArrayList<>();
+        }
+        List<User> users = userMapper.selectList(new QueryWrapper<User>().in("id", followerIds));
+        List<UserLevel> userLevelInfos = userLevelMapper.selectList(new QueryWrapper<UserLevel>().in("user_id", followerIds));
+
+        List<UserDto> userDtos = users.stream().map(item -> {
+            UserDto userDto = new UserDto();
+            BeanUtils.copyProperties(item, userDto);
+            Optional<UserLevel> validLevelInfo = userLevelInfos.stream().filter(userInfo -> userInfo.getUserId().equals(userDto.getId())).findFirst();
+            validLevelInfo.ifPresent(userLevel -> userDto.setUserLevel(validLevelInfo.get()));
+            userDto.setIsFollow(true);
+            return userDto;
+        }).collect(Collectors.toList());
+        return userDtos;
+    }
+
+    public void updateFollowState(UserDto toUser) {
+        User user = UserInfoProfile.getUserProfile();
+
+        UserFollow record = userFollowMapper.selectOne(new QueryWrapper<UserFollow>().eq("user_id", toUser.getId()).eq("follow_id", user.getId()));
+        if (record != null) {
+            userFollowMapper.deleteById(record.getId());
+        } else {
+            UserFollow userFollow = new UserFollow();
+            userFollow.setUserId(toUser.getId());
+            userFollow.setFollowId(user.getId());
+            userFollowMapper.insert(userFollow);
+        }
     }
 }

@@ -25,4 +25,6 @@ public class UserDto extends User {
     public String token;
 
     public UserLevel userLevel;
+
+    public Boolean isFollow;
 }

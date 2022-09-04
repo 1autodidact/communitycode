@@ -1,12 +1,15 @@
 package com.wenmrong.community1.community.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.wenmrong.community1.community.dto.ResultDTO;
+import com.wenmrong.community1.community.dto.UserDto;
 import com.wenmrong.community1.community.model.UserLike;
 import com.wenmrong.community1.community.model.User;
 import com.wenmrong.community1.community.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * <h3>community</h3>
@@ -52,5 +55,23 @@ public class UserController {
     public ResultDTO getFollowCount(String userId) {
         Integer followCount = userService.getFollowCount(userId);
         return ResultDTO.okOf(followCount);
+    }
+
+    @GetMapping("/getFollowUsers")
+    @ResponseBody
+    public ResultDTO getFollowUsers(
+            @RequestParam(name = "currentPage", defaultValue = "1") Integer currentPage,
+            @RequestParam(name = "pageSize", defaultValue = "7") Integer pageSize,
+            @RequestParam(required = false) String bigCow,
+            @RequestParam(required = false) String fan) {
+
+        List<UserDto> followUsers = userService.getFollowUsers(currentPage, pageSize, bigCow, fan);
+        return ResultDTO.okOf(new PageInfo<>(followUsers));
+    }
+    @PostMapping("/updateFollowState")
+    @ResponseBody
+    public ResultDTO updateFollowState(@RequestBody UserDto user) {
+        userService.updateFollowState(user);
+        return ResultDTO.okOf();
     }
 }

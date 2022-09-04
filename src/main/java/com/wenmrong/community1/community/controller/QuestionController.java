@@ -6,9 +6,9 @@ import com.wenmrong.community1.community.enums.CommentTypeEnum;
 import com.wenmrong.community1.community.model.Label;
 import com.wenmrong.community1.community.model.Question;
 import com.wenmrong.community1.community.model.User;
-import com.wenmrong.community1.community.model.UserLike;
 import com.wenmrong.community1.community.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -68,14 +68,14 @@ public class QuestionController {
 
     @GetMapping("/getQuestions")
     @ResponseBody
-    public ResultDTO getQuestions(Model model,
+    public ResultDTO getQuestions(
                                   @RequestParam(name = "currentPage", defaultValue = "1") Integer currentPage,
-                                  @RequestParam(name = "pageSize", defaultValue = "7") Integer pageSize,
+                                  @RequestParam(name = "pageSize", defaultValue = "3") Integer pageSize,
                                   @RequestParam(required = false) String labelIds,
-                                    @RequestParam(required = false) String currentArticleId) {
+                                    @RequestParam(required = false) String currentArticleId,
+                                  @RequestParam(required = false) String createUser) {
 
-        List<QuestionDTO> questionDTOS = questionService.selectRelatedQuestion(currentPage, pageSize, labelIds, currentArticleId);
-
+        List<QuestionDTO> questionDTOS = questionService.selectRelatedQuestion(currentPage, pageSize, labelIds, currentArticleId, createUser);
         return ResultDTO.okOf(new PageInfo<>(questionDTOS));
 
     }

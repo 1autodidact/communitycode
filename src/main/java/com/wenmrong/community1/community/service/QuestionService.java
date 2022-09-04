@@ -236,12 +236,14 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
 
    }
 
-   public List<QuestionDTO> selectRelatedQuestion(Integer currentPage, Integer pageSize, String labelIds, String currentArticleId) {
+   public List<QuestionDTO> selectRelatedQuestion(Integer currentPage, Integer pageSize, String labelIds, String currentArticleId, String createUser) {
        User user = UserInfoProfile.getUserProfile();
        PageHelper.startPage(currentPage,pageSize,true);
        HashSet requestLabId = new HashSet(Arrays.asList(Optional.ofNullable(labelIds).orElse("").split(",")));
+       QueryWrapper condition = createUser == null?null:new QueryWrapper<Question>().eq("creator",createUser);
 
-       List<Question> questions = questionMapper.selectList(null);
+
+       List<Question> questions = questionMapper.selectList(condition);
        List<Long> articleIds = questions.stream().map(Question::getId).collect(Collectors.toList());
        if (articleIds.size() == 0) {
            return new ArrayList<>();
