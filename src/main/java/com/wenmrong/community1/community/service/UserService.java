@@ -212,7 +212,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     }
 
     public Integer getFollowCount(String userId) {
-        return userFollowMapper.selectCount(new QueryWrapper<UserFollow>().eq("user_id", Long.valueOf(userId)));
+        return userFollowMapper.selectCount(new QueryWrapper<UserFollow>().eq("follow_id", Long.valueOf(userId)));
     }
 
 
