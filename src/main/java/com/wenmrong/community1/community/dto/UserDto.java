@@ -26,5 +26,9 @@ public class UserDto extends User {
 
     public UserLevel userLevel;
 
+    public int likes;
+
+    public int viewCount;
+
     public Boolean isFollow;
 }

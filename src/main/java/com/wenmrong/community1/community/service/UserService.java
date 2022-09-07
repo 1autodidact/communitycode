@@ -160,7 +160,20 @@ public class UserService extends ServiceImpl<UserMapper, User> {
 
     public UserDto getUserInfo(String id) {
         User user = userMapper.selectOne(new QueryWrapper<User>().eq("id", Long.valueOf(id)));
-        return this.buildUserLevelInfo(user);
+        UserDto userDto = this.buildUserLevelInfo(user);
+        this.assembleStatisticInfo(Long.valueOf(id), userDto);
+        return userDto;
+    }
+
+    private void assembleStatisticInfo(Long id, UserDto userDto) {
+        List<Question> question = questionMapper.selectList(new QueryWrapper<Question>().eq("creator", id));
+        if (question.size() != 0) {
+            List<Long> questionIds = question.stream().map(Question::getId).collect(Collectors.toList());
+            int viewCount = question.stream().mapToInt(Question::getViewCount).sum();
+            Integer likes = userLikeMapper.selectCount(new QueryWrapper<UserLike>().eq("state", "1").in("article_id", questionIds));
+            userDto.setLikes(likes);
+            userDto.setViewCount(viewCount);
+        }
     }
 
     public void updateLikeState(Long articleId) {
@@ -237,11 +250,13 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         List<UserDto> userDtos = users.stream().map(item -> {
             UserDto userDto = new UserDto();
             BeanUtils.copyProperties(item, userDto);
+            this.assembleStatisticInfo(item.getId(),userDto);
             Optional<UserLevel> validLevelInfo = userLevelInfos.stream().filter(userInfo -> userInfo.getUserId().equals(userDto.getId())).findFirst();
             validLevelInfo.ifPresent(userLevel -> userDto.setUserLevel(validLevelInfo.get()));
             userDto.setIsFollow(true);
             return userDto;
         }).collect(Collectors.toList());
+
         return userDtos;
     }
 

@@ -233,6 +233,18 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
             }
         });
 
+        rocketMQTemplate.sendAndReceive(MQTopic.NOTIFICATION_TOPIC,question, new RocketMQLocalRequestCallback() {
+            @Override
+            public void onSuccess(Object message) {
+                log.error("消息发送成功" + JSONObject.toJSONString(message));
+            }
+
+            @Override
+            public void onException(Throwable e) {
+                log.error("消息发送失败",e);
+
+            }
+        });
 
    }
 
