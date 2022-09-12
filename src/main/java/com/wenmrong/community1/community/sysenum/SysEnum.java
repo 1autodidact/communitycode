@@ -66,4 +66,32 @@ public class SysEnum {
     }
 
 
+    public enum Notification_Type {
+        COMMENT(1),
+        LIKE(2),
+        FOLLOW(3),
+        /**
+         * 升级
+         */
+        UPGRADE(4),
+        /**
+         * 更新文章
+         */
+        PUBLISH(5);
+
+        private Integer type;
+
+        Notification_Type(Integer type) {
+            this.type = type;
+        }
+
+        public Integer getType() {
+            return type;
+        }
+
+        public void setType(Integer type) {
+            this.type = type;
+        }
+    }
+
 }

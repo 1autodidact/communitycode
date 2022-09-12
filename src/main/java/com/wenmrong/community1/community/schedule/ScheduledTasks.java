@@ -26,7 +26,7 @@ public class ScheduledTasks {
 	private QuestionMapper questionMapper;
 	@Autowired
 	private HotTagCache hotTagCache;
-	@Scheduled(fixedRate = 1000 * 60 * 60 * 3)
+//	@Scheduled(fixedRate = 1000 * 60 * 60 * 3)
 	public void hotTagSchedule() {
 		log.info("The time is now {}", new Date());
 		int offset = 0;

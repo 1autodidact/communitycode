@@ -7,26 +7,19 @@ import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Sets;
 import com.wenmrong.community1.community.cache.TagCache;
 import com.wenmrong.community1.community.constants.MQTopic;
-import com.wenmrong.community1.community.dto.PaginationDTO;
-import com.wenmrong.community1.community.dto.QuestionDTO;
-import com.wenmrong.community1.community.dto.QuestionQueryDTO;
-import com.wenmrong.community1.community.dto.TagDTO;
-import com.wenmrong.community1.community.dto.UserDto;
+import com.wenmrong.community1.community.dto.*;
 import com.wenmrong.community1.community.enums.SortEnum;
 import com.wenmrong.community1.community.exception.CustomizeErrorCode;
 import com.wenmrong.community1.community.exception.CustomizeException;
 import com.wenmrong.community1.community.mapper.*;
-import com.wenmrong.community1.community.model.Comment;
-import com.wenmrong.community1.community.model.Question;
-import com.wenmrong.community1.community.model.QuestionExample;
-import com.wenmrong.community1.community.model.User;
-import com.wenmrong.community1.community.model.UserFollow;
-import com.wenmrong.community1.community.model.UserLike;
+import com.wenmrong.community1.community.model.*;
+import com.wenmrong.community1.community.sysenum.SysEnum;
 import com.wenmrong.community1.community.utils.UserInfoProfile;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.spring.core.RocketMQLocalRequestCallback;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -116,7 +109,7 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
             QuestionDTO questionDTO = new QuestionDTO();
             BeanUtils.copyProperties(question, questionDTO);
             UserDto userDto = new UserDto();
-            BeanUtils.copyProperties(user,userDto);
+            BeanUtils.copyProperties(user, userDto);
             questionDTO.setUser(userDto);
             TagDTO tagDTO = this.randomGetTag();
             questionDTO.setTagDTO(tagDTO);
@@ -141,12 +134,11 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
     }
 
 
-
     public QuestionDTO getById(Long id) {
         //先进行计数,如果question已经查询完毕,再计数无法及时刷新数据
         questionService.incView(id);
         Question question = questionMapper.selectById(id);
-            if (question == null) {
+        if (question == null) {
             throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
         }
         return assembleQuestionInfo(question);
@@ -207,89 +199,86 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
 
         return questionDTOS;
     }
+
     @Transactional
-   public void create(QuestionDTO questionDTO) {
-       Question question = new Question();
-       BeanUtils.copyProperties(questionDTO,question);
-       question.setCreator(Long.valueOf(questionDTO.getUserId()));
-       question.setViewCount(0);
-       question.setCommentCount(0);
-       question.setLikeCount(0);
-       question.setTag("language");
-       question.setLabelIds(questionDTO.getLabelIds());
+    public void create(QuestionDTO questionDTO) {
+        User userProfile = UserInfoProfile.getUserProfile();
+        Question question = new Question();
+        BeanUtils.copyProperties(questionDTO, question);
+        question.setCreator(Long.valueOf(questionDTO.getUserId()));
+        question.setViewCount(0);
+        question.setCommentCount(0);
+        question.setLikeCount(0);
+        question.setTag("language");
+        question.setLabelIds(questionDTO.getLabelIds());
+        questionMapper.insert(question);
 
+        Notification notification = new Notification();
+        notification.setType(SysEnum.Notification_Type.PUBLISH.getType());
+        notification.setOuterid(question.getId());
+        notification.setNotifierName(userProfile.getName());
+        notification.setOuterTitle(this.buildNotificationContent(userProfile, question));
+        rocketMQTemplate.sendAndReceive(MQTopic.NOTIFICATION_TOPIC, notification, new RocketMQLocalRequestCallback<String>() {
 
-
-        rocketMQTemplate.sendAndReceive(MQTopic.QUESTION_TOPIC,question, new RocketMQLocalRequestCallback() {
             @Override
-            public void onSuccess(Object message) {
-                log.error("消息发送成功" + JSONObject.toJSONString(message));
+            public void onSuccess(String message) {
+                log.error("消息发送成功" + message);
             }
-
             @Override
             public void onException(Throwable e) {
-                log.error("消息发送失败",e);
-
+                log.error("消息发送失败", e);
             }
         });
 
-        rocketMQTemplate.sendAndReceive(MQTopic.NOTIFICATION_TOPIC,question, new RocketMQLocalRequestCallback() {
-            @Override
-            public void onSuccess(Object message) {
-                log.error("消息发送成功" + JSONObject.toJSONString(message));
-            }
+    }
 
-            @Override
-            public void onException(Throwable e) {
-                log.error("消息发送失败",e);
+    @NotNull
+    private String buildNotificationContent(User userProfile, Question question) {
+        return String.format("%s发布了%s文章",userProfile.getName(),question.getTitle());
+    }
 
-            }
-        });
-
-   }
-
-   public List<QuestionDTO> selectRelatedQuestion(Integer currentPage, Integer pageSize, String labelIds, String currentArticleId, String createUser) {
-       User user = UserInfoProfile.getUserProfile();
-       PageHelper.startPage(currentPage,pageSize,true);
-       HashSet requestLabId = new HashSet(Arrays.asList(Optional.ofNullable(labelIds).orElse("").split(",")));
-       QueryWrapper condition = createUser == null?null:new QueryWrapper<Question>().eq("creator",createUser);
+    public List<QuestionDTO> selectRelatedQuestion(Integer currentPage, Integer pageSize, String labelIds, String currentArticleId, String createUser) {
+        User user = UserInfoProfile.getUserProfile();
+        PageHelper.startPage(currentPage, pageSize, true);
+        HashSet requestLabId = new HashSet(Arrays.asList(Optional.ofNullable(labelIds).orElse("").split(",")));
+        QueryWrapper condition = createUser == null ? null : new QueryWrapper<Question>().eq("creator", createUser);
 
 
-       List<Question> questions = questionMapper.selectList(condition);
-       List<Long> articleIds = questions.stream().map(Question::getId).collect(Collectors.toList());
-       if (articleIds.size() == 0) {
-           return new ArrayList<>();
-       }
-       List<UserLike> userLikeRecord = userlikeMapper.selectList(new QueryWrapper<UserLike>().in("article_id", articleIds));
+        List<Question> questions = questionMapper.selectList(condition);
+        List<Long> articleIds = questions.stream().map(Question::getId).collect(Collectors.toList());
+        if (articleIds.size() == 0) {
+            return new ArrayList<>();
+        }
+        List<UserLike> userLikeRecord = userlikeMapper.selectList(new QueryWrapper<UserLike>().in("article_id", articleIds));
 
-       List<Comment> relatedComments = commentMapper.selectList(new QueryWrapper<Comment>().in("question_id", articleIds));
+        List<Comment> relatedComments = commentMapper.selectList(new QueryWrapper<Comment>().in("question_id", articleIds));
 
-       if (StringUtils.isBlank(labelIds)) {
-           return questions.stream().map(item -> {
-               QuestionDTO questionDTO = this.assembleQuestionInfo(item);
-               List<UserLike> relatedArticle = userLikeRecord.stream().filter(record -> record.getArticleId().equals(item.getId())).collect(Collectors.toList());
+        if (StringUtils.isBlank(labelIds)) {
+            return questions.stream().map(item -> {
+                QuestionDTO questionDTO = this.assembleQuestionInfo(item);
+                List<UserLike> relatedArticle = userLikeRecord.stream().filter(record -> record.getArticleId().equals(item.getId())).collect(Collectors.toList());
 
-               List<Comment> relatedCommentRecord = relatedComments.stream().filter(comment -> comment.getQuestionId().equals(item.getId())).collect(Collectors.toList());
-               if (user != null) {
-                   boolean isLike = relatedArticle.stream().anyMatch(article -> article.getLikeUser().equals(user.getId()));
-                   questionDTO.setLike(isLike);
-               }
+                List<Comment> relatedCommentRecord = relatedComments.stream().filter(comment -> comment.getQuestionId().equals(item.getId())).collect(Collectors.toList());
+                if (user != null) {
+                    boolean isLike = relatedArticle.stream().anyMatch(article -> article.getLikeUser().equals(user.getId()));
+                    questionDTO.setLike(isLike);
+                }
 
-               questionDTO.setLikeCount(relatedArticle.size());
-               questionDTO.setCommentCount(relatedCommentRecord.size());
-               return questionDTO;
+                questionDTO.setLikeCount(relatedArticle.size());
+                questionDTO.setCommentCount(relatedCommentRecord.size());
+                return questionDTO;
 
-           }).collect(Collectors.toList());
-       }
+            }).collect(Collectors.toList());
+        }
 
-       List<QuestionDTO> relatedQuestions = questions.stream().filter(item -> {
-           List<String> dbLabelIds = item.getLabelIds().stream().map(id -> String.valueOf(id)).collect(Collectors.toList());
-           Sets.SetView intersection = Sets.intersection(new HashSet<>(dbLabelIds), requestLabId);
-           return intersection.size() != 0;
-       }).map(this::assembleQuestionInfo).collect(Collectors.toList());
-       return relatedQuestions.stream().filter(item -> !item.getId().equals(Long.valueOf(currentArticleId))).collect(Collectors.toList());
+        List<QuestionDTO> relatedQuestions = questions.stream().filter(item -> {
+            List<String> dbLabelIds = item.getLabelIds().stream().map(id -> String.valueOf(id)).collect(Collectors.toList());
+            Sets.SetView intersection = Sets.intersection(new HashSet<>(dbLabelIds), requestLabId);
+            return intersection.size() != 0;
+        }).map(this::assembleQuestionInfo).collect(Collectors.toList());
+        return relatedQuestions.stream().filter(item -> !item.getId().equals(Long.valueOf(currentArticleId))).collect(Collectors.toList());
 
-   }
+    }
 
 
     private QuestionDTO assembleQuestionInfo(Question question) {

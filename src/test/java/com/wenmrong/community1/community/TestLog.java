@@ -1,7 +1,5 @@
 package com.wenmrong.community1.community;
 
-import com.alibaba.fastjson.JSONObject;
-import com.wenmrong.community1.community.mq.consumer.QuestionConsumer;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

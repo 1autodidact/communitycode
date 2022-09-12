@@ -71,7 +71,7 @@ public class CodeGenerator {
 
 
         // 是否覆盖已有文件---------------------------------------------------------------------------
-        gc.setFileOverride(false);
+        gc.setFileOverride(true);
 
 
 
