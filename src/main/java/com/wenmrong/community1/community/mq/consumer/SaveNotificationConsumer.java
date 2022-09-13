@@ -2,6 +2,7 @@ package com.wenmrong.community1.community.mq.consumer;
 
 import com.alibaba.fastjson.JSONObject;
 import com.sun.org.apache.regexp.internal.RE;
+import com.wenmrong.community1.community.constants.MQTopic;
 import com.wenmrong.community1.community.mapper.NotificationMapper;
 import com.wenmrong.community1.community.model.Notification;
 import com.wenmrong.community1.community.model.Question;
@@ -26,7 +27,7 @@ import java.util.stream.Collectors;
  * @date : 2022-09-10 09:33
  **/
 @Component
-@RocketMQMessageListener(topic = "save_notification_topic",consumerGroup = "save_notification")
+@RocketMQMessageListener(topic = MQTopic.SAVED_NOTIFICATION_TOPIC,consumerGroup = "save_notification")
 @Slf4j
 public class SaveNotificationConsumer implements RocketMQReplyListener<String, Boolean> {
     @Autowired
@@ -35,8 +36,11 @@ public class SaveNotificationConsumer implements RocketMQReplyListener<String, B
     private NotificationService notificationService;
     @Override
     public Boolean onMessage(String hashKey) {
-        Map entries = redisTemplate.opsForHash().entries(hashKey);
-        List<Notification> publishNotification = (List<Notification>) entries.entrySet().stream().map(item -> JSONObject.parse((String) item)).collect(Collectors.toList());
+        Map<String,String> entries = redisTemplate.opsForHash().entries(hashKey);
+        log.error("entries ",JSONObject.toJSONString(entries));
+        List<Notification> publishNotification = entries.entrySet().stream()
+                .map(item -> JSONObject.parseObject(item.getValue(),Notification.class))
+                .collect(Collectors.toList());
         return notificationService.saveBatch(publishNotification);
     }
 }

@@ -218,6 +218,7 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
         notification.setOuterid(question.getId());
         notification.setNotifierName(userProfile.getName());
         notification.setOuterTitle(this.buildNotificationContent(userProfile, question));
+        notification.setNotifier(userProfile.getId());
         rocketMQTemplate.sendAndReceive(MQTopic.NOTIFICATION_TOPIC, notification, new RocketMQLocalRequestCallback<String>() {
 
             @Override

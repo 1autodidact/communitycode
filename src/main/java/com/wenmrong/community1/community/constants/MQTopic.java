@@ -11,4 +11,5 @@ public class MQTopic {
     public static final String QUESTION_TOPIC = "question_topic";
     public static final String COMMENT_TOPIC = "comment_topic";
     public static final String NOTIFICATION_TOPIC = "notification_topic";
+    public static final String SAVED_NOTIFICATION_TOPIC = "saved_notification_topic";
 }

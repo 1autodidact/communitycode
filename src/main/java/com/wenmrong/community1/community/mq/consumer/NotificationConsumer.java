@@ -52,4 +52,11 @@ public class NotificationConsumer implements RocketMQReplyListener<Notification,
         }
         return "success";
     }
+
+
+
+//    @Override
+//    public String onMessage(Long message) {
+//        return "success";
+//    }
 }

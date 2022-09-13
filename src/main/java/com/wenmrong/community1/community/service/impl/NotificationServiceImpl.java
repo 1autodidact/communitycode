@@ -2,6 +2,7 @@ package com.wenmrong.community1.community.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.wenmrong.community1.community.constants.MQTopic;
 import com.wenmrong.community1.community.mapper.UserFollowMapper;
 import com.wenmrong.community1.community.mapper.UserMapper;
 import com.wenmrong.community1.community.model.Notification;
@@ -11,6 +12,8 @@ import com.wenmrong.community1.community.model.UserFollow;
 import com.wenmrong.community1.community.service.NotificationService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wenmrong.community1.community.sysenum.SysEnum;
+import org.apache.rocketmq.spring.core.RocketMQLocalRequestCallback;
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,11 +38,14 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
     RedisTemplate redisTemplate;
     @Resource
     UserFollowMapper userFollowMapper;
+
+    @Autowired
+    RocketMQTemplate rocketMQTemplate;
     @Resource
     UserMapper userMapper;
     private static final String PUBLISH_NOTIFICATION = "autodidact:notification:publish";
 
-    private static final String FOLLOW_NOTIFICATION = "autodidact:notification:publish";
+    private static final String FOLLOW_NOTIFICATION = "autodidact:notification:follow";
 
     @Override
     public void publish(Notification notification) {
@@ -52,7 +58,18 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
             BeanUtils.copyProperties(notification,savedNotification);
             savedNotification.setReceiver(id);
             savedNotification.setType(SysEnum.Notification_Type.PUBLISH.getType());
-            redisTemplate.opsForHash().put(this.buildReceivingQuestionKey(id), this.buildStorageKey(publisher,savedNotification.getOuterid()),JSONObject.toJSONString(savedNotification));
+            redisTemplate.opsForHash().put(this.buildReceivingQuestionKey(savedNotification.getOuterid()), this.buildStorageKey(publisher,id),JSONObject.toJSONString(savedNotification));
+        });
+
+        rocketMQTemplate.sendAndReceive(MQTopic.SAVED_NOTIFICATION_TOPIC, this.buildReceivingQuestionKey(notification.getOuterid()), new RocketMQLocalRequestCallback<Boolean>() {
+            @Override
+            public void onSuccess(Boolean message) {
+                log.error("消息发送成功" + message);
+            }
+            @Override
+            public void onException(Throwable e) {
+                log.error("消息发送失败", e);
+            }
         });
     }
 
@@ -65,12 +82,12 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
 
     @NotNull
     private String buildReceivingQuestionKey(Long id) {
-       return String.format("%s:%s", PUBLISH_NOTIFICATION, id);
+       return String.format("%s_%s", PUBLISH_NOTIFICATION, id);
     }
 
     @NotNull
     private String buildFollowKey(Long id) {
-        return String.format("%s:%s", FOLLOW_NOTIFICATION, id);
+        return String.format("%s_%s", FOLLOW_NOTIFICATION, id);
     }
 
 
