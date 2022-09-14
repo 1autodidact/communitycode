@@ -44,6 +44,7 @@ public class requestInterceptor implements HandlerInterceptor {
             return true;
         }
         boolean tokenExpired = jwtTokenUtil.isTokenExpired(jwtTokenUtil.getExpirationDateFromToken(token));
+
         if (tokenExpired) {
             return false;
         }

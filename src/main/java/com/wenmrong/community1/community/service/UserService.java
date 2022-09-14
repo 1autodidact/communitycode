@@ -221,6 +221,8 @@ public class UserService extends ServiceImpl<UserMapper, User> {
             return userDto;
         }
         BeanUtils.copyProperties(userProfile, userDto);
+        UserLevel levelInfo = userLevelMapper.selectOne(new QueryWrapper<UserLevel>().eq("user_id", userDto.getId()));
+        userDto.setUserLevel(levelInfo);
         return userDto;
     }
 

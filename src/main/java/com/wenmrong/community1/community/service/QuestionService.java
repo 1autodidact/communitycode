@@ -299,12 +299,14 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
     }
 
 
-    public List<Question> getLikesArticle(String likeUser) {
+    public List<QuestionDTO> getLikesArticle(String likeUser) {
         List<UserLike> like_user = userlikeMapper.selectList(new QueryWrapper<UserLike>().eq("like_user", likeUser));
         List<Long> likeArticleIds = like_user.stream().map(UserLike::getArticleId).collect(Collectors.toList());
         if (likeArticleIds.size() == 0) {
-            return new ArrayList<Question>();
+            return new ArrayList<QuestionDTO>();
         }
-        return questionMapper.selectList(new QueryWrapper<Question>().in("id", likeArticleIds));
+        List<Question> questions = questionMapper.selectList(new QueryWrapper<Question>().in("id", likeArticleIds));
+        List<QuestionDTO> questDtos = questions.stream().map(this::assembleQuestionInfo).collect(Collectors.toList());
+        return questDtos;
     }
 }

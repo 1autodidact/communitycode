@@ -12,6 +12,7 @@ import com.wenmrong.community1.community.model.UserFollow;
 import com.wenmrong.community1.community.service.NotificationService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wenmrong.community1.community.sysenum.SysEnum;
+import com.wenmrong.community1.community.utils.UserInfoProfile;
 import org.apache.rocketmq.spring.core.RocketMQLocalRequestCallback;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +39,8 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
     RedisTemplate redisTemplate;
     @Resource
     UserFollowMapper userFollowMapper;
-
+    @Resource
+    NotificationMapper notificationMapper;
     @Autowired
     RocketMQTemplate rocketMQTemplate;
     @Resource
@@ -78,6 +80,14 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
 
         redisTemplate.opsForHash().put(this.buildFollowKey(notification.getReceiver()), this.buildStorageKey(notification.getReceiver(),notification.getOuterid()),JSONObject.toJSONString(notification));
 
+    }
+
+    @Override
+    public List<Notification> getList(Integer currentPage, Integer pageSize, String type, String isRead) {
+        User userProfile = UserInfoProfile.getUserProfile();
+        QueryWrapper<Notification> wrapper = new QueryWrapper<Notification>().eq("receiver", userProfile.getId());
+        List<Notification> notifications = notificationMapper.selectList(wrapper);
+        return notifications;
     }
 
     @NotNull

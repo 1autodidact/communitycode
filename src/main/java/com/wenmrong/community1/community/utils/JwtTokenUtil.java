@@ -5,6 +5,7 @@ import com.wenmrong.community1.community.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 @Component
+@Slf4j
 public class JwtTokenUtil {
     @Value("${jwt.secret}")
     public String secret;
@@ -59,7 +61,12 @@ public class JwtTokenUtil {
      * @return
      */
     public boolean isTokenExpired(Date expirationTime) {
-        return expirationTime.before(new Date());
+        try {
+            return expirationTime.before(new Date());
+        } catch (Exception e) {
+            log.error("isTokenExpired异常",e);
+            return true;
+        }
     }
 
     /**
@@ -69,7 +76,11 @@ public class JwtTokenUtil {
      * @return
      */
     public Date getExpirationDateFromToken(String token) {
-        return getTokenClaim(token).getExpiration();
+        try {
+            return getTokenClaim(token).getExpiration();
+        } catch (Exception e) {
+           return new Date(1661146635210l);
+        }
     }
 
     /**
