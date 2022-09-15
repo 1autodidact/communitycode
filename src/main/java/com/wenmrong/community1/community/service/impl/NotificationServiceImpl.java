@@ -78,9 +78,8 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
     @Override
     public void follow(Notification notification) {
 
-        redisTemplate.opsForHash().put(this.buildFollowKey(notification.getReceiver()), this.buildStorageKey(notification.getReceiver(),notification.getOuterid()),JSONObject.toJSONString(notification));
-
     }
+
 
     @Override
     public List<Notification> getList(Integer currentPage, Integer pageSize, String type, String isRead) {
@@ -112,5 +111,6 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
     private String buildStorageKey(Long publisherId, Long outerId) {
         return String.format("%s:%s", publisherId,outerId);
     }
+
 
 }

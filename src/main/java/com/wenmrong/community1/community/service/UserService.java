@@ -4,15 +4,20 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
+import com.wenmrong.community1.community.constants.MQTag;
+import com.wenmrong.community1.community.constants.MQTopic;
 import com.wenmrong.community1.community.dto.UserDto;
 import com.wenmrong.community1.community.exception.CustomizeErrorCode;
 import com.wenmrong.community1.community.exception.CustomizeException;
 import com.wenmrong.community1.community.mapper.*;
 import com.wenmrong.community1.community.model.*;
 import com.wenmrong.community1.community.sysenum.SysEnum;
-import com.wenmrong.community1.community.utils.BeanPlusUtils;
 import com.wenmrong.community1.community.utils.JwtTokenUtil;
+import com.wenmrong.community1.community.utils.CharacterUtil;
 import com.wenmrong.community1.community.utils.UserInfoProfile;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.rocketmq.spring.core.RocketMQLocalRequestCallback;
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -34,6 +39,7 @@ import static com.wenmrong.community1.community.constants.CommunityConstants.LOG
 import static com.wenmrong.community1.community.exception.CustomizeErrorCode.LOGIN_FAILURE;
 
 @Service
+@Slf4j
 public class UserService extends ServiceImpl<UserMapper, User> {
     @Autowired
     RedisTemplate redisTemplate;
@@ -53,11 +59,15 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     private UserFollowMapper userFollowMapper;
     @Resource
     private UserLikeMapper userLikeMapper;
+    @Autowired
+    private RocketMQTemplate rocketMQTemplate;
+
 
     public UserDto login(User user) throws InterruptedException {
         UserDto userDto = this.getLoginInfo(user);
         return userDto;
     }
+
 
     private UserDto getLoginInfo(User user) throws InterruptedException {
         if (Boolean.TRUE.equals(redisTemplate.opsForValue().setIfAbsent(LOGIN_PREFIX + user.getName(), user.getName(), 1000 * 10, TimeUnit.MILLISECONDS))) {
@@ -81,6 +91,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         userDto.setUserLevel(levelInfo);
         return userDto;
     }
+
 
     public void createOrUpdate(User user) {
         UserExample userExample = new UserExample();
@@ -107,6 +118,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         }
     }
 
+
     @Transactional
     public UserDto createUser(User user) throws InterruptedException {
         userMapper.insert(user);
@@ -118,6 +130,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         userLevelMapper.insert(userLevel);
         return this.getLoginInfo(user);
     }
+
 
     public String sendEmail(String email, String character) {
         //创建激活码
@@ -165,6 +178,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         return userDto;
     }
 
+
     private void assembleStatisticInfo(Long id, UserDto userDto) {
         List<Question> question = questionMapper.selectList(new QueryWrapper<Question>().eq("creator", id));
         if (question.size() != 0) {
@@ -175,6 +189,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
             userDto.setViewCount(viewCount);
         }
     }
+
 
     public void updateLikeState(Long articleId) {
         User user = UserInfoProfile.getUserProfile();
@@ -192,7 +207,27 @@ public class UserService extends ServiceImpl<UserMapper, User> {
             userLikeMapper.insert(userLike);
         }
 
+
+        Notification notification = new Notification();
+        notification.setType(SysEnum.Notification_Type.FOLLOW.getType());
+        notification.setOuterid(articleId);
+        notification.setNotifier(user.getId());
+        notification.setNotifierName(user.getName());
+        rocketMQTemplate.sendAndReceive(CharacterUtil.buildNotificationDestination(MQTopic.NOTIFICATION_TOPIC, MQTag.FOLLOW), notification, new RocketMQLocalRequestCallback<String>() {
+
+            @Override
+            public void onSuccess(String message) {
+                log.error("消息发送成功{} topic{}", message, MQTopic.NOTIFICATION_TOPIC);
+            }
+
+            @Override
+            public void onException(Throwable e) {
+                log.error("{}消息发送失败", MQTopic.NOTIFICATION_TOPIC, e);
+            }
+        });
+
     }
+
 
     public void validateUserInfo(String username) {
         User user = userMapper.selectOne(new QueryWrapper<User>().eq("name", username));
@@ -201,10 +236,12 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         }
     }
 
+
     public void logout() {
         User user = UserInfoProfile.getUserProfile();
         redisTemplate.delete(COMMUNITY_USER_TOKEN + user.getName());
     }
+
 
     public UserDto buildUserLevelInfo(User user) {
         UserDto userDto = new UserDto();
@@ -213,6 +250,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         userDto.setUserLevel(levelInfo);
         return userDto;
     }
+
 
     public UserDto getCurrentUserRights() {
         User userProfile = UserInfoProfile.getUserProfile();
@@ -225,6 +263,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         userDto.setUserLevel(levelInfo);
         return userDto;
     }
+
 
     public Integer getFollowCount(String userId) {
         return userFollowMapper.selectCount(new QueryWrapper<UserFollow>().eq("follow_id", Long.valueOf(userId)));
@@ -252,7 +291,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         List<UserDto> userDtos = users.stream().map(item -> {
             UserDto userDto = new UserDto();
             BeanUtils.copyProperties(item, userDto);
-            this.assembleStatisticInfo(item.getId(),userDto);
+            this.assembleStatisticInfo(item.getId(), userDto);
             Optional<UserLevel> validLevelInfo = userLevelInfos.stream().filter(userInfo -> userInfo.getUserId().equals(userDto.getId())).findFirst();
             validLevelInfo.ifPresent(userLevel -> userDto.setUserLevel(validLevelInfo.get()));
             userDto.setIsFollow(true);
@@ -262,9 +301,9 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         return userDtos;
     }
 
+
     public void updateFollowState(UserDto toUser) {
         User user = UserInfoProfile.getUserProfile();
-
         UserFollow record = userFollowMapper.selectOne(new QueryWrapper<UserFollow>().eq("user_id", toUser.getId()).eq("follow_id", user.getId()));
         if (record != null) {
             userFollowMapper.deleteById(record.getId());

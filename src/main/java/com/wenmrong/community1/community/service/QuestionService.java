@@ -1,11 +1,11 @@
 package com.wenmrong.community1.community.service;
 
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Sets;
 import com.wenmrong.community1.community.cache.TagCache;
+import com.wenmrong.community1.community.constants.MQTag;
 import com.wenmrong.community1.community.constants.MQTopic;
 import com.wenmrong.community1.community.dto.*;
 import com.wenmrong.community1.community.enums.SortEnum;
@@ -14,12 +14,12 @@ import com.wenmrong.community1.community.exception.CustomizeException;
 import com.wenmrong.community1.community.mapper.*;
 import com.wenmrong.community1.community.model.*;
 import com.wenmrong.community1.community.sysenum.SysEnum;
+import com.wenmrong.community1.community.utils.CharacterUtil;
 import com.wenmrong.community1.community.utils.UserInfoProfile;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.spring.core.RocketMQLocalRequestCallback;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,7 +53,8 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
     private UserFollowMapper userFollowMapper;
     @Autowired
     private RocketMQTemplate rocketMQTemplate;
-
+    @Autowired
+    private NotificationService notificationService;
     public PaginationDTO<QuestionDTO> list(String search, String tag, Integer page, Integer size, String sort) {
         if (StringUtils.isNotBlank(search)) {
             String[] tags = search.split(",");
@@ -217,9 +218,9 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
         notification.setType(SysEnum.Notification_Type.PUBLISH.getType());
         notification.setOuterid(question.getId());
         notification.setNotifierName(userProfile.getName());
-        notification.setOuterTitle(this.buildNotificationContent(userProfile, question));
+        notification.setOuterTitle(CharacterUtil.buildNotificationContent(userProfile, question, SysEnum.Notification_Type.PUBLISH.getType()));
         notification.setNotifier(userProfile.getId());
-        rocketMQTemplate.sendAndReceive(MQTopic.NOTIFICATION_TOPIC, notification, new RocketMQLocalRequestCallback<String>() {
+        rocketMQTemplate.sendAndReceive(CharacterUtil.buildNotificationDestination(MQTopic.NOTIFICATION_TOPIC, MQTag.PUBLISH), notification, new RocketMQLocalRequestCallback<String>() {
 
             @Override
             public void onSuccess(String message) {
@@ -233,10 +234,9 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
 
     }
 
-    @NotNull
-    private String buildNotificationContent(User userProfile, Question question) {
-        return String.format("%s发布了%s文章",userProfile.getName(),question.getTitle());
-    }
+
+
+
 
     public List<QuestionDTO> selectRelatedQuestion(Integer currentPage, Integer pageSize, String labelIds, String currentArticleId, String createUser) {
         User user = UserInfoProfile.getUserProfile();

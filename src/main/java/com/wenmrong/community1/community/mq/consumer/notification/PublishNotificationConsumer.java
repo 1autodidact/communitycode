@@ -1,6 +1,8 @@
-package com.wenmrong.community1.community.mq.consumer;
+package com.wenmrong.community1.community.mq.consumer.notification;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wenmrong.community1.community.constants.MQGroup;
+import com.wenmrong.community1.community.constants.MQTag;
 import com.wenmrong.community1.community.constants.MQTopic;
 import com.wenmrong.community1.community.model.Notification;
 import com.wenmrong.community1.community.service.NotificationService;
@@ -24,9 +26,9 @@ import java.util.Optional;
  * @date : 2022-09-07 21:18
  **/
 @Component
-@RocketMQMessageListener(topic = MQTopic.NOTIFICATION_TOPIC, consumerGroup = "notification_consumer")
+@RocketMQMessageListener(topic = MQTopic.NOTIFICATION_TOPIC, consumerGroup = MQGroup.PUBLISH_NOTIFICATION,selectorExpression = MQTag.PUBLISH)
 @Slf4j
-public class NotificationConsumer implements RocketMQReplyListener<Notification, String> {
+public class PublishNotificationConsumer implements RocketMQReplyListener<Notification, String> {
     @Resource
     NotificationService notificationService;
     @Autowired
@@ -54,9 +56,4 @@ public class NotificationConsumer implements RocketMQReplyListener<Notification,
     }
 
 
-
-//    @Override
-//    public String onMessage(Long message) {
-//        return "success";
-//    }
 }
