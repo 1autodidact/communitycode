@@ -6,5 +6,5 @@ package com.wenmrong.community1.community.constants;
  */
 public class MQTag {
     public static final String PUBLISH = "publish";
-    public static final String FOLLOW = "follow";
+    public static final String COMMON = "common";
 }

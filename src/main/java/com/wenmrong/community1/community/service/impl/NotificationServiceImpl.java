@@ -2,6 +2,7 @@ package com.wenmrong.community1.community.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.wenmrong.community1.community.constants.MQTag;
 import com.wenmrong.community1.community.constants.MQTopic;
 import com.wenmrong.community1.community.mapper.UserFollowMapper;
 import com.wenmrong.community1.community.mapper.UserMapper;
@@ -12,7 +13,9 @@ import com.wenmrong.community1.community.model.UserFollow;
 import com.wenmrong.community1.community.service.NotificationService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wenmrong.community1.community.sysenum.SysEnum;
+import com.wenmrong.community1.community.utils.CharacterUtil;
 import com.wenmrong.community1.community.utils.UserInfoProfile;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.core.RocketMQLocalRequestCallback;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.jetbrains.annotations.NotNull;
@@ -34,6 +37,7 @@ import java.util.stream.Collectors;
  * @since 2022-09-09
  */
 @Service
+@Slf4j
 public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Notification> implements NotificationService {
     @Autowired
     RedisTemplate redisTemplate;
@@ -112,5 +116,21 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
         return String.format("%s:%s", publisherId,outerId);
     }
 
+    public void sendCommonNotification(Long outerId, Notification notification, User user) {
+        notification.setNotifier(user.getId());
+        notification.setNotifierName(user.getName());
+        rocketMQTemplate.sendAndReceive(CharacterUtil.buildNotificationDestination(MQTopic.NOTIFICATION_TOPIC, MQTag.COMMON), notification, new RocketMQLocalRequestCallback<String>() {
+
+            @Override
+            public void onSuccess(String message) {
+                log.error("消息发送成功{} topic{}", message, MQTopic.NOTIFICATION_TOPIC);
+            }
+
+            @Override
+            public void onException(Throwable e) {
+                log.error("{}消息发送失败", MQTopic.NOTIFICATION_TOPIC, e);
+            }
+        });
+    }
 
 }

@@ -42,6 +42,8 @@ public class CommentService  extends ServiceImpl<CommentMapper, Comment> {
     @Autowired
     private NotificationMapper notificationMapper;
 
+    @Autowired
+    private NotificationService notificationService;
     @Transactional
     public void insert(Comment comment, User commentator) {
         if (comment.getParentId() == null || comment.getParentId() == 0) {
@@ -151,5 +153,9 @@ public class CommentService  extends ServiceImpl<CommentMapper, Comment> {
         comment.setType(SysEnum.CommentType.COMMENT.getType());
         comment.setCommentator(user.getId());
         commentMapper.insert(comment);
+        Notification notification = new Notification();
+        notification.setOuterid(comment.getId());
+        notification.setNotifier(comment.getCommentator());
+        notificationService.sendCommonNotification(comment.getId(), notification, user);
     }
 }

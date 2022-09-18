@@ -26,7 +26,7 @@ import java.util.Optional;
  * @date : 2022-09-07 21:18
  **/
 @Component
-@RocketMQMessageListener(topic = MQTopic.NOTIFICATION_TOPIC, consumerGroup = MQGroup.PUBLISH_NOTIFICATION,selectorExpression = MQTag.PUBLISH)
+@RocketMQMessageListener(topic = MQTopic.NOTIFICATION_TOPIC, consumerGroup = MQGroup.PUBLISH_NOTIFICATION, selectorExpression = MQTag.PUBLISH)
 @Slf4j
 public class PublishNotificationConsumer implements RocketMQReplyListener<Notification, String> {
     @Resource
@@ -37,21 +37,8 @@ public class PublishNotificationConsumer implements RocketMQReplyListener<Notifi
     @Override
     public String onMessage(Notification notification) {
         log.error("线程名称：{}" + "message {}", Thread.currentThread().getName(), JSONObject.toJSONString(notification));
-        Optional<SysEnum.Notification_Type> matchedNotification = Arrays.stream(SysEnum.Notification_Type.values()).filter(item -> item.getType().equals(notification.getType())).findFirst();
-        SysEnum.Notification_Type notification_type = matchedNotification.get();
-        switch (notification_type) {
-            case COMMENT:
-                break;
-            case FOLLOW:
-                notificationService.follow(notification);
-                break;
-            case PUBLISH:
-                notificationService.publish(notification);
-                break;
-
-            default:
-                //语句
-        }
+        notificationService.publish(notification);
+        //语句
         return "success";
     }
 

@@ -43,29 +43,38 @@ import static com.wenmrong.community1.community.exception.CustomizeErrorCode.LOG
 public class UserService extends ServiceImpl<UserMapper, User> {
     @Autowired
     RedisTemplate redisTemplate;
+
     @Autowired
     JwtTokenUtil jwtTokenUtil;
+
     @Resource
     private UserLevelMapper userLevelMapper;
+
     @Resource
     private UserMapper userMapper;
+
     @Autowired
     private MailService mailService;
+
     @Autowired
     private RandomCodeService randomCodeService;
+
     @Resource
     private QuestionMapper questionMapper;
+
     @Resource
     private UserFollowMapper userFollowMapper;
+
     @Resource
     private UserLikeMapper userLikeMapper;
+
     @Autowired
     private RocketMQTemplate rocketMQTemplate;
 
-
+    @Autowired
+    private NotificationService notificationService;
     public UserDto login(User user) throws InterruptedException {
-        UserDto userDto = this.getLoginInfo(user);
-        return userDto;
+        return this.getLoginInfo(user);
     }
 
 
@@ -192,11 +201,13 @@ public class UserService extends ServiceImpl<UserMapper, User> {
 
 
     public void updateLikeState(Long articleId) {
+        Notification notification = new Notification();
         User user = UserInfoProfile.getUserProfile();
         UserLike record = userLikeMapper.selectOne(new QueryWrapper<UserLike>()
                 .eq("article_id", articleId)
                 .eq("like_user", user.getId()));
         if (record != null) {
+            notification.setType(SysEnum.Notification_Type.LIKE.getType());
             record.setState(false);
             userLikeMapper.updateById(record);
         } else {
@@ -205,28 +216,14 @@ public class UserService extends ServiceImpl<UserMapper, User> {
             userLike.setState(true);
             userLike.setLikeUser(user.getId());
             userLikeMapper.insert(userLike);
+            notification.setType(SysEnum.Notification_Type.UN_LIKE.getType());
+
         }
 
-
-        Notification notification = new Notification();
-        notification.setType(SysEnum.Notification_Type.FOLLOW.getType());
-        notification.setOuterid(articleId);
-        notification.setNotifier(user.getId());
-        notification.setNotifierName(user.getName());
-        rocketMQTemplate.sendAndReceive(CharacterUtil.buildNotificationDestination(MQTopic.NOTIFICATION_TOPIC, MQTag.FOLLOW), notification, new RocketMQLocalRequestCallback<String>() {
-
-            @Override
-            public void onSuccess(String message) {
-                log.error("消息发送成功{} topic{}", message, MQTopic.NOTIFICATION_TOPIC);
-            }
-
-            @Override
-            public void onException(Throwable e) {
-                log.error("{}消息发送失败", MQTopic.NOTIFICATION_TOPIC, e);
-            }
-        });
-
+        notificationService.sendCommonNotification(articleId, notification, user);
     }
+
+
 
 
     public void validateUserInfo(String username) {
@@ -303,15 +300,21 @@ public class UserService extends ServiceImpl<UserMapper, User> {
 
 
     public void updateFollowState(UserDto toUser) {
+        Notification notification = new Notification();
         User user = UserInfoProfile.getUserProfile();
         UserFollow record = userFollowMapper.selectOne(new QueryWrapper<UserFollow>().eq("user_id", toUser.getId()).eq("follow_id", user.getId()));
         if (record != null) {
             userFollowMapper.deleteById(record.getId());
+            notification.setType(SysEnum.Notification_Type.UN_FOLLOW.getType());
         } else {
+            notification.setType(SysEnum.Notification_Type.FOLLOW.getType());
             UserFollow userFollow = new UserFollow();
             userFollow.setUserId(toUser.getId());
             userFollow.setFollowId(user.getId());
             userFollowMapper.insert(userFollow);
         }
+        notification.setReceiver(toUser.getId());
+        notification.setNotifier(user.getId());
+        notificationService.sendCommonNotification(null, notification, user);
     }
 }

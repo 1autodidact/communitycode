@@ -69,15 +69,18 @@ public class SysEnum {
     public enum Notification_Type {
         COMMENT(1),
         LIKE(2),
-        FOLLOW(3),
+        UN_LIKE(3),
+        FOLLOW(4),
+        UN_FOLLOW(5),
+
         /**
          * 升级
          */
-        UPGRADE(4),
+        UPGRADE(6),
         /**
          * 更新文章
          */
-        PUBLISH(5);
+        PUBLISH(7);
 
         private Integer type;
 
