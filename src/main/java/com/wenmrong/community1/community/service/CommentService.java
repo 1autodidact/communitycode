@@ -1,7 +1,9 @@
 package com.wenmrong.community1.community.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wenmrong.community1.community.dto.CommentDTO;
+import com.wenmrong.community1.community.dto.UserDto;
 import com.wenmrong.community1.community.enums.CommentTypeEnum;
 import com.wenmrong.community1.community.enums.NotificationStatusEnum;
 import com.wenmrong.community1.community.enums.NotificationTypeEnum;
@@ -16,10 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import javax.annotation.Resource;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,6 +42,8 @@ public class CommentService  extends ServiceImpl<CommentMapper, Comment> {
     @Autowired
     private NotificationMapper notificationMapper;
 
+    @Resource
+    private UserLevelMapper userLevelMapper;
     @Autowired
     private NotificationService notificationService;
     @Transactional
@@ -109,36 +111,24 @@ public class CommentService  extends ServiceImpl<CommentMapper, Comment> {
 
     public List<CommentDTO> listByTargetId(Long id, CommentTypeEnum type) {
         // 1 为评论问题类型
-        CommentExample commentExample = new CommentExample();
-        commentExample.createCriteria()
-                .andParentIdEqualTo(id)
-                .andTypeEqualTo(1);
-        commentExample.setOrderByClause("gmt_create desc");
-        List<Comment> comments = commentMapper.selectByExample(commentExample);
+        List<Comment> comments = commentMapper.selectList(new QueryWrapper<Comment>().eq("question_id", id));
+        List<Long> userIds = comments.stream().map(Comment::getCommentator).collect(Collectors.toList());
+        List<User> users = userMapper.selectList(new QueryWrapper<User>().in("id", userIds));
+        List<UserLevel> relatedUserLevel = userLevelMapper.selectList(new QueryWrapper<UserLevel>().in("user_id", userIds));
 
-        if (comments.size() == 0) {
-            return new ArrayList<>();
-        }
-        // 获取去重的评论人
-        Set<Long> commentators = comments.stream().map(comment -> comment.getCommentator()).collect(Collectors.toSet());
-        List<Long> userIds = new ArrayList();
-        userIds.addAll(commentators);
-
-        //获取评论人并转化为map
-        UserExample userExample = new UserExample();
-        userExample.createCriteria()
-                .andIdIn(userIds);
-        List<User> users = userMapper.selectByExample(userExample);
-        Map<Long, User> userMap = users.stream().collect(Collectors.toMap(user -> user.getId(), user -> user));
-
-        //comments 转化为commentsDTOS(单一类型转复合类型的常用方法)
-        List<CommentDTO> commentDTOS = comments.stream().map(comment -> {
+        List<CommentDTO> commentDTOS = comments.stream().map(item -> {
             CommentDTO commentDTO = new CommentDTO();
-            BeanUtils.copyProperties(comment, commentDTO);
-            commentDTO.setUser(userMap.get(comment.getCommentator()));
+            BeanUtils.copyProperties(item, commentDTO);
+            Optional<User> matchedUser = users.stream().filter(userInfo -> item.getCommentator().equals(userInfo.getId())).findFirst();
+            if (matchedUser.isPresent()) {
+                Optional<UserLevel> level = relatedUserLevel.stream().filter(info -> info.getUserId().equals(matchedUser.get().getId())).findFirst();
+                UserLevel userLevel = level.get();
+                UserDto userDto = new UserDto();
+                userDto.setUserLevel(userLevel);
+                commentDTO.setUser(userDto);
+            }
             return commentDTO;
         }).collect(Collectors.toList());
-
         return commentDTOS;
 
 
