@@ -35,35 +35,6 @@ public class QuestionController {
 
     @Autowired
     private LabelService labelService;
-    @GetMapping("/question/{id}")
-    public String question(@PathVariable(name = "id") Long id, Model model,
-                           HttpServletRequest request, HttpServletResponse response) {
-        User user = (User)request.getSession().getAttribute("user");
-        QuestionDTO questionDTO = questionService.getById(id);
-        List<QuestionDTO> relatedQuestions = questionService.selectRelated(questionDTO);
-        List<CommentDTO> comments = commentService.listByTargetId(id, CommentTypeEnum.QUESTION);
-        String history = questionHistoryService.createHistory(id.toString(),request);
-        ArrayList<Question> questionHistory = questionHistoryService.showHistory(history);
-        Cookie cookie = new Cookie("history",history);
-        cookie.setMaxAge(24*60*60);
-        cookie.setPath("/");
-        response.addCookie(cookie);
-        if (user != null) {
-            String star = user.getStar();
-            if (star != null && !star.equals("")) {
-                List<String> starList = Arrays.asList(star.substring(0, star.length() - 1).split("="));
-                if (starList.contains(Long.toString(id))) {
-                    model.addAttribute("starFlag",true);
-                }
-            }
-        }
-
-        model.addAttribute("question", questionDTO);
-        model.addAttribute("comments", comments);
-        model.addAttribute("relatedQuestions", relatedQuestions);
-        model.addAttribute("questionHistory", questionHistory);
-        return "question";
-    }
 
 
     @GetMapping("/getQuestions")
@@ -92,6 +63,13 @@ public class QuestionController {
     @GetMapping("/question/getCountById")
     @ResponseBody
     public ResultDTO getArticleCommentVisitTotal() {
+        StatisticData statistic = statisticService.statistic();
+        return ResultDTO.okOf(statistic);
+    }
+
+    @GetMapping("/getArticleCommentVisitTotal")
+    @ResponseBody
+    public ResultDTO getArticleCommentVisitCount() {
         StatisticData statistic = statisticService.statistic();
         return ResultDTO.okOf(statistic);
     }
