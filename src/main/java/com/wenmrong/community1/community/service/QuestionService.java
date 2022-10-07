@@ -4,11 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Sets;
-import com.wenmrong.community1.community.cache.TagCache;
 import com.wenmrong.community1.community.constants.MQTag;
 import com.wenmrong.community1.community.constants.MQTopic;
 import com.wenmrong.community1.community.dto.*;
-import com.wenmrong.community1.community.enums.SortEnum;
 import com.wenmrong.community1.community.exception.CustomizeErrorCode;
 import com.wenmrong.community1.community.exception.CustomizeException;
 import com.wenmrong.community1.community.mapper.*;
@@ -16,7 +14,6 @@ import com.wenmrong.community1.community.model.*;
 import com.wenmrong.community1.community.sysenum.SysEnum;
 import com.wenmrong.community1.community.utils.CharacterUtil;
 import com.wenmrong.community1.community.utils.UserInfoProfile;
-import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.spring.core.RocketMQLocalRequestCallback;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
@@ -116,12 +113,14 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
     }
 
 
-    public List<QuestionDTO> selectRelatedQuestion(Integer currentPage, Integer pageSize, String labelIds, String currentArticleId, String createUser) {
+    public List<QuestionDTO> selectRelatedQuestion(Integer currentPage, Integer pageSize, String labelIds, String currentArticleId, String createUser, String title) {
         User user = UserInfoProfile.getUserProfile();
         PageHelper.startPage(currentPage, pageSize, true);
         HashSet requestLabId = new HashSet(Arrays.asList(Optional.ofNullable(labelIds).orElse("").split(",")));
         QueryWrapper condition = createUser == null ? new QueryWrapper<Question>().orderByDesc("gmt_create") : new QueryWrapper<Question>().eq("creator", createUser).orderByDesc("gmt_create");
-
+        if (StringUtils.isNotBlank(title)) {
+            condition = (QueryWrapper) condition.eq("title",title);
+        }
 
         List<Question> questions = questionMapper.selectList(condition);
         List<Long> articleIds = questions.stream().map(Question::getId).collect(Collectors.toList());

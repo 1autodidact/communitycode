@@ -2,22 +2,12 @@ package com.wenmrong.community1.community.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.wenmrong.community1.community.dto.*;
-import com.wenmrong.community1.community.enums.CommentTypeEnum;
 import com.wenmrong.community1.community.model.Label;
-import com.wenmrong.community1.community.model.Question;
-import com.wenmrong.community1.community.model.User;
 import com.wenmrong.community1.community.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -44,9 +34,10 @@ public class QuestionController {
                                   @RequestParam(name = "pageSize", defaultValue = "3") Integer pageSize,
                                   @RequestParam(required = false) String labelIds,
                                     @RequestParam(required = false) String currentArticleId,
-                                  @RequestParam(required = false) String createUser) {
+                                  @RequestParam(required = false) String createUser,
+                                  @RequestParam(required = false) String title) {
 
-        List<QuestionDTO> questionDTOS = questionService.selectRelatedQuestion(currentPage, pageSize, labelIds, currentArticleId, createUser);
+        List<QuestionDTO> questionDTOS = questionService.selectRelatedQuestion(currentPage, pageSize, labelIds, currentArticleId, createUser,title );
         return ResultDTO.okOf(new PageInfo<>(questionDTOS));
 
     }
