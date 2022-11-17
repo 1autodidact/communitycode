@@ -19,6 +19,7 @@ public class QuestionDTO {
     private String description;
     private String tag;
     private String userId;
+    private String pictureUrl;
     @JSONField(serializeUsing = CustomSerializerAndDeserializer.class)
     private Long gmtCreate;
     @JSONField(serializeUsing = CustomSerializerAndDeserializer.class)

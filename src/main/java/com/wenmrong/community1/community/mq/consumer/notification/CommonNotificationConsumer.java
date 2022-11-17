@@ -57,9 +57,17 @@ public class CommonNotificationConsumer implements RocketMQReplyListener<Notific
 
     @NotNull
     private void buildNotification(Notification notification, Integer type) {
-        User currentUserInfo = UserInfoProfile.getUserProfile();
+        if (type == null) {
+            type = 1;
+            notification.setType(1);
+        }
+        Long notifierId = notification.getNotifier();
+        User notifierUser = userMapper.selectById(notifierId);
         if (type.equals(SysEnum.Notification_Type.UN_LIKE.getType()) || type.equals(SysEnum.Notification_Type.LIKE.getType())) {
-            Question question = questionMapper.selectOne(new QueryWrapper<Question>().eq("id", notification));
+            if (notification.getOuterid() == null) {
+                return;
+            }
+            Question question = questionMapper.selectOne(new QueryWrapper<Question>().eq("id", notification.getOuterid()));
             User user = userMapper.selectOne(new QueryWrapper<User>().eq("id", question.getCreator()));
             notification.setNotifier(user.getId());
             notification.setOuterTitle(CharacterUtil.buildNotificationContent(user,question, notification.getType()));
@@ -70,7 +78,7 @@ public class CommonNotificationConsumer implements RocketMQReplyListener<Notific
         if (type.equals(SysEnum.Notification_Type.FOLLOW.getType()) || type.equals(SysEnum.Notification_Type.UN_FOLLOW.getType())) {
             String desc = CharacterUtil.buildDescription(type);
             User user = userMapper.selectOne(new QueryWrapper<User>().eq("id", notification.getReceiver()));
-            notification.setOuterTitle(currentUserInfo.getName() + desc + user.getName());
+            notification.setOuterTitle(notifierUser.getName() + desc + user.getName());
         }
 
         if (type.equals(SysEnum.Notification_Type.COMMENT.getType())) {

@@ -111,5 +111,6 @@ public class Question extends Model<Question> {
     @TableField(value = "label_ids",typeHandler = FastjsonTypeHandler.class)
     private List<Integer> labelIds;
 
-
+    @TableField("picture_url")
+    private String pictureUrl;
 }

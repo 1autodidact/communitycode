@@ -17,6 +17,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -112,6 +113,9 @@ public class CommentService  extends ServiceImpl<CommentMapper, Comment> {
     public List<CommentDTO> listByTargetId(Long id, CommentTypeEnum type) {
         // 1 为评论问题类型
         List<Comment> comments = commentMapper.selectList(new QueryWrapper<Comment>().eq("question_id", id));
+        if (CollectionUtils.isEmpty(comments)) {
+            return new ArrayList<>();
+        }
         List<Long> userIds = comments.stream().map(Comment::getCommentator).collect(Collectors.toList());
         List<User> users = userMapper.selectList(new QueryWrapper<User>().in("id", userIds));
         List<UserLevel> relatedUserLevel = userLevelMapper.selectList(new QueryWrapper<UserLevel>().in("user_id", userIds));
@@ -146,6 +150,7 @@ public class CommentService  extends ServiceImpl<CommentMapper, Comment> {
         Notification notification = new Notification();
         notification.setOuterid(comment.getId());
         notification.setNotifier(comment.getCommentator());
+        notification.setType(SysEnum.Notification_Type.COMMENT.getType());
         notificationService.sendCommonNotification(comment.getId(), notification, user);
     }
 }

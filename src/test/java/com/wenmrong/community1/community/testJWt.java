@@ -1,7 +1,6 @@
 package com.wenmrong.community1.community;
 
 import com.alibaba.fastjson.JSONObject;
-import com.qq.connect.api.qzone.UserInfo;
 import com.wenmrong.community1.community.model.User;
 import com.wenmrong.community1.community.utils.JwtTokenUtil;
 import org.junit.jupiter.api.Test;

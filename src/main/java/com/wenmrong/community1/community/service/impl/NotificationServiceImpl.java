@@ -119,6 +119,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
     public void sendCommonNotification(Long outerId, Notification notification, User user) {
         notification.setNotifier(user.getId());
         notification.setNotifierName(user.getName());
+        notification.setOuterid(outerId);
         rocketMQTemplate.sendAndReceive(CharacterUtil.buildNotificationDestination(MQTopic.NOTIFICATION_TOPIC, MQTag.COMMON), notification, new RocketMQLocalRequestCallback<String>() {
 
             @Override

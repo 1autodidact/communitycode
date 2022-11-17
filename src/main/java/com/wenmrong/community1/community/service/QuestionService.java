@@ -4,15 +4,18 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Sets;
+import com.wenmrong.community1.community.config.TsCosClient;
 import com.wenmrong.community1.community.constants.MQTag;
 import com.wenmrong.community1.community.constants.MQTopic;
-import com.wenmrong.community1.community.dto.*;
+import com.wenmrong.community1.community.dto.QuestionDTO;
+import com.wenmrong.community1.community.dto.UserDto;
 import com.wenmrong.community1.community.exception.CustomizeErrorCode;
 import com.wenmrong.community1.community.exception.CustomizeException;
 import com.wenmrong.community1.community.mapper.*;
 import com.wenmrong.community1.community.model.*;
 import com.wenmrong.community1.community.sysenum.SysEnum;
 import com.wenmrong.community1.community.utils.CharacterUtil;
+import com.wenmrong.community1.community.utils.TsCosUtil;
 import com.wenmrong.community1.community.utils.UserInfoProfile;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.spring.core.RocketMQLocalRequestCallback;
@@ -21,8 +24,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -53,7 +58,8 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
     @Autowired
     private NotificationService notificationService;
 
-
+    @Autowired
+    private TsCosClient tsCosClient;
 
     public QuestionDTO getById(Long id) {
         //先进行计数,如果question已经查询完毕,再计数无法及时刷新数据
@@ -66,7 +72,6 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
     }
 
 
-
     public void incView(Long id) {
         Question question = new Question();
         question.setId(id);
@@ -77,9 +82,8 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
     }
 
 
-
     @Transactional
-    public void create(QuestionDTO questionDTO) {
+    public void create(QuestionDTO questionDTO, MultipartFile file) throws IOException {
         User userProfile = UserInfoProfile.getUserProfile();
         Question question = new Question();
         BeanUtils.copyProperties(questionDTO, question);
@@ -89,6 +93,7 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
         question.setLikeCount(0);
         question.setTag("language");
         question.setLabelIds(questionDTO.getLabelIds());
+        question.setPictureUrl(TsCosUtil.uploadByStream(tsCosClient,file.getInputStream()));
         questionMapper.insert(question);
 
         Notification notification = new Notification();
@@ -119,7 +124,7 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
         HashSet requestLabId = new HashSet(Arrays.asList(Optional.ofNullable(labelIds).orElse("").split(",")));
         QueryWrapper condition = createUser == null ? new QueryWrapper<Question>().orderByDesc("gmt_create") : new QueryWrapper<Question>().eq("creator", createUser).orderByDesc("gmt_create");
         if (StringUtils.isNotBlank(title)) {
-            condition = (QueryWrapper) condition.eq("title",title);
+            condition = (QueryWrapper) condition.eq("title", title);
         }
 
         List<Question> questions = questionMapper.selectList(condition);
@@ -185,5 +190,17 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
         List<Question> questions = questionMapper.selectList(new QueryWrapper<Question>().in("id", likeArticleIds));
         List<QuestionDTO> questDtos = questions.stream().map(this::assembleQuestionInfo).collect(Collectors.toList());
         return questDtos;
+    }
+
+    public void edit(QuestionDTO questionDTO, MultipartFile file) throws IOException {
+        Question question = new Question();
+        BeanUtils.copyProperties(questionDTO, question);
+        question.setPictureUrl(TsCosUtil.uploadByStream(tsCosClient,file.getInputStream()));
+
+        questionMapper.updateById(question);
+    }
+
+    public String picture(MultipartFile picture) throws IOException {
+        return TsCosUtil.uploadByStream(tsCosClient, picture.getInputStream());
     }
 }

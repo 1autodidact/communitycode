@@ -13,7 +13,8 @@ public enum CustomizeErrorCode implements ICustomizeErrorCode {
     NOTIFICATION_NOT_FOUND(2009, "Notification is not found"),
     FILE_UPLOAD_FAILURE(2010,"File upload failure"),
     REGISTER_FAILURE(9999,"register failure"),
-    LOGIN_FAILURE(9999,"login failure");
+    LOGIN_FAILURE(9999,"login failure"),
+    UPLOAD_FAILURE(9006,"upload failure");
     private String message;
     private Integer code;
 

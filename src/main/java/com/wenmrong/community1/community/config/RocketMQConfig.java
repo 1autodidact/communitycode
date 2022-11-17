@@ -35,9 +35,6 @@ public class RocketMQConfig {
         CustomMessageConverter customMessageConverter = new CustomMessageConverter();
         messageConverters.add(customMessageConverter);
         CompositeMessageConverter compositeMessageConverter = new CompositeMessageConverter(messageConverters);
-
-
-
         rocketMQTemplate.setMessageConverter(compositeMessageConverter);
         // 默认的配置
         rocketMQTemplate.setMessageConverter( rocketMQMessageConverter.getMessageConverter());
