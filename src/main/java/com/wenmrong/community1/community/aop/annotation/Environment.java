@@ -1,13 +1,6 @@
 package com.wenmrong.community1.community.aop.annotation;
 
-import com.wenmrong.community1.community.aop.ParseModel.CommonModel;
-import com.wenmrong.community1.community.aop.ParseModel.ParseModel;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * @author wenmingrong@kungeek.com

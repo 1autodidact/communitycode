@@ -35,4 +35,14 @@ public class TestAop {
         questionService.logInfoByParseModel(questionDTO);
         System.out.println("aa");
     }
+
+    @Test
+    public void addLock() {
+        for (int i = 0; i < 20; i++) {
+            new Thread(() -> {
+                questionService.addLock();
+
+            }).start();
+        }
+    }
 }

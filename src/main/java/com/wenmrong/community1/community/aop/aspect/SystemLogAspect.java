@@ -1,4 +1,4 @@
-package com.wenmrong.community1.community.aop;
+package com.wenmrong.community1.community.aop.aspect;
 
 import com.wenmrong.community1.community.aop.ParseModel.ParseModel;
 import com.wenmrong.community1.community.aop.annotation.SystemLog;

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Sets;
 import com.wenmrong.community1.community.aop.ParseModel.CommonModel;
+import com.wenmrong.community1.community.aop.annotation.DsLock;
 import com.wenmrong.community1.community.aop.annotation.SystemLog;
 import com.wenmrong.community1.community.config.TsCosClient;
 import com.wenmrong.community1.community.constants.MQTag;
@@ -213,6 +214,12 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
 
     @SystemLog(model = CommonModel.class)
     public List<QuestionDTO>  logInfoByParseModel(QuestionDTO questionDTO) {
+
         return null;
+    }
+
+    @DsLock(key= "community:question:lock",value =  "locked",timeout = 5000)
+    public void addLock() {
+        log.error("分布式锁加锁成功");
     }
 }
