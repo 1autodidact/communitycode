@@ -13,11 +13,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @since
  */
 @SpringBootTest
-@RunWith(SpringJUnit4ClassRunner.class)
+//@RunWith(SpringJUnit4ClassRunner.class)
 public class EncryDeCryptTest {
     @Test
     public void testEncrypt() throws Exception {
-        String encrypt = SecretUtil.encrypt("autodidact");
+        String encrypt = SecretUtil.encrypt("redis123456");
         String decrypt = SecretUtil.decrypt(encrypt);
         System.out.println("aaa");
     }

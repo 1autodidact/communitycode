@@ -28,4 +28,6 @@ public class TestReflect {
         Object o = properties.get(replyMessage);
         System.out.println("aa");
     }
+
+
 }

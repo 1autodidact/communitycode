@@ -91,7 +91,6 @@ public class QuestionController {
                                      @RequestParam String likeUser) {
         List<QuestionDTO> likesArticle = questionService.getLikesArticle(likeUser);
         return ResultDTO.okOf(likesArticle);
-
     }
 
     @PostMapping("/article/update")

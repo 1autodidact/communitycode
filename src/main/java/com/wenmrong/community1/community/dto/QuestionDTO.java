@@ -1,5 +1,6 @@
 package com.wenmrong.community1.community.dto;
 
+import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.wenmrong.community1.community.config.CustomSerializerAndDeserializer;
 import com.wenmrong.community1.community.model.UserLike;
@@ -32,5 +33,6 @@ public class QuestionDTO {
     private Boolean isFollow = false;
     private List<Integer> labelIds;
     private UserLike userUserLikeInfo;
+
 
 }

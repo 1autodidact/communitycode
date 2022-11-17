@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Sets;
+import com.wenmrong.community1.community.aop.ParseModel.CommonModel;
+import com.wenmrong.community1.community.aop.annotation.SystemLog;
 import com.wenmrong.community1.community.config.TsCosClient;
 import com.wenmrong.community1.community.constants.MQTag;
 import com.wenmrong.community1.community.constants.MQTopic;
@@ -202,5 +204,15 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
 
     public String picture(MultipartFile picture) throws IOException {
         return TsCosUtil.uploadByStream(tsCosClient, picture.getInputStream());
+    }
+
+    @SystemLog(traceId = "#questionDTO.user.id")
+    public List<QuestionDTO>  searchQuestion(QuestionDTO questionDTO) {
+        return null;
+    }
+
+    @SystemLog(model = CommonModel.class)
+    public List<QuestionDTO>  logInfoByParseModel(QuestionDTO questionDTO) {
+        return null;
     }
 }

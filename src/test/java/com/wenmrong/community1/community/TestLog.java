@@ -21,4 +21,5 @@ public class TestLog {
         log.error("topic:question_topic{}", "aaa");
         System.out.println("aa");
     }
+
 }
