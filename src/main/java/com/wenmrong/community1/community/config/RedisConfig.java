@@ -11,6 +11,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisPassword;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
@@ -22,6 +28,23 @@ import java.time.Duration;
 @EnableCaching
 @Configuration
 public class RedisConfig extends CachingConfigurerSupport {
+
+//    @Bean
+//    public RedisConnectionFactory redisConnectionFactory() {
+//        RedisStandaloneConfiguration rsc = new RedisStandaloneConfiguration(host, port);
+//        rsc.setPassword(RedisPassword.of(password));
+//        rsc.setDatabase(database);
+//
+//        // 配置连接池
+//       new LettucePoolingClientConfiguration.LettucePoolingClientConfigurationBuilder();
+//        poolConfig.setMaxTotal(256);
+//        poolConfig.setMaxWaitMillis(10*1000);
+//        JedisClientConfiguration jedisClientConfiguration = JedisClientConfiguration.builder().usePooling().poolConfig(poolConfig).build();
+//
+//        return new JedisConnectionFactory(rsc);
+//    }
+
+
     @Bean
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();

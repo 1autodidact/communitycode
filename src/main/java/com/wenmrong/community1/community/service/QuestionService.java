@@ -6,8 +6,10 @@ import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Sets;
 import com.wenmrong.community1.community.aop.ParseModel.CommonModel;
 import com.wenmrong.community1.community.aop.annotation.DsLock;
+import com.wenmrong.community1.community.aop.annotation.Environment;
 import com.wenmrong.community1.community.aop.annotation.SystemLog;
 import com.wenmrong.community1.community.config.TsCosClient;
+import com.wenmrong.community1.community.constants.ENV;
 import com.wenmrong.community1.community.constants.MQTag;
 import com.wenmrong.community1.community.constants.MQTopic;
 import com.wenmrong.community1.community.dto.QuestionDTO;
@@ -219,7 +221,8 @@ public class QuestionService extends ServiceImpl<QuestionMapper, Question> {
     }
 
     @DsLock(key= "community:question:lock",value =  "locked",timeout = 5000)
+    @Environment(environment = ENV.PRODUCT)
     public void addLock() {
-        log.error("分布式锁加锁成功");
+        log.error(Thread.currentThread().getName() + "   分布式锁加锁成功");
     }
 }

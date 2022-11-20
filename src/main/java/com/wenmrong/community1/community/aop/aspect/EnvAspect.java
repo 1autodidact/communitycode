@@ -1,38 +1,39 @@
 package com.wenmrong.community1.community.aop.aspect;
 
-import com.wenmrong.community1.community.aop.ParseModel.ParseModel;
-import com.wenmrong.community1.community.aop.annotation.DsLock;
+import com.wenmrong.community1.community.aop.annotation.Environment;
+import com.wenmrong.community1.community.constants.ENV;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
-import java.util.concurrent.TimeUnit;
 
 /**
  * <h3>community</h3>
  * <p></p>
  *
  * @author : Autodidact
- * @date : 2022-11-17 20:34
+ * @date : 2022-11-20 10:10
  **/
 @Aspect
 @Component
 @Slf4j
-public class DsLockAspect {
+//@Order(1)
+public class EnvAspect {
 
     @Autowired
     RedisTemplate redisTemplate;
-    /**
-     * Controller层切点,注解方式
-     */
-    //@Pointcut("execution(* *..controller..*Controller*.*(..))")
-    @Pointcut("@annotation(com.wenmrong.community1.community.aop.annotation.DsLock)")
+   
+    
+    
+    @Pointcut("@annotation(com.wenmrong.community1.community.aop.annotation.Environment)")
     public void annotationAspect() {
     }
 
@@ -44,7 +45,7 @@ public class DsLockAspect {
      * @throws InterruptedException
      */
     @Around("annotationAspect()")
-    public void lock(ProceedingJoinPoint joinPoint) throws Throwable {
+    public void envControl(ProceedingJoinPoint joinPoint) throws Throwable {
         // 获得当前访问的class
         Class<?> className = joinPoint.getTarget().getClass();
         // 获得访问的方法名
@@ -58,26 +59,19 @@ public class DsLockAspect {
             // 得到访问的方法对象
             Method method = className.getMethod(methodName, argClass);
             method.setAccessible(true);
-            if (method.isAnnotationPresent(DsLock.class)) {
-                DsLock annotation = method.getAnnotation(DsLock.class);
-                String key = annotation.key();
-                String value = annotation.value();
-                long timeout = annotation.timeout();
-                boolean lock = redisTemplate.opsForValue().setIfAbsent(key, value, timeout, TimeUnit.MILLISECONDS) == Boolean.TRUE;
-                System.out.println("DSLockASpect" + Thread.currentThread().getName() + "  加锁 " +lock);
-
-                if (lock) {
+            if (method.isAnnotationPresent(Environment.class)) {
+                Environment annotation = method.getAnnotation(Environment.class);
+                String environment = annotation.environment();
+                System.out.println("EnvAspect" + Thread.currentThread().getName());
+                if (environment.equals(ENV.PRODUCT)) {
                     joinPoint.proceed(args);
-                    log.error(Thread.currentThread().getName() + "  分布式锁释放");
                 }
 
             }
 
         } catch (Exception e) {
-            log.error("分布式锁aop 执行异常",e);
+            log.error(" 执行异常",e);
         }
 
     }
-
-
 }
