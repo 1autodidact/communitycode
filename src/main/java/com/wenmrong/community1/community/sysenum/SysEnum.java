@@ -1,7 +1,7 @@
 package com.wenmrong.community1.community.sysenum;
 
 /**
- * @author wenmingrong@kungeek.com
+ * 
  * @since
  */
 public class SysEnum {
